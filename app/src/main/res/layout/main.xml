@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/welcomeTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#00578b"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:drawableLeft="@drawable/home"
+        android:textColor="#fff">
+    </TextView>
+
+    <Button android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/smsBtn"
+        android:background="@drawable/custom_button"
+        android:textSize="25sp"
+        android:text="@string/label_sms"
+        android:shadowRadius="1"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowColor="#000"
+        android:drawableRight="@drawable/sms"
+        android:layout_margin="10dp"
+        android:padding="20dp"
+        android:textColor="#fff"
+        android:layout_below="@+id/welcomeTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"></Button>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newSmsLabel"
+        android:background="@drawable/badge"
+        android:textSize="25sp"
+        android:textColor="#fff"
+        android:gravity="center_horizontal"
+        android:width="50dp"
+        android:layout_margin="10dp"
+        android:layout_alignTop="@id/smsBtn"
+        android:layout_alignLeft="@id/smsBtn">
+    </TextView>
+
+    <Button android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/logoutBtn"
+        android:text="@string/label_logout"
+        android:shadowRadius="1"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:layout_margin="10dp"
+        android:shadowColor="#000"
+        android:background="@drawable/custom_button"
+        android:drawableRight="@drawable/exit"
+        android:textSize="25sp"
+        android:padding="20dp"
+        android:textColor="#fff"
+        android:layout_below="@+id/smsBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"></Button>
+
+</RelativeLayout>
