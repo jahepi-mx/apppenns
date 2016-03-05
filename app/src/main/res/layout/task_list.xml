@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/label_sms"
+            android:text="@string/label_task"
             android:id="@+id/textView"
             android:gravity="center_vertical"
             android:layout_marginLeft="10dp"
@@ -34,21 +34,32 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_new"
+            android:text="@string/btn_add"
             android:background="@drawable/custom_button"
             android:shadowRadius="2"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowColor="#000"
             android:textColor="#fff"
-            android:id="@+id/newMessageBtn"
+            android:id="@+id/newTaskBtn"
             android:layout_weight="1" />
     </LinearLayout>
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_square_button"
+        android:shadowRadius="2"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowColor="#000"
+        android:textColor="#fff"
+        android:id="@+id/dateBtn" />
+
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/messageListView"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:id="@+id/taskListView" />
 
 </LinearLayout>

@@ -1,5 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -38,7 +40,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         users = application.getUsers();
         users.remove(application.getUser());
 
-        dialog = new ToDialog(this, users, this);
+        dialog = new ToDialog();
+        dialog.setListener(this);
+        dialog.setUsers(users);
 
         toTextView = (TextView) findViewById(R.id.toAllTextView);
         messageEditText = (EditText) findViewById(R.id.messageEditText);
@@ -65,7 +69,8 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         toBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                FragmentManager fm = getFragmentManager();
+                dialog.show(fm, TAG);
             }
         });
 

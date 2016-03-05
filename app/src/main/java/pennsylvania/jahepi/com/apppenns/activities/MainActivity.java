@@ -18,7 +18,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
 
     private TextView viewSms;
     private MessageNotifier messageNotifier;
-    private Button logoutBtn, smsBtn;
+    private Button logoutBtn, smsBtn, activityBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
 
         logoutBtn = (Button) findViewById(R.id.logoutBtn);
         smsBtn = (Button) findViewById(R.id.smsBtn);
+        activityBtn = (Button) findViewById(R.id.activityBtn);
 
         TextView view = (TextView) findViewById(R.id.welcomeTextView);
         view.setText(application.getUser().getName());
@@ -36,6 +37,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
 
         logoutBtn.setOnClickListener(this);
         smsBtn.setOnClickListener(this);
+        activityBtn.setOnClickListener(this);
     }
 
     @Override
@@ -46,6 +48,9 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         }
         if (v == smsBtn) {
             startActivity(new Intent(this, MessageListActivity.class));
+        }
+        if (v == activityBtn) {
+            startActivity(new Intent(this, TaskListActivity.class));
         }
     }
 

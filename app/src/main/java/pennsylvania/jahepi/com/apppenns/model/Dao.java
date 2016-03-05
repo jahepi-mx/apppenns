@@ -238,14 +238,21 @@ public class Dao {
                 task.setClient(cursor.getString(2));
                 task.setDescription(cursor.getString(3));
                 task.setModifiedDate(cursor.getString(4));
+
                 Coord checkIn = new Coord();
                 checkIn.setLatitude(cursor.getDouble(5));
                 checkIn.setLongitude(cursor.getDouble(6));
+
                 Coord checkOut = new Coord();
                 checkOut.setLatitude(cursor.getDouble(7));
                 checkOut.setLongitude(cursor.getDouble(8));
-                task.setCheckIn(checkIn);
-                task.setCheckOut(checkOut);
+
+                task.setCheckInCoord(checkIn);
+                task.setCheckOutCoord(checkOut);
+                task.setSend(cursor.getInt(9) == 1);
+                task.setDate(cursor.getString(10));
+                task.setCheckin(cursor.getInt(11) == 1);
+                task.setCheckout(cursor.getInt(12) == 1);
                 tasks.add(task);
             }
             cursor.close();
@@ -256,20 +263,29 @@ public class Dao {
     public Task getTask(Task taskParam) {
         Cursor cursor = db.get(Database.TASKS_TABLE, String.format("id='%s' AND user='%s'", taskParam.getId(), taskParam.getUser().getId()));
         if (cursor != null) {
+
             Task task = new Task();
             task.setId(cursor.getInt(0));
             task.setUser(getUser(cursor.getInt(1)));
             task.setClient(cursor.getString(2));
             task.setDescription(cursor.getString(3));
             task.setModifiedDate(cursor.getString(4));
+
             Coord checkIn = new Coord();
             checkIn.setLatitude(cursor.getDouble(5));
             checkIn.setLongitude(cursor.getDouble(6));
+
             Coord checkOut = new Coord();
             checkOut.setLatitude(cursor.getDouble(7));
             checkOut.setLongitude(cursor.getDouble(8));
-            task.setCheckIn(checkIn);
-            task.setCheckOut(checkOut);
+
+            task.setCheckInCoord(checkIn);
+            task.setCheckOutCoord(checkOut);
+            task.setSend(cursor.getInt(9) == 1);
+            task.setDate(cursor.getString(10));
+            task.setCheckin(cursor.getInt(11) == 1);
+            task.setCheckout(cursor.getInt(12) == 1);
+
             cursor.close();
             return task;
         }
@@ -283,11 +299,14 @@ public class Dao {
             values.put("client", task.getClient());
             values.put("description", task.getDescription());
             values.put("date", task.getModifiedDateString());
-            values.put("in_lat", task.getCheckIn().getLatitude());
-            values.put("in_lon", task.getCheckIn().getLongitude());
-            values.put("out_lat", task.getCheckOut().getLatitude());
-            values.put("out_lon", task.getCheckOut().getLongitude());
+            values.put("in_lat", task.getCheckInCoord().getLatitude());
+            values.put("in_lon", task.getCheckInCoord().getLongitude());
+            values.put("out_lat", task.getCheckOutCoord().getLatitude());
+            values.put("out_lon", task.getCheckOutCoord().getLongitude());
             values.put("send", task.isSend() ? 1 : 0);
+            values.put("register_date", task.getDate());
+            values.put("check_in", task.isCheckin() ? 1 : 0);
+            values.put("check_out", task.isCheckout() ? 1 : 0);
 
             Task taskDB = getTask(task);
             if (taskDB != null) {

@@ -1,8 +1,9 @@
 package pennsylvania.jahepi.com.apppenns.dialogs;
 
-import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,25 +24,28 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 /**
  * Created by javier.hernandez on 29/02/2016.
  */
-public class ToDialog extends Dialog implements View.OnClickListener {
+public class ToDialog extends DialogFragment implements View.OnClickListener {
 
     private ArrayList<User> users;
     private DialogAdapter adapter;
     private Button acceptBtn;
     private DialogListener listener;
 
-    public ToDialog(Context context, ArrayList<User> users, DialogListener listener) {
-        super(context);
-        setContentView(R.layout.dialog_to);
-        setTitle(context.getString(R.string.txt_users));
-        this.users = users;
-        acceptBtn = (Button) findViewById(R.id.okToBtn);
-        ListView listView = (ListView) findViewById(R.id.toListView);
-        adapter = new DialogAdapter(context, R.layout.dialog_to_row);
+    public ToDialog() {
+        super();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_to, container, false);
+        getDialog().setTitle(getString(R.string.txt_users));
+        acceptBtn = (Button) view.findViewById(R.id.okToBtn);
+        ListView listView = (ListView) view.findViewById(R.id.toListView);
+        adapter = new DialogAdapter(view.getContext(), R.layout.dialog_to_row);
         adapter.addAll(users);
 
         listView.setAdapter(adapter);
-        this.listener = listener;
         acceptBtn.setOnClickListener(this);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -54,6 +57,8 @@ public class ToDialog extends Dialog implements View.OnClickListener {
                 holder.checkbox.setChecked(user.isSelected());
             }
         });
+
+        return view;
     }
 
     public void reset() {
@@ -62,6 +67,14 @@ public class ToDialog extends Dialog implements View.OnClickListener {
             User user = iterator.next();
             user.setSelected(false);
         }
+    }
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
+    }
+
+    public void setListener(DialogListener listener) {
+        this.listener = listener;
     }
 
     @Override

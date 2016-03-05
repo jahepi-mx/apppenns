@@ -8,14 +8,17 @@ public class Task extends Entity {
     private int id;
     private String client;
     private String description;
-    private Coord checkIn;
-    private Coord checkOut;
+    private Coord checkInCoord;
+    private Coord checkOutCoord;
+    private boolean checkin;
+    private boolean checkout;
     private User user;
     private boolean send;
+    private String date;
 
     public Task() {
-        checkIn = new Coord();
-        checkOut = new Coord();
+        checkInCoord = new Coord();
+        checkOutCoord = new Coord();
     }
 
     public int getId() {
@@ -42,20 +45,20 @@ public class Task extends Entity {
         this.description = description;
     }
 
-    public Coord getCheckIn() {
-        return checkIn;
+    public Coord getCheckInCoord() {
+        return checkInCoord;
     }
 
-    public void setCheckIn(Coord checkIn) {
-        this.checkIn = checkIn;
+    public void setCheckInCoord(Coord checkInCoord) {
+        this.checkInCoord = checkInCoord;
     }
 
-    public Coord getCheckOut() {
-        return checkOut;
+    public Coord getCheckOutCoord() {
+        return checkOutCoord;
     }
 
-    public void setCheckOut(Coord checkOut) {
-        this.checkOut = checkOut;
+    public void setCheckOutCoord(Coord checkOutCoord) {
+        this.checkOutCoord = checkOutCoord;
     }
 
     public User getUser() {
@@ -72,5 +75,29 @@ public class Task extends Entity {
 
     public void setSend(boolean send) {
         this.send = send;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public boolean isCheckin() {
+        return checkin;
+    }
+
+    public void setCheckin(boolean checkin) {
+        this.checkin = checkin;
+    }
+
+    public boolean isCheckout() {
+        return checkout;
+    }
+
+    public void setCheckout(boolean checkout) {
+        this.checkout = checkout;
     }
 }

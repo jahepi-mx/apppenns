@@ -329,10 +329,12 @@ public class Sync extends Service {
                 post.addPart("client", new StringBody(task.getClient()));
                 post.addPart("description", new StringBody(task.getDescription()));
                 post.addPart("date", new StringBody(task.getModifiedDateString()));
-                post.addPart("in_lat", new StringBody(Double.toString(task.getCheckIn().getLatitude())));
-                post.addPart("in_lon", new StringBody(Double.toString(task.getCheckIn().getLongitude())));
-                post.addPart("out_lat", new StringBody(Double.toString(task.getCheckOut().getLatitude())));
-                post.addPart("out_lon", new StringBody(Double.toString(task.getCheckOut().getLongitude())));
+                post.addPart("in_lat", new StringBody(Double.toString(task.getCheckInCoord().getLatitude())));
+                post.addPart("in_lon", new StringBody(Double.toString(task.getCheckInCoord().getLongitude())));
+                post.addPart("out_lat", new StringBody(Double.toString(task.getCheckOutCoord().getLatitude())));
+                post.addPart("out_lon", new StringBody(Double.toString(task.getCheckOutCoord().getLongitude())));
+                post.addPart("check_in", new StringBody(Boolean.toString(task.isCheckin())));
+                post.addPart("check_out", new StringBody(Boolean.toString(task.isCheckout())));
                 postRequest.setEntity(post);
                 HttpResponse response = httpClient.execute(postRequest);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));

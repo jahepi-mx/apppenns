@@ -16,7 +16,7 @@ public class Database {
     public static final String USERS_TABLE = "users";
     public static final String TASKS_TABLE = "tasks";
 
-    private static final int DB_VERSION = 13;
+    private static final int DB_VERSION = 14;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -112,7 +112,7 @@ public class Database {
             Log.d(TAG, "Users table created!");
             db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
-            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, client TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT)");
+            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, client TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT)");
             Log.d(TAG, "Tasks table created!");
         }
 

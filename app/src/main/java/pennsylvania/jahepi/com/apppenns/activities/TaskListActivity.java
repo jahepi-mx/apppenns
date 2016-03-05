@@ -1,6 +1,5 @@
 package pennsylvania.jahepi.com.apppenns.activities;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,28 +13,28 @@ import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 
 /**
- * Created by javier.hernandez on 04/03/2016.
+ * Created by jahepi on 05/03/16.
  */
-public class AddTaskActivity extends AuthActivity implements DialogListener {
+public class TaskListActivity extends AuthActivity implements DialogListener {
 
-    private final static String TAG = "AddTaskActivity";
+    private final static String TAG = "TaskListActivity";
 
-    private Button dateBtn;
     private DateDialog dialog;
+    private Button dateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.task_add);
+        setContentView(R.layout.task_list);
 
         dialog = new DateDialog();
         dialog.setListener(this);
 
-        Button backBtn = (Button) findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        Button addTask = (Button) findViewById(R.id.newTaskBtn);
+        addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
+                Intent intent = new Intent(TaskListActivity.this, AddTaskActivity.class);
                 startActivity(intent);
             }
         });
@@ -44,13 +43,13 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddTaskActivity.this, MainActivity.class);
+                Intent intent = new Intent(TaskListActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         });
 
         String date = Util.getDate();
-        dateBtn = (Button) findViewById(R.id.taskDateBtn);
+        dateBtn = (Button) findViewById(R.id.dateBtn);
         dateBtn.setText(date);
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
