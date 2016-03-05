@@ -13,7 +13,8 @@
     <string name="label_new_sms">%1$s</string>
     <string name="txt_message_title">Información Mensaje</string>
     <string name="txt_message_send">Envío Mensaje</string>
-    <string name="txt_error_send_message">Verifique que tenga los datos requeridos</string>
+    <string name="txt_error_send">Verifique que tenga los datos requeridos</string>
+    <string name="txt_error_database">No se pudo guardar el registro</string>
     <string name="txt_message_to">A:</string>
     <string name="txt_message_to_send">Para:</string>
     <string name="txt_message_to_all">Para: %1$s</string>

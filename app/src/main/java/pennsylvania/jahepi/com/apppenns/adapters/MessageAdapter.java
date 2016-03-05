@@ -84,6 +84,16 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
         return convertView;
     }
 
+    public Message getMessage(Message message) {
+        for (int i = 0; i < getCount(); i++) {
+            Message msg = (Message) getItem(i);
+            if (message.equals(msg)) {
+                return msg;
+            }
+        }
+        return null;
+    }
+
     public static class ViewHolder {
         TextView title;
         TextView text;

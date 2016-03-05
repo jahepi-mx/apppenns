@@ -94,7 +94,7 @@
                 android:layout_weight="6"
                 android:id="@+id/clientEditText"
                 android:inputType="text"
-                android:textColor="#fff"
+                android:textColor="#000"
                 android:background="@drawable/rounded_corner"
                 android:layout_margin="10dp">
             </EditText>

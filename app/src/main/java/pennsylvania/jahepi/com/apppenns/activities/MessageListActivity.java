@@ -21,7 +21,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Message;
 /**
  * Created by javier.hernandez on 26/02/2016.
  */
-public class MessageListActivity extends AuthActivity implements AdapterView.OnItemLongClickListener, CustomApplication.MessageNotifierListener {
+public class MessageListActivity extends AuthActivity implements AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener {
 
     private final static String TAG = "MessageListActivity";
 
@@ -88,13 +88,7 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
     @Override
     protected void onStart() {
         super.onStart();
-        application.setMessageNotifierListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // application.setMessageNotifierListener(null);
+        application.addMessageNotifierListener(0, this);
     }
 
     @Override
@@ -123,12 +117,9 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
                 Iterator<Message> iterator = messages.iterator();
                 while (iterator.hasNext()) {
                     Message message = iterator.next();
-                    for (int i = 0; i < adapter.getCount(); i++) {
-                        Message msg = (Message) adapter.getItem(i);
-                        if (message.equals(msg)) {
-                            msg.setSend(true);
-                            break;
-                        }
+                    Message adapterMessage = adapter.getMessage(message);
+                    if (adapterMessage != null) {
+                        adapterMessage.setSend(true);
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -144,12 +135,9 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
                 Iterator<Message> iterator = messages.iterator();
                 while (iterator.hasNext()) {
                     Message message = iterator.next();
-                    for (int i = 0; i < adapter.getCount(); i++) {
-                        Message msg = (Message) adapter.getItem(i);
-                        if (message.equals(msg)) {
-                            msg.setDelivered(true);
-                            break;
-                        }
+                    Message adapterMessage = adapter.getMessage(message);
+                    if (adapterMessage != null) {
+                        adapterMessage.setDelivered(true);
                     }
                 }
                 adapter.notifyDataSetChanged();

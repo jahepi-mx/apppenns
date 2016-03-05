@@ -13,6 +13,7 @@ import com.nullwire.trace.ExceptionHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -41,7 +42,7 @@ public class CustomApplication extends Application {
     private Dao dao;
     private User user;
     private String androidId;
-    private MessageNotifierListener messageNotifierListener;
+    private ArrayList<ApplicationNotifierListener> appNotifierListeners;
 
     @Override
     public void onCreate() {
@@ -52,6 +53,7 @@ public class CustomApplication extends Application {
         gps = new Gps(this);
         dao = new Dao(this.getApplicationContext());
         gps.start();
+        appNotifierListeners = new ArrayList<ApplicationNotifierListener>();
         startSync();
     }
 
@@ -155,20 +157,32 @@ public class CustomApplication extends Application {
     }
 
     public void notifyNewMessages(ArrayList<Message> messages) {
-        if (messageNotifierListener != null) {
-            messageNotifierListener.onNewMessages(messages);
+        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
+        while (iterator.hasNext()) {
+            ApplicationNotifierListener listener = iterator.next();
+            if (listener != null) {
+                listener.onNewMessages(messages);
+            }
         }
     }
 
     public void notifySendMessages(ArrayList<Message> messages) {
-        if (messageNotifierListener != null) {
-            messageNotifierListener.onMessagesSend(messages);
+        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
+        while (iterator.hasNext()) {
+            ApplicationNotifierListener listener = iterator.next();
+            if (listener != null) {
+                listener.onMessagesSend(messages);
+            }
         }
     }
 
     public void notifyReadMessages(ArrayList<Message> messages) {
-        if (messageNotifierListener != null) {
-            messageNotifierListener.onMessagesRead(messages);
+        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
+        while (iterator.hasNext()) {
+            ApplicationNotifierListener listener = iterator.next();
+            if (listener != null) {
+                listener.onMessagesRead(messages);
+            }
         }
     }
 
@@ -184,15 +198,11 @@ public class CustomApplication extends Application {
         return dao.updateMessageField(message, field, value);
     }
 
-    public MessageNotifierListener getMessageNotifierListener() {
-        return messageNotifierListener;
+    public void addMessageNotifierListener(int index, ApplicationNotifierListener appNotifierListener) {
+        this.appNotifierListeners.add(index, appNotifierListener);
     }
 
-    public void setMessageNotifierListener(MessageNotifierListener messageNotifierListener) {
-        this.messageNotifierListener = messageNotifierListener;
-    }
-
-    public interface MessageNotifierListener {
+    public interface ApplicationNotifierListener {
         public void onNewMessages(ArrayList<Message> messages);
         public void onMessagesSend(ArrayList<Message> messages);
         public void onMessagesRead(ArrayList<Message> messages);

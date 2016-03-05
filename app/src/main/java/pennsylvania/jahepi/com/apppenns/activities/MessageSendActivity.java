@@ -109,7 +109,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         }
 
         if (Util.isEmpty(messageStr) || tmpUsers.size() == 0) {
-            toast(this.getString(R.string.txt_error_send_message));
+            toast(this.getString(R.string.txt_error_send));
             return;
         }
 
