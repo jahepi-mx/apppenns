@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 import pennsylvania.jahepi.com.apppenns.model.Dao;
 import pennsylvania.jahepi.com.apppenns.services.Gps;
@@ -139,6 +140,18 @@ public class CustomApplication extends Application {
 
     public ArrayList<Message> getMessages() {
         return dao.getMessages(user.getId());
+    }
+
+    public ArrayList<Task> getNewTasks() {
+        return dao.getNewTasks(user.getId());
+    }
+
+    public boolean saveTask(Task task) {
+        return dao.saveTask(task);
+    }
+
+    public boolean updateTaskAsSend(Task task) {
+        return dao.updateTaskAsSend(task);
     }
 
     public void notifyNewMessages(ArrayList<Message> messages) {

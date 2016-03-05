@@ -17,6 +17,8 @@ public class Gps implements LocationListener {
 
     private final static String TAG = "Gps";
     private final static int INTERVAL = 300000;
+    private final static int MIN_TIME = 5 * 60 * 1000;
+    private final static int MIN_DISTANCE = 20;
 
     private CustomApplication application;
     private LocationManager locationManager;
@@ -50,7 +52,7 @@ public class Gps implements LocationListener {
     public void start() {
         int res = application.getApplicationContext().checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION");
         if (res == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
         }
     }
 

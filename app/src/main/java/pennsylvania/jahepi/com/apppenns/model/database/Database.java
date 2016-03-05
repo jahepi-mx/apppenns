@@ -14,8 +14,9 @@ public class Database {
 
     public static final String MESSAGES_TABLE = "messages";
     public static final String USERS_TABLE = "users";
+    public static final String TASKS_TABLE = "tasks";
 
-    private static final int DB_VERSION = 12;
+    private static final int DB_VERSION = 13;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -109,8 +110,10 @@ public class Database {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT)");
             Log.d(TAG, "Users table created!");
-            db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, sync INT, read_sync INT, UNIQUE (to_user, from_user, date))");
+            db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
+            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, client TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT)");
+            Log.d(TAG, "Tasks table created!");
         }
 
         @Override
@@ -119,6 +122,8 @@ public class Database {
             Log.d(TAG, "Users table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + MESSAGES_TABLE);
             Log.d(TAG, "Messages table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + TASKS_TABLE);
+            Log.d(TAG, "Tasks table removed!");
             onCreate(db);
         }
     }

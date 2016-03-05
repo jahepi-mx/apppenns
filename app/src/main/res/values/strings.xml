@@ -26,5 +26,7 @@
     <string name="btn_cancel">Cancelar</string>
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>
+    <string name="btn_activity">Actividades</string>
+    <string name="btn_add_activity">Agregar Actividad</string>
     <string name="btn_new">Nuevo</string>
 </resources>

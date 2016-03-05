@@ -7,7 +7,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 import pennsylvania.jahepi.com.apppenns.model.database.Database;
 
@@ -223,5 +225,90 @@ public class Dao {
             return n;
         }
         return 0;
+    }
+
+    public ArrayList<Task> getNewTasks(int userId) {
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        Cursor cursor = db.getAllOrderBy(Database.TASKS_TABLE, String.format("user='%s' AND send=0", userId), "id DESC");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Task task = new Task();
+                task.setId(cursor.getInt(0));
+                task.setUser(getUser(cursor.getInt(1)));
+                task.setClient(cursor.getString(2));
+                task.setDescription(cursor.getString(3));
+                task.setModifiedDate(cursor.getString(4));
+                Coord checkIn = new Coord();
+                checkIn.setLatitude(cursor.getDouble(5));
+                checkIn.setLongitude(cursor.getDouble(6));
+                Coord checkOut = new Coord();
+                checkOut.setLatitude(cursor.getDouble(7));
+                checkOut.setLongitude(cursor.getDouble(8));
+                task.setCheckIn(checkIn);
+                task.setCheckOut(checkOut);
+                tasks.add(task);
+            }
+            cursor.close();
+        }
+        return tasks;
+    }
+
+    public Task getTask(Task taskParam) {
+        Cursor cursor = db.get(Database.TASKS_TABLE, String.format("id='%s' AND user='%s'", taskParam.getId(), taskParam.getUser().getId()));
+        if (cursor != null) {
+            Task task = new Task();
+            task.setId(cursor.getInt(0));
+            task.setUser(getUser(cursor.getInt(1)));
+            task.setClient(cursor.getString(2));
+            task.setDescription(cursor.getString(3));
+            task.setModifiedDate(cursor.getString(4));
+            Coord checkIn = new Coord();
+            checkIn.setLatitude(cursor.getDouble(5));
+            checkIn.setLongitude(cursor.getDouble(6));
+            Coord checkOut = new Coord();
+            checkOut.setLatitude(cursor.getDouble(7));
+            checkOut.setLongitude(cursor.getDouble(8));
+            task.setCheckIn(checkIn);
+            task.setCheckOut(checkOut);
+            cursor.close();
+            return task;
+        }
+        return null;
+    }
+
+    public boolean saveTask(Task task) {
+        if (task != null) {
+            ContentValues values = new ContentValues();
+            values.put("user", task.getUser().getId());
+            values.put("client", task.getClient());
+            values.put("description", task.getDescription());
+            values.put("date", task.getModifiedDateString());
+            values.put("in_lat", task.getCheckIn().getLatitude());
+            values.put("in_lon", task.getCheckIn().getLongitude());
+            values.put("out_lat", task.getCheckOut().getLatitude());
+            values.put("out_lon", task.getCheckOut().getLongitude());
+            values.put("send", task.isSend() ? 1 : 0);
+
+            Task taskDB = getTask(task);
+            if (taskDB != null) {
+                if (taskDB.isGreaterDate(task)) {
+                    db.update(Database.TASKS_TABLE, values, String.format("id='%s' AND user='%s'", task.getId(), task.getUser().getId()));
+                }
+            } else {
+                Log.d(TAG, task.toString());
+                db.insert(Database.TASKS_TABLE, values);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateTaskAsSend(Task task) {
+        if (task != null) {
+            ContentValues values = new ContentValues();
+            values.put("send", "1");
+            return db.update(Database.TASKS_TABLE, values, String.format("id='%s' AND user='%s'", task.getId(), task.getUser().getId()));
+        }
+        return false;
     }
 }

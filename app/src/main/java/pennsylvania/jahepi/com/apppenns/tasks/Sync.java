@@ -29,6 +29,7 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
@@ -85,6 +86,7 @@ public class Sync extends Service {
                     getReadMessages();
                     syncNewMessages();
                     syncReadMessages();
+                    syncNewTasks();
                 }
                 syncUsers();
                 active = false;
@@ -311,6 +313,55 @@ public class Sync extends Service {
             application.notifySendMessages(messages);
         }
         Log.d(TAG, "syncNewMessages finalized");
+    }
+
+    private void syncNewTasks() {
+        ArrayList<Task> tasks = application.getNewTasks();
+        Iterator<Task> iterator = tasks.iterator();
+        String url = CustomApplication.SERVICE_URL + "intranet/android/newTask";
+        while (iterator.hasNext()) {
+            try {
+                Task task = (Task) iterator.next();
+                HttpPost postRequest = new HttpPost(url);
+                MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                post.addPart("id", new StringBody(Integer.toString(task.getId())));
+                post.addPart("user", new StringBody(Integer.toString(task.getUser().getId())));
+                post.addPart("client", new StringBody(task.getClient()));
+                post.addPart("description", new StringBody(task.getDescription()));
+                post.addPart("date", new StringBody(task.getModifiedDateString()));
+                post.addPart("in_lat", new StringBody(Double.toString(task.getCheckIn().getLatitude())));
+                post.addPart("in_lon", new StringBody(Double.toString(task.getCheckIn().getLongitude())));
+                post.addPart("out_lat", new StringBody(Double.toString(task.getCheckOut().getLatitude())));
+                post.addPart("out_lon", new StringBody(Double.toString(task.getCheckOut().getLongitude())));
+                postRequest.setEntity(post);
+                HttpResponse response = httpClient.execute(postRequest);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+                String sResponse = null;
+                StringBuilder jsonStr = new StringBuilder();
+
+                while ((sResponse = reader.readLine()) != null) {
+                    jsonStr = jsonStr.append(sResponse);
+                }
+
+                JSONObject jObject = new JSONObject(jsonStr.toString());
+                String messageStr = jObject.getString("message");
+                int code = jObject.getInt("code");
+
+                if (code == SUCCESS) {
+                    if (application.updateTaskAsSend(task)) {
+                        Log.d(TAG, "syncNewTasks inserted: " + task.getClient());
+                    } else {
+                        Log.d(TAG, "syncNewTasks not inserted: " + task.getClient());
+                    }
+                } else {
+                    Log.d(TAG, "syncNewTasks code invalid");
+                }
+
+            } catch (Exception e) {
+                Log.d(TAG, e.getMessage());
+            }
+        }
+        Log.d(TAG, "syncNewTasks finalized");
     }
 
     private void syncReadMessages() {
