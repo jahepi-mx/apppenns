@@ -89,7 +89,13 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
     @Override
     protected void onStart() {
         super.onStart();
-        application.addMessageNotifierListener(0, this);
+        application.addMessageNotifierListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        application.removeMessageNotifierListener(this);
     }
 
     @Override

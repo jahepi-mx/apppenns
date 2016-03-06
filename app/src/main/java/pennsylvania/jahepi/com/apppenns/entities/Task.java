@@ -9,6 +9,8 @@ public class Task extends Entity {
     private String client;
     private String description;
     private Coord checkInCoord;
+    private String checkInDate;
+    private String checkOutDate;
     private Coord checkOutCoord;
     private boolean checkin;
     private boolean checkout;
@@ -99,6 +101,28 @@ public class Task extends Entity {
 
     public void setCheckout(boolean checkout) {
         this.checkout = checkout;
+    }
+
+    public String getCheckInDate() {
+        if (checkInDate != null) {
+            return checkInDate;
+        }
+        return "";
+    }
+
+    public void setCheckInDate(String checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public String getCheckOutDate() {
+        if (checkOutDate != null) {
+            return checkOutDate;
+        }
+        return "";
+    }
+
+    public void setCheckOutDate(String checkOutDate) {
+        this.checkOutDate = checkOutDate;
     }
 
     @Override

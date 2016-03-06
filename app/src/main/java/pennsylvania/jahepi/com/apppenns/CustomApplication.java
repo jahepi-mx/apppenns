@@ -212,8 +212,14 @@ public class CustomApplication extends Application {
         return dao.updateMessageField(message, field, value);
     }
 
-    public void addMessageNotifierListener(int index, ApplicationNotifierListener appNotifierListener) {
-        this.appNotifierListeners.add(index, appNotifierListener);
+    public void addMessageNotifierListener(ApplicationNotifierListener appNotifierListener) {
+        if (!appNotifierListeners.contains(appNotifierListener)) {
+            appNotifierListeners.add(appNotifierListener);
+        }
+    }
+
+    public void removeMessageNotifierListener(ApplicationNotifierListener appNotifierListener) {
+        appNotifierListeners.remove(appNotifierListener);
     }
 
     public interface ApplicationNotifierListener {

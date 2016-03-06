@@ -253,6 +253,8 @@ public class Dao {
                 task.setDate(cursor.getString(10));
                 task.setCheckin(cursor.getInt(11) == 1);
                 task.setCheckout(cursor.getInt(12) == 1);
+                task.setCheckInDate(cursor.getString(13));
+                task.setCheckOutDate(cursor.getString(14));
                 tasks.add(task);
             }
             cursor.close();
@@ -286,6 +288,8 @@ public class Dao {
                 task.setDate(cursor.getString(10));
                 task.setCheckin(cursor.getInt(11) == 1);
                 task.setCheckout(cursor.getInt(12) == 1);
+                task.setCheckInDate(cursor.getString(13));
+                task.setCheckOutDate(cursor.getString(14));
                 tasks.add(task);
             }
             cursor.close();
@@ -318,7 +322,8 @@ public class Dao {
             task.setDate(cursor.getString(10));
             task.setCheckin(cursor.getInt(11) == 1);
             task.setCheckout(cursor.getInt(12) == 1);
-
+            task.setCheckInDate(cursor.getString(13));
+            task.setCheckOutDate(cursor.getString(14));
             cursor.close();
             return task;
         }
@@ -340,6 +345,8 @@ public class Dao {
             values.put("register_date", task.getDate());
             values.put("check_in", task.isCheckin() ? 1 : 0);
             values.put("check_out", task.isCheckout() ? 1 : 0);
+            values.put("checkin_date", task.getCheckInDate());
+            values.put("checkout_date", task.getCheckOutDate());
 
             Task taskDB = getTask(task);
             if (taskDB != null) {

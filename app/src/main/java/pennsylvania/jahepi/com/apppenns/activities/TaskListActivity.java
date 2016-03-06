@@ -92,7 +92,13 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     @Override
     protected void onStart() {
         super.onStart();
-        application.addMessageNotifierListener(1, this);
+        application.addMessageNotifierListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        application.removeMessageNotifierListener(this);
     }
 
     @Override
