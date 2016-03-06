@@ -148,6 +148,10 @@ public class CustomApplication extends Application {
         return dao.getNewTasks(user.getId());
     }
 
+    public ArrayList<Task> getTasks(String date) {
+        return dao.getTasks(user.getId(), date);
+    }
+
     public boolean saveTask(Task task) {
         return dao.saveTask(task);
     }
@@ -186,6 +190,16 @@ public class CustomApplication extends Application {
         }
     }
 
+    public void notifySendTasks(ArrayList<Task> tasks) {
+        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
+        while (iterator.hasNext()) {
+            ApplicationNotifierListener listener = iterator.next();
+            if (listener != null) {
+                listener.onTasksSend(tasks);
+            }
+        }
+    }
+
     public ArrayList<Message> getMessagesRead() {
         return dao.getMessagesRead(user.getId());
     }
@@ -206,5 +220,6 @@ public class CustomApplication extends Application {
         public void onNewMessages(ArrayList<Message> messages);
         public void onMessagesSend(ArrayList<Message> messages);
         public void onMessagesRead(ArrayList<Message> messages);
+        public void onTasksSend(ArrayList<Task> tasks);
     }
 }

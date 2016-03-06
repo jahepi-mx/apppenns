@@ -55,6 +55,7 @@
         android:shadowDy="1"
         android:shadowColor="#000"
         android:textColor="#fff"
+        android:textStyle="bold"
         android:id="@+id/dateBtn" />
 
     <ListView

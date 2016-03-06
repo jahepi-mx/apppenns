@@ -17,6 +17,7 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.adapters.MessageAdapter;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
  * Created by javier.hernandez on 26/02/2016.
@@ -143,5 +144,10 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
                 adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onTasksSend(ArrayList<Task> tasks) {
+
     }
 }

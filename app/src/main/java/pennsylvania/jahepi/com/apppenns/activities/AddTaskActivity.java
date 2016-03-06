@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
@@ -29,7 +30,14 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_add);
 
+        Intent intent = getIntent();
+        String date = intent.getStringExtra(CustomApplication.GENERIC_INTENT);
+        if (date == null) {
+            date = Util.getDate();
+        }
+
         dialog = new DateDialog();
+        dialog.setDate(date);
         dialog.setListener(this);
 
         Button backBtn = (Button) findViewById(R.id.backBtn);
@@ -37,6 +45,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
+                intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
                 startActivity(intent);
             }
         });
@@ -50,7 +59,6 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             }
         });
 
-        String date = Util.getDate();
         dateBtn = (Button) findViewById(R.id.taskDateBtn);
         dateBtn.setText(date);
 
@@ -87,6 +95,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setModifiedDate(Util.getDateTime());
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
                     startActivity(intent);
                 } else {
                     toast(getString(R.string.txt_error_database));

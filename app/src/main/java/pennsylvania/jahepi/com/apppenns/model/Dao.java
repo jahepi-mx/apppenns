@@ -260,6 +260,39 @@ public class Dao {
         return tasks;
     }
 
+    public ArrayList<Task> getTasks(int userId, String date) {
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        Cursor cursor = db.getAllOrderBy(Database.TASKS_TABLE, String.format("user='%s' AND register_date='%s'", userId, date), "id DESC");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Task task = new Task();
+                task.setId(cursor.getInt(0));
+                task.setUser(getUser(cursor.getInt(1)));
+                task.setClient(cursor.getString(2));
+                task.setDescription(cursor.getString(3));
+                task.setModifiedDate(cursor.getString(4));
+
+                Coord checkIn = new Coord();
+                checkIn.setLatitude(cursor.getDouble(5));
+                checkIn.setLongitude(cursor.getDouble(6));
+
+                Coord checkOut = new Coord();
+                checkOut.setLatitude(cursor.getDouble(7));
+                checkOut.setLongitude(cursor.getDouble(8));
+
+                task.setCheckInCoord(checkIn);
+                task.setCheckOutCoord(checkOut);
+                task.setSend(cursor.getInt(9) == 1);
+                task.setDate(cursor.getString(10));
+                task.setCheckin(cursor.getInt(11) == 1);
+                task.setCheckout(cursor.getInt(12) == 1);
+                tasks.add(task);
+            }
+            cursor.close();
+        }
+        return tasks;
+    }
+
     public Task getTask(Task taskParam) {
         Cursor cursor = db.get(Database.TASKS_TABLE, String.format("id='%s' AND user='%s'", taskParam.getId(), taskParam.getUser().getId()));
         if (cursor != null) {

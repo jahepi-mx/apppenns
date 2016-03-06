@@ -100,4 +100,13 @@ public class Task extends Entity {
     public void setCheckout(boolean checkout) {
         this.checkout = checkout;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        Task task = (Task) o;
+        if (task.getId() == id && task.getUser().getId() == user.getId()) {
+            return true;
+        }
+        return false;
+    }
 }

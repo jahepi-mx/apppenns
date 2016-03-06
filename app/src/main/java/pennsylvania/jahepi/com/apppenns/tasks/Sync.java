@@ -316,6 +316,7 @@ public class Sync extends Service {
     }
 
     private void syncNewTasks() {
+        ArrayList<Task> notifyTasks = new ArrayList<Task>();
         ArrayList<Task> tasks = application.getNewTasks();
         Iterator<Task> iterator = tasks.iterator();
         String url = CustomApplication.SERVICE_URL + "intranet/android/newTask";
@@ -351,6 +352,8 @@ public class Sync extends Service {
 
                 if (code == SUCCESS) {
                     if (application.updateTaskAsSend(task)) {
+                        task.setSend(true);
+                        notifyTasks.add(task);
                         Log.d(TAG, "syncNewTasks inserted: " + task.getClient());
                     } else {
                         Log.d(TAG, "syncNewTasks not inserted: " + task.getClient());
@@ -362,6 +365,9 @@ public class Sync extends Service {
             } catch (Exception e) {
                 Log.d(TAG, e.getMessage());
             }
+        }
+        if (notifyTasks.size() > 0) {
+            application.notifySendTasks(tasks);
         }
         Log.d(TAG, "syncNewTasks finalized");
     }

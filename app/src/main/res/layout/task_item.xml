@@ -5,7 +5,7 @@
     android:padding="6dip">
 
     <ImageView
-        android:id="@+id/messageIcon"
+        android:id="@+id/taskIcon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
@@ -14,22 +14,22 @@
         android:src="@drawable/anonymus_out" />
 
     <TextView
-        android:id="@+id/messageText"
+        android:id="@+id/taskText"
         android:layout_width="fill_parent"
         android:layout_height="26dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/messageIcon"
+        android:layout_toRightOf="@id/taskIcon"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Text"
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/messageTitle"
+        android:id="@+id/taskTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/messageIcon"
+        android:layout_toRightOf="@id/taskIcon"
         android:gravity="center_vertical"
         android:textSize="20sp" />
 

@@ -25,6 +25,15 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
         calendar = Calendar.getInstance();
     }
 
+    public void setDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            calendar.setTime(dateFormat.parse(date));
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
+    }
+
     public String getDate() {
         Date date = calendar.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
