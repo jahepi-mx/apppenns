@@ -17,12 +17,22 @@
         android:id="@+id/taskText"
         android:layout_width="fill_parent"
         android:layout_height="26dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_toRightOf="@id/taskIcon"
         android:ellipsize="marquee"
+        android:layout_below="@+id/taskTitle"
         android:singleLine="true"
         android:text="Text"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/taskStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+        android:layout_toRightOf="@id/taskIcon"
+        android:layout_below="@+id/taskText"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="status"
         android:textSize="15sp" />
 
     <TextView
@@ -30,7 +40,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/taskIcon"
-        android:gravity="center_vertical"
+        android:text="Text 3"
         android:textSize="20sp" />
 
 </RelativeLayout>

@@ -23,6 +23,7 @@
         <activity android:name=".activities.MessageSendActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.MessageListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.AddTaskActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TaskListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait">
             <intent-filter>

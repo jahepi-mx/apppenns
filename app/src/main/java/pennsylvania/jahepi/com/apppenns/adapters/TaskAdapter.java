@@ -1,6 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
 
             TextView taskText = (TextView) convertView.findViewById(R.id.taskText);
             TextView taskTitle = (TextView) convertView.findViewById(R.id.taskTitle);
+            TextView taskStatus = (TextView) convertView.findViewById(R.id.taskStatus);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.taskIcon);
             int imageResourceTask = getContext().getResources().getIdentifier(URI_TASK, null, getContext().getPackageName());
             Drawable drawableTask = getContext().getResources().getDrawable(imageResourceTask);
@@ -46,6 +48,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             viewHolder.taskTitle = taskTitle;
             viewHolder.drawableTask = drawableTask;
             viewHolder.imageView = imageView;
+            viewHolder.taskStatus = taskStatus;
 
             viewHolder.imageView.setImageDrawable(viewHolder.drawableTask);
 
@@ -58,6 +61,21 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
         holder.taskTitle.setText(task.getClient());
         if (task.isSend()) {
             holder.taskTitle.setText(holder.taskTitle.getText() + TICK);
+        }
+
+        if (!task.isCheckin() && !task.isCheckout()) {
+            holder.taskStatus.setText(getContext().getString(R.string.txt_checkin));
+            holder.taskStatus.setTextColor(Color.BLUE);
+        }
+
+        if (task.isCheckin() && !task.isCheckout()) {
+            holder.taskStatus.setText(getContext().getString(R.string.txt_checkout));
+            holder.taskStatus.setTextColor(Color.RED);
+        }
+
+        if (task.isCheckin() && task.isCheckout()) {
+            holder.taskStatus.setText(getContext().getString(R.string.txt_done));
+            holder.taskStatus.setTextColor(Color.GRAY);
         }
 
         holder.taskText.setText(Util.abbreviate(task.getDescription(), MESSAGE_LENGTH));
@@ -78,6 +96,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
     private static class ViewHolder {
         TextView taskText;
         TextView taskTitle;
+        TextView taskStatus;
         Drawable drawableTask;
         ImageView imageView;
     }

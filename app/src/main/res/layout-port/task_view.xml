@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#0057B8"
+        android:padding="5dp"
+        android:gravity="right">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home"
+            android:id="@+id/homeBtn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/txt_task_title"
+            android:id="@+id/textView"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:textColor="#fff"
+            android:layout_weight="3"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_back"
+            android:background="@drawable/custom_button"
+            android:shadowRadius="2"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:textColor="#fff"
+            android:id="@+id/backBtn"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/messageDate"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/txt_message_date"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/taskDateValue"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/txt_client"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/taskClientValue"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/txt_description"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/taskDescValue"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:background="@drawable/rounded_corner"
+                android:lines="10"
+                android:padding="5dp"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_checkin"
+                android:background="@drawable/custom_button_green"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textColor="#fff"
+                android:id="@+id/checkinBtn"
+                android:layout_weight="1"
+                android:layout_margin="10dp" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_checkout"
+                android:background="@drawable/custom_button_red"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textColor="#fff"
+                android:id="@+id/checkoutBtn"
+                android:layout_weight="1"
+                android:layout_margin="10dp" />
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

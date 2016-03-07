@@ -105,6 +105,9 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Task task = (Task) adapter.getItem(position);
         Log.d(TAG, task.getClient());
+        Intent intent = new Intent(this, TaskViewActivity.class);
+        intent.putExtra(CustomApplication.GENERIC_INTENT, task);
+        startActivity(intent);
     }
 
     @Override
