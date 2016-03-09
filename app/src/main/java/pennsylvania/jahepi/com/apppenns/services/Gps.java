@@ -17,7 +17,7 @@ public class Gps implements LocationListener {
 
     private final static String TAG = "Gps";
     private final static int INTERVAL = 300000;
-    private final static int MIN_TIME = 1 * 60 * 1000;
+    private final static int MIN_TIME = 3 * 60 * 1000;
     private final static int MIN_DISTANCE = 20;
 
     private CustomApplication application;

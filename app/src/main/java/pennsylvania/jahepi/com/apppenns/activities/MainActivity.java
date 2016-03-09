@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.tasks.ClientSync;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
@@ -45,6 +46,8 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         if (v == logoutBtn) {
             application.logout();
             startActivity(new Intent(this, LoginActivity.class));
+            //ClientSync clientSync = new ClientSync(this);
+            //clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (v == smsBtn) {
             startActivity(new Intent(this, MessageListActivity.class));
