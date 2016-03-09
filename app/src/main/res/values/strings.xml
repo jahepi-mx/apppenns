@@ -2,6 +2,7 @@
     <string name="app_name">AppPenns</string>
     <string name="txt_init">Initializing</string>
     <string name="txt_new_message">%1$s (Nuevo)</string>
+    <string name="txt_sync_status">Completado %1$s</string>
     <string name="txt_sync">Sincronizacion</string>
     <string name="txt_login_error">Usuario no valido</string>
     <string name="txt_session_error">Se ha perdido la sesion!, reingrese usuario y contraseña.</string>
@@ -45,6 +46,7 @@
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>
     <string name="btn_activity">Actividades</string>
+    <string name="btn_client_sync">Actualiza Clientes</string>
     <string name="btn_add">Agregar</string>
     <string name="btn_new">Nuevo</string>
     <string name="btn_checkin">Entrada</string>

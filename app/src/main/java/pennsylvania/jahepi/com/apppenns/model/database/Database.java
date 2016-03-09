@@ -15,8 +15,10 @@ public class Database {
     public static final String MESSAGES_TABLE = "messages";
     public static final String USERS_TABLE = "users";
     public static final String TASKS_TABLE = "tasks";
+    public static final String ADDRESSES_TABLE = "clients";
+    public static final String CLIENTS_TABLE = "addresses";
 
-    private static final int DB_VERSION = 16;
+    private static final int DB_VERSION = 17;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -114,6 +116,10 @@ public class Database {
             Log.d(TAG, "Messages table created!");
             db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, client TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT)");
             Log.d(TAG, "Tasks table created!");
+            db.execSQL("CREATE TABLE " + CLIENTS_TABLE + " (id INT, user INT, name TEXT, kepler TEXT, date TEXT, active INT, UNIQUE (id, user))");
+            Log.d(TAG, "Clients table created!");
+            db.execSQL("CREATE TABLE " + ADDRESSES_TABLE + " (id INT, client INT, address TEXT, latitude REAL, longitude REAL, date TEXT, active INT, UNIQUE (id, client))");
+            Log.d(TAG, "Addresses table created!");
         }
 
         @Override
@@ -124,6 +130,10 @@ public class Database {
             Log.d(TAG, "Messages table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + TASKS_TABLE);
             Log.d(TAG, "Tasks table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + CLIENTS_TABLE);
+            Log.d(TAG, "Clients table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + ADDRESSES_TABLE);
+            Log.d(TAG, "Addresses table removed!");
             onCreate(db);
         }
     }

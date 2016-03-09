@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import pennsylvania.jahepi.com.apppenns.entities.Address;
+import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -238,17 +240,10 @@ public class Dao {
                 task.setClient(cursor.getString(2));
                 task.setDescription(cursor.getString(3));
                 task.setModifiedDate(cursor.getString(4));
-
-                Coord checkIn = new Coord();
-                checkIn.setLatitude(cursor.getDouble(5));
-                checkIn.setLongitude(cursor.getDouble(6));
-
-                Coord checkOut = new Coord();
-                checkOut.setLatitude(cursor.getDouble(7));
-                checkOut.setLongitude(cursor.getDouble(8));
-
-                task.setCheckInCoord(checkIn);
-                task.setCheckOutCoord(checkOut);
+                task.setCheckInLatitude(cursor.getDouble(5));
+                task.setCheckInLongitude(cursor.getDouble(6));
+                task.setCheckOutLatitude(cursor.getDouble(7));
+                task.setCheckOutLongitude(cursor.getDouble(8));
                 task.setSend(cursor.getInt(9) == 1);
                 task.setDate(cursor.getString(10));
                 task.setCheckin(cursor.getInt(11) == 1);
@@ -274,17 +269,10 @@ public class Dao {
                 task.setClient(cursor.getString(2));
                 task.setDescription(cursor.getString(3));
                 task.setModifiedDate(cursor.getString(4));
-
-                Coord checkIn = new Coord();
-                checkIn.setLatitude(cursor.getDouble(5));
-                checkIn.setLongitude(cursor.getDouble(6));
-
-                Coord checkOut = new Coord();
-                checkOut.setLatitude(cursor.getDouble(7));
-                checkOut.setLongitude(cursor.getDouble(8));
-
-                task.setCheckInCoord(checkIn);
-                task.setCheckOutCoord(checkOut);
+                task.setCheckInLatitude(cursor.getDouble(5));
+                task.setCheckInLongitude(cursor.getDouble(6));
+                task.setCheckOutLatitude(cursor.getDouble(7));
+                task.setCheckOutLongitude(cursor.getDouble(8));
                 task.setSend(cursor.getInt(9) == 1);
                 task.setDate(cursor.getString(10));
                 task.setCheckin(cursor.getInt(11) == 1);
@@ -309,17 +297,10 @@ public class Dao {
             task.setClient(cursor.getString(2));
             task.setDescription(cursor.getString(3));
             task.setModifiedDate(cursor.getString(4));
-
-            Coord checkIn = new Coord();
-            checkIn.setLatitude(cursor.getDouble(5));
-            checkIn.setLongitude(cursor.getDouble(6));
-
-            Coord checkOut = new Coord();
-            checkOut.setLatitude(cursor.getDouble(7));
-            checkOut.setLongitude(cursor.getDouble(8));
-
-            task.setCheckInCoord(checkIn);
-            task.setCheckOutCoord(checkOut);
+            task.setCheckInLatitude(cursor.getDouble(5));
+            task.setCheckInLongitude(cursor.getDouble(6));
+            task.setCheckOutLatitude(cursor.getDouble(7));
+            task.setCheckOutLongitude(cursor.getDouble(8));
             task.setSend(cursor.getInt(9) == 1);
             task.setDate(cursor.getString(10));
             task.setCheckin(cursor.getInt(11) == 1);
@@ -371,6 +352,90 @@ public class Dao {
             ContentValues values = new ContentValues();
             values.put("send", "1");
             return db.update(Database.TASKS_TABLE, values, String.format("id='%s' AND user='%s'", task.getId(), task.getUser().getId()));
+        }
+        return false;
+    }
+
+    public Client getClient(Client clientParam) {
+        Cursor cursor = db.get(Database.CLIENTS_TABLE, String.format("id='%s' AND user='%s'", clientParam.getId(), clientParam.getUser().getId()));
+        if (cursor != null) {
+            Client client = new Client();
+            client.setId(cursor.getInt(0));
+            client.setUser(getUser(cursor.getInt(1)));
+            client.setName(cursor.getString(2));
+            client.setKepler(cursor.getString(3));
+            client.setModifiedDate(cursor.getString(4));
+            client.setActive(cursor.getInt(5) == 1);
+            cursor.close();
+            return client;
+        }
+        return null;
+    }
+
+    public boolean saveClient(Client client) {
+        if (client != null) {
+            ContentValues values = new ContentValues();
+            values.put("id", client.getId());
+            values.put("user", client.getUser().getId());
+            values.put("name", client.getName());
+            values.put("kepler", client.getKepler());
+            values.put("date", client.getModifiedDateString());
+            values.put("active", client.isActive() ? 1 : 0);
+
+            Client clientDB = getClient(client);
+            if (clientDB != null) {
+                if (clientDB.isGreaterDate(client)) {
+                    db.update(Database.CLIENTS_TABLE, values, String.format("id='%s' AND user='%s'", client.getId(), client.getUser().getId()));
+                }
+            } else {
+                Log.d(TAG, client.toString());
+                db.insert(Database.CLIENTS_TABLE, values);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public Address getAddress(Address addressParam) {
+        Cursor cursor = db.get(Database.ADDRESSES_TABLE, String.format("id='%s' AND client='%s'", addressParam.getId(), addressParam.getClient().getId()));
+        if (cursor != null) {
+            Address address = new Address();
+            address.setId(cursor.getInt(0));
+            address.setClient(address.getClient());
+            address.setAddress(cursor.getString(2));
+            Coord coord = new Coord();
+            coord.setLatitude(cursor.getDouble(3));
+            coord.setLongitude(cursor.getDouble(4));
+            address.setCoord(coord);
+            address.setModifiedDate(cursor.getString(5));
+            address.setActive(cursor.getInt(5) == 1);
+            cursor.close();
+            return address;
+        }
+        return null;
+    }
+
+    public boolean saveAdress(Address address) {
+        if (address != null) {
+            ContentValues values = new ContentValues();
+            values.put("id", address.getId());
+            values.put("client", address.getClient().getId());
+            values.put("address", address.getAddress());
+            values.put("latitude", address.getCoord().getLatitude());
+            values.put("longitude", address.getCoord().getLongitude());
+            values.put("date", address.getModifiedDateString());
+            values.put("active", address.isActive() ? 1 : 0);
+
+            Address addressDB = getAddress(address);
+            if (addressDB != null) {
+                if (addressDB.isGreaterDate(address)) {
+                    db.update(Database.ADDRESSES_TABLE, values, String.format("id='%s' AND client='%s'", address.getId(), address.getClient().getId()));
+                }
+            } else {
+                Log.d(TAG, address.toString());
+                db.insert(Database.ADDRESSES_TABLE, values);
+            }
+            return true;
         }
         return false;
     }

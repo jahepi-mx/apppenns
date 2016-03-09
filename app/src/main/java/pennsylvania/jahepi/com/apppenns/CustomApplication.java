@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import pennsylvania.jahepi.com.apppenns.entities.Address;
+import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.User;
@@ -210,6 +212,14 @@ public class CustomApplication extends Application {
 
     public boolean updateMessageField(Message message, String field, String value) {
         return dao.updateMessageField(message, field, value);
+    }
+
+    public boolean saveClient(Client client) {
+        return dao.saveClient(client);
+    }
+
+    public boolean saveAddress(Address address) {
+        return dao.saveAdress(address);
     }
 
     public void addMessageNotifierListener(ApplicationNotifierListener appNotifierListener) {

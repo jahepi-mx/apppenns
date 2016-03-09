@@ -24,6 +24,22 @@ public class Task extends Entity {
         checkOutCoord = new Coord();
     }
 
+    public void setCheckOutLatitude(double latitude) {
+        checkOutCoord.setLatitude(latitude);
+    }
+
+    public void setCheckOutLongitude(double longitude) {
+        checkOutCoord.setLongitude(longitude);
+    }
+
+    public void setCheckInLatitude(double latitude) {
+        checkInCoord.setLatitude(latitude);
+    }
+
+    public void setCheckInLongitude(double longitude) {
+        checkInCoord.setLongitude(longitude);
+    }
+
     public int getId() {
         return id;
     }

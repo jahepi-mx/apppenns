@@ -19,7 +19,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
 
     private TextView viewSms;
     private MessageNotifier messageNotifier;
-    private Button logoutBtn, smsBtn, activityBtn;
+    private Button logoutBtn, smsBtn, activityBtn, clientSyncBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         logoutBtn = (Button) findViewById(R.id.logoutBtn);
         smsBtn = (Button) findViewById(R.id.smsBtn);
         activityBtn = (Button) findViewById(R.id.activityBtn);
+        clientSyncBtn = (Button) findViewById(R.id.clientSyncBtn);
 
         TextView view = (TextView) findViewById(R.id.welcomeTextView);
         view.setText(application.getUser().getName());
@@ -39,6 +40,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         logoutBtn.setOnClickListener(this);
         smsBtn.setOnClickListener(this);
         activityBtn.setOnClickListener(this);
+        clientSyncBtn.setOnClickListener(this);
     }
 
     @Override
@@ -46,14 +48,16 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         if (v == logoutBtn) {
             application.logout();
             startActivity(new Intent(this, LoginActivity.class));
-            //ClientSync clientSync = new ClientSync(this);
-            //clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (v == smsBtn) {
             startActivity(new Intent(this, MessageListActivity.class));
         }
         if (v == activityBtn) {
             startActivity(new Intent(this, TaskListActivity.class));
+        }
+        if (v == clientSyncBtn) {
+            ClientSync clientSync = new ClientSync(this);
+            clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
