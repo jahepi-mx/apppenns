@@ -51,7 +51,7 @@ public class CustomApplication extends Application {
         logged = false;
         androidId = Util.getAndroidId(this);
         gps = new Gps(this);
-        dao = new Dao(this.getApplicationContext());
+        dao = new Dao(getApplicationContext());
         gps.start();
         appNotifierListeners = new ArrayList<ApplicationNotifierListener>();
         startSync();

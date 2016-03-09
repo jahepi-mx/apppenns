@@ -6,32 +6,43 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.dialogs.CheckOutDialog;
+import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
  * Created by jahepi on 06/03/16.
  */
-public class TaskViewActivity extends AuthActivity implements View.OnClickListener, DialogInterface.OnClickListener {
+public class TaskViewActivity extends AuthActivity implements View.OnClickListener, DialogInterface.OnClickListener, DialogListener {
 
     private static final String TAG = "TaskViewActivity";
     private static final int ALPHA = 50;
-    private static enum TYPE {CHECKIN, CHECKOUT};
-    private TYPE type;
 
     private Button checkinBtn, checkoutBtn, backBtn;
-    private AlertDialog.Builder checkAlert;
+    private AlertDialog.Builder checkInAlert;
+    private CheckOutDialog checkOutAlert;
     private Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_view);
+
+        ImageButton homeBtn = (ImageButton) findViewById(R.id.homeBtn);
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TaskViewActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Intent intent = getIntent();
         task = (Task) intent.getSerializableExtra(CustomApplication.GENERIC_INTENT);
@@ -63,11 +74,14 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             }
         }
 
-        checkAlert = new AlertDialog.Builder(this);
-        checkAlert.setPositiveButton(R.string.btn_yes, this);
-        checkAlert.setNegativeButton(R.string.btn_no, this);
-        checkAlert.setTitle(getString(R.string.txt_confirm));
-        checkAlert.setIcon(R.drawable.task);
+        checkInAlert = new AlertDialog.Builder(this);
+        checkInAlert.setPositiveButton(R.string.btn_yes, this);
+        checkInAlert.setNegativeButton(R.string.btn_no, this);
+        checkInAlert.setTitle(getString(R.string.txt_confirm));
+        checkInAlert.setMessage(getString(R.string.txt_confirm_checkin));
+        checkInAlert.setIcon(R.drawable.task);
+
+        checkOutAlert = new CheckOutDialog(this, this);
 
         backBtn.setOnClickListener(this);
         checkinBtn.setOnClickListener(this);
@@ -77,26 +91,17 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            if (type == TYPE.CHECKIN) {
-                checkin();
-            }
-            if (type == TYPE.CHECKOUT) {
-                checkout();
-            }
+            checkin();
         }
     }
 
     @Override
     public void onClick(View v) {
         if (v == checkinBtn) {
-            type = TYPE.CHECKIN;
-            checkAlert.setMessage(getString(R.string.txt_confirm_checkin));
-            checkAlert.show();
+            checkInAlert.show();
         }
         if (v == checkoutBtn) {
-            type = TYPE.CHECKOUT;
-            checkAlert.setMessage(getString(R.string.txt_confirm_checkout));
-            checkAlert.show();
+            checkOutAlert.show();
         }
         if (v == backBtn) {
             Intent intent = new Intent(this, TaskListActivity.class);
@@ -139,6 +144,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 task.setCheckOutCoord(coord);
                 task.setCheckout(true);
                 task.setSend(false);
+                task.setConclusion(checkOutAlert.getConclusion());
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(this, TaskListActivity.class);
                     startActivity(intent);
@@ -150,5 +156,15 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             }
         }
         toast(getString(R.string.txt_error_task));
+    }
+
+    @Override
+    public void accept() {
+        checkout();
+    }
+
+    @Override
+    public void cancel() {
+
     }
 }

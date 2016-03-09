@@ -338,6 +338,7 @@ public class Sync extends Service {
                 post.addPart("check_out", new StringBody(Boolean.toString(task.isCheckout())));
                 post.addPart("checkin_date", new StringBody(task.getCheckInDate()));
                 post.addPart("checkout_date", new StringBody(task.getCheckOutDate()));
+                post.addPart("conclusion", new StringBody(task.getConclusion()));
                 postRequest.setEntity(post);
                 HttpResponse response = httpClient.execute(postRequest);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));

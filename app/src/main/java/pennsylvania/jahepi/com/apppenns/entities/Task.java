@@ -17,6 +17,7 @@ public class Task extends Entity {
     private User user;
     private boolean send;
     private String date;
+    private String conclusion;
 
     public Task() {
         checkInCoord = new Coord();
@@ -103,6 +104,14 @@ public class Task extends Entity {
         this.checkout = checkout;
     }
 
+    public String getConclusion() {
+        return conclusion;
+    }
+
+    public void setConclusion(String conclusion) {
+        this.conclusion = conclusion;
+    }
+
     public String getCheckInDate() {
         if (checkInDate != null) {
             return checkInDate;
@@ -128,7 +137,7 @@ public class Task extends Entity {
     @Override
     public boolean equals(Object o) {
         Task task = (Task) o;
-        if (task.getId() == id && task.getUser().getId() == user.getId()) {
+        if (task.getId() == id && task.getUser().getId() == user.getId() && task.getDate().equals(date)) {
             return true;
         }
         return false;

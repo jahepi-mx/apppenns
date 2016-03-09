@@ -33,6 +33,7 @@
     <string name="txt_add_task">Agregar Actividad</string>
     <string name="txt_date">Fecha:</string>
     <string name="txt_description">Descripción:</string>
+    <string name="txt_conclusion">Conclusión:</string>
     <string name="txt_users">Usuarios</string>
     <string name="txt_confirm">Confirmación</string>
     <string name="txt_confirm_checkin">Desea confirmar la entrada?</string>

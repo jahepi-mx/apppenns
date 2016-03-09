@@ -93,6 +93,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setDescription(description);
                 task.setDate(date);
                 task.setModifiedDate(Util.getDateTime());
+                task.setConclusion("");
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
