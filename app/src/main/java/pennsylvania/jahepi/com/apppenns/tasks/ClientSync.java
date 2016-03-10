@@ -1,6 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.tasks;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,7 +50,6 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
     @Override
     protected void onPreExecute() {
         dialog.show(activity.getFragmentManager(), TAG);
-        dialog.setTitle(activity.getString(R.string.txt_sync_start));
     }
 
     @Override
@@ -154,6 +154,12 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
         public ProgressDialog() {
             super();
             setCancelable(false);
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            setTitle(getString(R.string.txt_sync_start));
         }
 
         public void setTitle(String title ) {
