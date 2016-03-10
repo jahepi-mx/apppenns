@@ -89,7 +89,7 @@
                 android:id="@+id/taskClientValue"
                 android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </TableRow>
 
         <TableRow
@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:background="@drawable/rounded_corner"
-                android:lines="10"
+                android:lines="5"
                 android:padding="5dp"/>
         </TableRow>
 

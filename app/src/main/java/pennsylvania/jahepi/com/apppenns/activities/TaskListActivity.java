@@ -87,6 +87,8 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         ListView listView = (ListView) findViewById(R.id.taskListView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+
+        onOnChangeLocation(application.getLatitude(), application.getLongitude());
     }
 
     @Override
@@ -152,6 +154,22 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
                     }
                 }
                 adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public void onOnChangeLocation(final double latitude, final double longitude) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (latitude != 0 && longitude != 0) {
+                    for (int i = 0; i < adapter.getCount(); i++) {
+                        Task task = (Task) adapter.getItem(i);
+                        task.setDistance(latitude, longitude);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
     }

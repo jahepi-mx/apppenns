@@ -3,6 +3,7 @@
     <string name="txt_init">Initializing</string>
     <string name="txt_new_message">%1$s (Nuevo)</string>
     <string name="txt_sync_status">Completado %1$s</string>
+    <string name="txt_sync_start">Iniciando proceso ...</string>
     <string name="txt_sync">Sincronizacion</string>
     <string name="txt_login_error">Usuario no valido</string>
     <string name="txt_session_error">Se ha perdido la sesion!, reingrese usuario y contraseña.</string>
@@ -25,6 +26,8 @@
     <string name="txt_address">Sucursal:</string>
     <string name="txt_message_to_send">Para:</string>
     <string name="txt_message_to_all">Para: %1$s</string>
+    <string name="txt_distance">Distancia: %1$s kms</string>
+    <string name="txt_distance_measure">Calculando distancia...</string>
     <string name="txt_message_from">De:</string>
     <string name="txt_message_date">Fecha:</string>
     <string name="txt_message">Mensaje:</string>

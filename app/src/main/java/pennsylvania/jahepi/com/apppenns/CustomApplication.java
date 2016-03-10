@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
+import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.User;
@@ -202,6 +203,16 @@ public class CustomApplication extends Application {
         }
     }
 
+    public void onChangeLocation(double latitude, double longitude) {
+        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
+        while (iterator.hasNext()) {
+            ApplicationNotifierListener listener = iterator.next();
+            if (listener != null) {
+                listener.onOnChangeLocation(latitude, longitude);
+            }
+        }
+    }
+
     public ArrayList<Message> getMessagesRead() {
         return dao.getMessagesRead(user.getId());
     }
@@ -245,5 +256,6 @@ public class CustomApplication extends Application {
         public void onMessagesSend(ArrayList<Message> messages);
         public void onMessagesRead(ArrayList<Message> messages);
         public void onTasksSend(ArrayList<Task> tasks);
+        public void onOnChangeLocation(double latitude, double longitude);
     }
 }

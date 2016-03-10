@@ -1,6 +1,7 @@
 package pennsylvania.jahepi.com.apppenns;
 
 import android.content.Context;
+import android.location.Location;
 import android.telephony.TelephonyManager;
 
 import java.security.MessageDigest;
@@ -12,6 +13,9 @@ import java.util.Date;
  * Created by javier.hernandez on 24/02/2016.
  */
 public class Util {
+
+    private static Location location1 = new Location("");
+    private static Location location2 = new Location("");
 
     public static String getAndroidId(Context context) {
         TelephonyManager manager= (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -90,5 +94,13 @@ public class Util {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    public static float getDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
+        location1.setLatitude(latitude1);
+        location1.setLongitude(longitude1);
+        location2.setLatitude(latitude2);
+        location2.setLongitude(longitude2);
+        return location1.distanceTo(location2) / 1000;
     }
 }

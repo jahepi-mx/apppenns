@@ -39,6 +39,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             TextView taskText = (TextView) convertView.findViewById(R.id.taskText);
             TextView taskTitle = (TextView) convertView.findViewById(R.id.taskTitle);
             TextView taskStatus = (TextView) convertView.findViewById(R.id.taskStatus);
+            TextView taskDistance = (TextView) convertView.findViewById(R.id.taskDistance);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.taskIcon);
             int imageResourceTask = getContext().getResources().getIdentifier(URI_TASK, null, getContext().getPackageName());
             Drawable drawableTask = getContext().getResources().getDrawable(imageResourceTask);
@@ -49,6 +50,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             viewHolder.drawableTask = drawableTask;
             viewHolder.imageView = imageView;
             viewHolder.taskStatus = taskStatus;
+            viewHolder.taskDistance = taskDistance;
 
             viewHolder.imageView.setImageDrawable(viewHolder.drawableTask);
 
@@ -59,6 +61,13 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
 
         holder.taskTitle.setTypeface(null, Typeface.BOLD);
         holder.taskTitle.setText(task.getClient().getName());
+
+        if (task.getDistance() != 0) {
+            holder.taskDistance.setText(String.format(getContext().getString(R.string.txt_distance), task.getDistance()));
+        } else {
+            holder.taskDistance.setText(getContext().getString(R.string.txt_distance_measure));
+        }
+
         if (task.isSend()) {
             holder.taskTitle.setText(holder.taskTitle.getText() + TICK);
         }
@@ -78,7 +87,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             holder.taskStatus.setTextColor(Color.GRAY);
         }
 
-        holder.taskText.setText(Util.abbreviate(task.getDescription(), MESSAGE_LENGTH));
+        holder.taskText.setText(Util.abbreviate(task.getAddress().getAddress(), MESSAGE_LENGTH));
 
         return convertView;
     }
@@ -97,6 +106,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
         TextView taskText;
         TextView taskTitle;
         TextView taskStatus;
+        TextView taskDistance;
         Drawable drawableTask;
         ImageView imageView;
     }

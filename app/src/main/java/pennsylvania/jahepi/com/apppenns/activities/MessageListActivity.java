@@ -156,4 +156,9 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
     public void onTasksSend(ArrayList<Task> tasks) {
 
     }
+
+    @Override
+    public void onOnChangeLocation(double latitude, double longitude) {
+
+    }
 }

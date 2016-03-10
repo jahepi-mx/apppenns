@@ -49,6 +49,7 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
     @Override
     protected void onPreExecute() {
         dialog.show(activity.getFragmentManager(), TAG);
+        dialog.setTitle(activity.getString(R.string.txt_sync_start));
     }
 
     @Override

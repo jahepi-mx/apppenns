@@ -149,7 +149,7 @@
                 android:inputType="textMultiLine"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:background="@drawable/rounded_corner"
-                android:lines="6"
+                android:lines="5"
                 android:padding="5dp"/>
         </TableRow>
 

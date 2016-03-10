@@ -1,5 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.entities;
 
+import pennsylvania.jahepi.com.apppenns.Util;
+
 /**
  * Created by javier.hernandez on 04/03/2016.
  */
@@ -18,6 +20,7 @@ public class Task extends Entity {
     private boolean send;
     private String date;
     private String conclusion;
+    private float distance;
 
     public Task() {
         checkInCoord = new Coord();
@@ -152,6 +155,14 @@ public class Task extends Entity {
 
     public void setCheckOutDate(String checkOutDate) {
         this.checkOutDate = checkOutDate;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double latitude, double longitude) {
+        distance = Util.getDistance(latitude, longitude, address.getCoord().getLatitude(), address.getCoord().getLongitude());
     }
 
     @Override

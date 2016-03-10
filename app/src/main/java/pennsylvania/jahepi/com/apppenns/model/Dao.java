@@ -33,13 +33,7 @@ public class Dao {
         Cursor cursor = db.getAllOrderBy(Database.USERS_TABLE, null, "name ASC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                User user = new User();
-                user.setId(cursor.getInt(0));
-                user.setEmail(cursor.getString(1));
-                user.setPassword(cursor.getString(2));
-                user.setName(cursor.getString(3));
-                user.setModifiedDate(cursor.getString(4));
-                user.setActive(cursor.getInt(5) != 0);
+                User user = mapUser(cursor);
                 users.add(user);
             }
             cursor.close();
@@ -50,13 +44,7 @@ public class Dao {
     public User getUser(String email, String password) {
         Cursor cursor = db.get(Database.USERS_TABLE, String.format("email='%s' AND password='%s' AND active='1'", email, password));
         if (cursor != null) {
-            User user = new User();
-            user.setId(cursor.getInt(0));
-            user.setEmail(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
-            user.setName(cursor.getString(3));
-            user.setModifiedDate(cursor.getString(4));
-            user.setActive(cursor.getInt(5) != 0);
+            User user = mapUser(cursor);
             cursor.close();
             return user;
         }
@@ -66,17 +54,22 @@ public class Dao {
     public User getUser(int userId) {
         Cursor cursor = db.get(Database.USERS_TABLE, String.format("id='%s'", userId));
         if (cursor != null) {
-            User user = new User();
-            user.setId(cursor.getInt(0));
-            user.setEmail(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
-            user.setName(cursor.getString(3));
-            user.setModifiedDate(cursor.getString(4));
-            user.setActive(cursor.getInt(5) != 0);
+            User user = mapUser(cursor);
             cursor.close();
             return user;
         }
         return null;
+    }
+
+    private User mapUser(Cursor cursor) {
+        User user = new User();
+        user.setId(cursor.getInt(0));
+        user.setEmail(cursor.getString(1));
+        user.setPassword(cursor.getString(2));
+        user.setName(cursor.getString(3));
+        user.setModifiedDate(cursor.getString(4));
+        user.setActive(cursor.getInt(5) != 0);
+        return user;
     }
 
     public boolean saveUser(User user) {
@@ -107,15 +100,7 @@ public class Dao {
         Cursor cursor = db.getAllOrderBy(Database.MESSAGES_TABLE, String.format("from_user='%s' OR to_user='%s'", userId, userId), "id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Message message = new Message();
-                message.setId(cursor.getInt(0));
-                message.setFrom(getUser(cursor.getInt(1)));
-                message.setTo(getUser(cursor.getInt(2)));
-                message.setMessage(cursor.getString(3));
-                message.setModifiedDate(cursor.getString(4));
-                message.setDelivered(cursor.getInt(5) == 1);
-                message.setRead(cursor.getInt(6) == 1);
-                message.setSend(cursor.getInt(7) == 1);
+                Message message = mapMessage(cursor);
                 messages.add(message);
             }
             cursor.close();
@@ -128,15 +113,7 @@ public class Dao {
         Cursor cursor = db.getAllOrderBy(Database.MESSAGES_TABLE, String.format("to_user='%s' AND read=1 AND read_sync=0", userId), "id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Message message = new Message();
-                message.setId(cursor.getInt(0));
-                message.setFrom(getUser(cursor.getInt(1)));
-                message.setTo(getUser(cursor.getInt(2)));
-                message.setMessage(cursor.getString(3));
-                message.setModifiedDate(cursor.getString(4));
-                message.setDelivered(cursor.getInt(5) == 1);
-                message.setRead(cursor.getInt(6) == 1);
-                message.setSend(cursor.getInt(7) == 1);
+                Message message = mapMessage(cursor);
                 messages.add(message);
             }
             cursor.close();
@@ -149,15 +126,7 @@ public class Dao {
         Cursor cursor = db.getAllOrderBy(Database.MESSAGES_TABLE, String.format("from_user='%s' AND send=0", userId), "id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Message message = new Message();
-                message.setId(cursor.getInt(0));
-                message.setFrom(getUser(cursor.getInt(1)));
-                message.setTo(getUser(cursor.getInt(2)));
-                message.setMessage(cursor.getString(3));
-                message.setModifiedDate(cursor.getString(4));
-                message.setDelivered(cursor.getInt(5) == 1);
-                message.setRead(cursor.getInt(6) == 1);
-                message.setSend(cursor.getInt(7) == 1);
+                Message message = mapMessage(cursor);
                 messages.add(message);
             }
             cursor.close();
@@ -168,19 +137,24 @@ public class Dao {
     public Message getMessage(Message msg) {
         Cursor cursor = db.get(Database.MESSAGES_TABLE, String.format("date='%s' AND from_user='%s' AND to_user='%s'", msg.getModifiedDateString(), msg.getFrom().getId(), msg.getTo().getId()));
         if (cursor != null) {
-            Message message = new Message();
-            message.setId(cursor.getInt(0));
-            message.setFrom(getUser(cursor.getInt(1)));
-            message.setTo(getUser(cursor.getInt(2)));
-            message.setMessage(cursor.getString(3));
-            message.setModifiedDate(cursor.getString(4));
-            message.setDelivered(cursor.getInt(5) == 1);
-            message.setRead(cursor.getInt(6) == 1);
-            message.setSend(cursor.getInt(7) == 1);
+            Message message = mapMessage(cursor);
             cursor.close();
             return message;
         }
         return null;
+    }
+
+    private Message mapMessage(Cursor cursor) {
+        Message message = new Message();
+        message.setId(cursor.getInt(0));
+        message.setFrom(getUser(cursor.getInt(1)));
+        message.setTo(getUser(cursor.getInt(2)));
+        message.setMessage(cursor.getString(3));
+        message.setModifiedDate(cursor.getString(4));
+        message.setDelivered(cursor.getInt(5) == 1);
+        message.setRead(cursor.getInt(6) == 1);
+        message.setSend(cursor.getInt(7) == 1);
+        return message;
     }
 
     public boolean saveMessage(Message message) {
@@ -351,13 +325,7 @@ public class Dao {
     public Client getClient(Client clientParam) {
         Cursor cursor = db.get(Database.CLIENTS_TABLE, String.format("id='%s' AND user='%s'", clientParam.getId(), clientParam.getUser().getId()));
         if (cursor != null) {
-            Client client = new Client();
-            client.setId(cursor.getInt(0));
-            client.setUser(getUser(cursor.getInt(1)));
-            client.setName(cursor.getString(2));
-            client.setKepler(cursor.getString(3));
-            client.setModifiedDate(cursor.getString(4));
-            client.setActive(cursor.getInt(5) == 1);
+            Client client = mapClient(cursor);
             cursor.close();
             return client;
         }
@@ -369,18 +337,23 @@ public class Dao {
         ArrayList<Client> clients = new ArrayList<Client>();
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Client client = new Client();
-                client.setId(cursor.getInt(0));
-                client.setUser(getUser(cursor.getInt(1)));
-                client.setName(cursor.getString(2));
-                client.setKepler(cursor.getString(3));
-                client.setModifiedDate(cursor.getString(4));
-                client.setActive(cursor.getInt(5) == 1);
+                Client client = mapClient(cursor);
                 clients.add(client);
             }
             cursor.close();
         }
         return clients;
+    }
+
+    private Client mapClient(Cursor cursor) {
+        Client client = new Client();
+        client.setId(cursor.getInt(0));
+        client.setUser(getUser(cursor.getInt(1)));
+        client.setName(cursor.getString(2));
+        client.setKepler(cursor.getString(3));
+        client.setModifiedDate(cursor.getString(4));
+        client.setActive(cursor.getInt(5) == 1);
+        return client;
     }
 
     public boolean saveClient(Client client) {
@@ -410,14 +383,8 @@ public class Dao {
     public Address getAddress(Address addressParam) {
         Cursor cursor = db.get(Database.ADDRESSES_TABLE, String.format("id='%s' AND client='%s'", addressParam.getId(), addressParam.getClient().getId()));
         if (cursor != null) {
-            Address address = new Address();
-            address.setId(cursor.getInt(0));
+            Address address = mapAddress(cursor);
             address.setClient(address.getClient());
-            address.setAddress(cursor.getString(2));
-            address.getCoord().setLatitude(cursor.getDouble(3));
-            address.getCoord().setLongitude(cursor.getDouble(4));
-            address.setModifiedDate(cursor.getString(5));
-            address.setActive(cursor.getInt(5) == 1);
             cursor.close();
             return address;
         }
@@ -429,19 +396,24 @@ public class Dao {
         ArrayList<Address> addresses = new ArrayList<Address>();
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Address address = new Address();
-                address.setId(cursor.getInt(0));
+                Address address = mapAddress(cursor);
                 address.setClient(client);
-                address.setAddress(cursor.getString(2));
-                address.getCoord().setLatitude(cursor.getDouble(3));
-                address.getCoord().setLongitude(cursor.getDouble(4));
-                address.setModifiedDate(cursor.getString(5));
-                address.setActive(cursor.getInt(5) == 1);
                 addresses.add(address);
             }
             cursor.close();
         }
         return addresses;
+    }
+
+    private Address mapAddress(Cursor cursor) {
+        Address address = new Address();
+        address.setId(cursor.getInt(0));
+        address.setAddress(cursor.getString(2));
+        address.getCoord().setLatitude(cursor.getDouble(3));
+        address.getCoord().setLongitude(cursor.getDouble(4));
+        address.setModifiedDate(cursor.getString(5));
+        address.setActive(cursor.getInt(5) == 1);
+        return address;
     }
 
     public boolean saveAdress(Address address) {

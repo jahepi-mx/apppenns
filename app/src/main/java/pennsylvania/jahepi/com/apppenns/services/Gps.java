@@ -68,6 +68,7 @@ public class Gps implements LocationListener {
     public void onLocationChanged(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+        application.onChangeLocation(latitude, longitude);
         GpsThread thread = new GpsThread();
         thread.start();
     }
