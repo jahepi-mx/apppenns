@@ -57,7 +57,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             TextView clientTextView = (TextView) findViewById(R.id.taskClientValue);
             TextView descTextView = (TextView) findViewById(R.id.taskDescValue);
 
-            clientTextView.setText(task.getClient());
+            clientTextView.setText(task.getClient().getName());
             descTextView.setText(task.getDescription());
             dateTextView.setText(task.getDate());
 

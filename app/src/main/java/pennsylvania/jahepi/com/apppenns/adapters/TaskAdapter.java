@@ -58,7 +58,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
         Task task = (Task) getItem(position);
 
         holder.taskTitle.setTypeface(null, Typeface.BOLD);
-        holder.taskTitle.setText(task.getClient());
+        holder.taskTitle.setText(task.getClient().getName());
         if (task.isSend()) {
             holder.taskTitle.setText(holder.taskTitle.getText() + TICK);
         }

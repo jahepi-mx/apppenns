@@ -15,10 +15,10 @@ public class Database {
     public static final String MESSAGES_TABLE = "messages";
     public static final String USERS_TABLE = "users";
     public static final String TASKS_TABLE = "tasks";
-    public static final String ADDRESSES_TABLE = "clients";
-    public static final String CLIENTS_TABLE = "addresses";
+    public static final String ADDRESSES_TABLE = "addresses";
+    public static final String CLIENTS_TABLE = "clients";
 
-    private static final int DB_VERSION = 17;
+    private static final int DB_VERSION = 19;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -68,6 +68,17 @@ public class Database {
         return db.rawQuery("SELECT COUNT(*) AS total FROM " + MESSAGES_TABLE + " WHERE (from_user='" + userId + "' OR to_user='" + userId + "') AND read='0'", null);
     }
 
+    public Cursor getTasks(String where, String orderBy) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String sql = "SELECT tasks.id AS task_id, tasks.user, tasks.address AS address_id, tasks.description, tasks.date AS task_date, tasks.in_lat, tasks.in_lon, tasks.out_lat, tasks.out_lon, tasks.send, tasks.register_date, tasks.check_in, tasks.check_out, tasks.checkin_date, tasks.checkout_date, tasks.conclusion, " +
+                "addresses.client AS client_id, addresses.address, addresses.latitude, addresses.longitude, addresses.date AS address_date, addresses.active AS address_active, " +
+                "clients.name, clients.kepler, clients.date AS client_date, clients.active AS client_active " +
+                "FROM tasks INNER JOIN addresses ON tasks.address = addresses.id " +
+                "INNER JOIN clients ON clients.id = addresses.client " +
+                where + " " + orderBy;
+        return db.rawQuery(sql, null);
+    }
+
     public int delete(String table, String condition) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         return db.delete(table, condition, null);
@@ -114,7 +125,7 @@ public class Database {
             Log.d(TAG, "Users table created!");
             db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
-            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, client TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT)");
+            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT)");
             Log.d(TAG, "Tasks table created!");
             db.execSQL("CREATE TABLE " + CLIENTS_TABLE + " (id INT, user INT, name TEXT, kepler TEXT, date TEXT, active INT, UNIQUE (id, user))");
             Log.d(TAG, "Clients table created!");

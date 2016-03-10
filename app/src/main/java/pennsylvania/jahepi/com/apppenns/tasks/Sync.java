@@ -327,7 +327,7 @@ public class Sync extends Service {
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 post.addPart("id", new StringBody(Integer.toString(task.getId())));
                 post.addPart("user", new StringBody(Integer.toString(task.getUser().getId())));
-                post.addPart("client", new StringBody(task.getClient()));
+                post.addPart("address", new StringBody(Integer.toString(task.getAddress().getId())));
                 post.addPart("description", new StringBody(task.getDescription()));
                 post.addPart("register_date", new StringBody(task.getDate()));
                 post.addPart("checkin_lat", new StringBody(Double.toString(task.getCheckInCoord().getLatitude())));
@@ -357,9 +357,9 @@ public class Sync extends Service {
                     if (application.updateTaskAsSend(task)) {
                         task.setSend(true);
                         notifyTasks.add(task);
-                        Log.d(TAG, "syncNewTasks inserted: " + task.getClient());
+                        Log.d(TAG, "syncNewTasks inserted: " + task.getClient().getName());
                     } else {
-                        Log.d(TAG, "syncNewTasks not inserted: " + task.getClient());
+                        Log.d(TAG, "syncNewTasks not inserted: " + task.getClient().getName());
                     }
                 } else {
                     Log.d(TAG, "syncNewTasks code invalid");

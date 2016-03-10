@@ -231,26 +231,10 @@ public class Dao {
 
     public ArrayList<Task> getNewTasks(int userId) {
         ArrayList<Task> tasks = new ArrayList<Task>();
-        Cursor cursor = db.getAllOrderBy(Database.TASKS_TABLE, String.format("user='%s' AND send=0", userId), "id DESC");
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.user='%s' AND tasks.send=0", userId), "ORDER BY tasks.id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Task task = new Task();
-                task.setId(cursor.getInt(0));
-                task.setUser(getUser(cursor.getInt(1)));
-                task.setClient(cursor.getString(2));
-                task.setDescription(cursor.getString(3));
-                task.setModifiedDate(cursor.getString(4));
-                task.setCheckInLatitude(cursor.getDouble(5));
-                task.setCheckInLongitude(cursor.getDouble(6));
-                task.setCheckOutLatitude(cursor.getDouble(7));
-                task.setCheckOutLongitude(cursor.getDouble(8));
-                task.setSend(cursor.getInt(9) == 1);
-                task.setDate(cursor.getString(10));
-                task.setCheckin(cursor.getInt(11) == 1);
-                task.setCheckout(cursor.getInt(12) == 1);
-                task.setCheckInDate(cursor.getString(13));
-                task.setCheckOutDate(cursor.getString(14));
-                task.setConclusion(cursor.getString(15));
+                Task task = mapTask(cursor);
                 tasks.add(task);
             }
             cursor.close();
@@ -260,26 +244,10 @@ public class Dao {
 
     public ArrayList<Task> getTasks(int userId, String date) {
         ArrayList<Task> tasks = new ArrayList<Task>();
-        Cursor cursor = db.getAllOrderBy(Database.TASKS_TABLE, String.format("user='%s' AND register_date='%s'", userId, date), "id DESC");
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.user='%s' AND tasks.register_date='%s'", userId, date), "ORDER BY tasks.id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Task task = new Task();
-                task.setId(cursor.getInt(0));
-                task.setUser(getUser(cursor.getInt(1)));
-                task.setClient(cursor.getString(2));
-                task.setDescription(cursor.getString(3));
-                task.setModifiedDate(cursor.getString(4));
-                task.setCheckInLatitude(cursor.getDouble(5));
-                task.setCheckInLongitude(cursor.getDouble(6));
-                task.setCheckOutLatitude(cursor.getDouble(7));
-                task.setCheckOutLongitude(cursor.getDouble(8));
-                task.setSend(cursor.getInt(9) == 1);
-                task.setDate(cursor.getString(10));
-                task.setCheckin(cursor.getInt(11) == 1);
-                task.setCheckout(cursor.getInt(12) == 1);
-                task.setCheckInDate(cursor.getString(13));
-                task.setCheckOutDate(cursor.getString(14));
-                task.setConclusion(cursor.getString(15));
+                Task task = mapTask(cursor);
                 tasks.add(task);
             }
             cursor.close();
@@ -288,36 +256,61 @@ public class Dao {
     }
 
     public Task getTask(Task taskParam) {
-        Cursor cursor = db.get(Database.TASKS_TABLE, String.format("id='%s' AND user='%s'", taskParam.getId(), taskParam.getUser().getId()));
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.id='%s' AND tasks.user='%s'", taskParam.getId(), taskParam.getUser().getId()), "");
         if (cursor != null) {
-            Task task = new Task();
-            task.setId(cursor.getInt(0));
-            task.setUser(getUser(cursor.getInt(1)));
-            task.setClient(cursor.getString(2));
-            task.setDescription(cursor.getString(3));
-            task.setModifiedDate(cursor.getString(4));
-            task.setCheckInLatitude(cursor.getDouble(5));
-            task.setCheckInLongitude(cursor.getDouble(6));
-            task.setCheckOutLatitude(cursor.getDouble(7));
-            task.setCheckOutLongitude(cursor.getDouble(8));
-            task.setSend(cursor.getInt(9) == 1);
-            task.setDate(cursor.getString(10));
-            task.setCheckin(cursor.getInt(11) == 1);
-            task.setCheckout(cursor.getInt(12) == 1);
-            task.setCheckInDate(cursor.getString(13));
-            task.setCheckOutDate(cursor.getString(14));
-            task.setConclusion(cursor.getString(15));
+            Task task = null;
+            if (cursor.moveToNext()) {
+                task = mapTask(cursor);
+            }
             cursor.close();
             return task;
         }
         return null;
     }
 
+    private Task mapTask(Cursor cursor) {
+        Task task = new Task();
+        task.setId(cursor.getInt(0));
+        task.setUser(getUser(cursor.getInt(1)));
+
+        Address address = new Address();
+        address.setId(cursor.getInt(2));
+        address.setAddress(cursor.getString(17));
+        address.getCoord().setLatitude(cursor.getDouble(18));
+        address.getCoord().setLongitude(cursor.getDouble(19));
+        address.setModifiedDate(cursor.getString(20));
+        address.setActive(cursor.getInt(21) == 1);
+
+        Client client = new Client();
+        client.setId(cursor.getInt(16));
+        client.setName(cursor.getString(22));
+        client.setKepler(cursor.getString(23));
+        client.setModifiedDate(cursor.getString(24));
+        client.setActive(cursor.getInt(25) == 1);
+        address.setClient(client);
+
+        task.setAddress(address);
+        task.setDescription(cursor.getString(3));
+        task.setModifiedDate(cursor.getString(4));
+        task.setCheckInLatitude(cursor.getDouble(5));
+        task.setCheckInLongitude(cursor.getDouble(6));
+        task.setCheckOutLatitude(cursor.getDouble(7));
+        task.setCheckOutLongitude(cursor.getDouble(8));
+        task.setSend(cursor.getInt(9) == 1);
+        task.setDate(cursor.getString(10));
+        task.setCheckin(cursor.getInt(11) == 1);
+        task.setCheckout(cursor.getInt(12) == 1);
+        task.setCheckInDate(cursor.getString(13));
+        task.setCheckOutDate(cursor.getString(14));
+        task.setConclusion(cursor.getString(15));
+        return task;
+    }
+
     public boolean saveTask(Task task) {
         if (task != null) {
             ContentValues values = new ContentValues();
             values.put("user", task.getUser().getId());
-            values.put("client", task.getClient());
+            values.put("address", task.getAddress().getId());
             values.put("description", task.getDescription());
             values.put("date", task.getModifiedDateString());
             values.put("in_lat", task.getCheckInCoord().getLatitude());
@@ -421,10 +414,8 @@ public class Dao {
             address.setId(cursor.getInt(0));
             address.setClient(address.getClient());
             address.setAddress(cursor.getString(2));
-            Coord coord = new Coord();
-            coord.setLatitude(cursor.getDouble(3));
-            coord.setLongitude(cursor.getDouble(4));
-            address.setCoord(coord);
+            address.getCoord().setLatitude(cursor.getDouble(3));
+            address.getCoord().setLongitude(cursor.getDouble(4));
             address.setModifiedDate(cursor.getString(5));
             address.setActive(cursor.getInt(5) == 1);
             cursor.close();
@@ -442,10 +433,8 @@ public class Dao {
                 address.setId(cursor.getInt(0));
                 address.setClient(client);
                 address.setAddress(cursor.getString(2));
-                Coord coord = new Coord();
-                coord.setLatitude(cursor.getDouble(3));
-                coord.setLongitude(cursor.getDouble(4));
-                address.setCoord(coord);
+                address.getCoord().setLatitude(cursor.getDouble(3));
+                address.getCoord().setLongitude(cursor.getDouble(4));
                 address.setModifiedDate(cursor.getString(5));
                 address.setActive(cursor.getInt(5) == 1);
                 addresses.add(address);

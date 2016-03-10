@@ -6,7 +6,7 @@ package pennsylvania.jahepi.com.apppenns.entities;
 public class Task extends Entity {
 
     private int id;
-    private String client;
+    private Address address;
     private String description;
     private Coord checkInCoord;
     private String checkInDate;
@@ -48,12 +48,16 @@ public class Task extends Entity {
         this.id = id;
     }
 
-    public String getClient() {
-        return client;
+    public Client getClient() {
+        return address.getClient();
     }
 
-    public void setClient(String client) {
-        this.client = client;
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getDescription() {

@@ -96,10 +96,10 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                     toast(getString(R.string.txt_error_send));
                     return;
                 }
-                String address = "test";
+
                 Task task = new Task();
                 task.setUser(application.getUser());
-                task.setClient(address);
+                task.setAddress(address);
                 task.setDescription(description);
                 task.setDate(date);
                 task.setModifiedDate(Util.getDateTime());
