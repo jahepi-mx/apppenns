@@ -25,6 +25,7 @@
         <activity android:name=".activities.AddTaskActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TaskListActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.ClientActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -89,15 +89,34 @@
                 android:text="@string/txt_client"
                 android:textStyle="bold" />
 
-            <EditText android:layout_height="40dp"
+            <Button
                 android:layout_width="0dp"
+                android:id="@+id/clientBtn"
+                android:text="@string/txt_add_client"
                 android:layout_weight="6"
-                android:id="@+id/clientEditText"
-                android:inputType="text"
-                android:textColor="#000"
-                android:background="@drawable/rounded_corner"
-                android:layout_margin="10dp">
-            </EditText>
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_button"
+                android:textColor="#fff"
+                android:shadowRadius="1"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/clientAddressTextView"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="normal" />
 
         </TableRow>
 

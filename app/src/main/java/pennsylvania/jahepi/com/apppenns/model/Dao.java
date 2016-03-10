@@ -290,7 +290,6 @@ public class Dao {
     public Task getTask(Task taskParam) {
         Cursor cursor = db.get(Database.TASKS_TABLE, String.format("id='%s' AND user='%s'", taskParam.getId(), taskParam.getUser().getId()));
         if (cursor != null) {
-
             Task task = new Task();
             task.setId(cursor.getInt(0));
             task.setUser(getUser(cursor.getInt(1)));
@@ -372,6 +371,25 @@ public class Dao {
         return null;
     }
 
+    public ArrayList<Client> getClients(int userId, String name) {
+        Cursor cursor = db.getAllOrderBy(Database.CLIENTS_TABLE, String.format("name LIKE '%%%s%%' AND user='%s'", name, userId), "name ASC");
+        ArrayList<Client> clients = new ArrayList<Client>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Client client = new Client();
+                client.setId(cursor.getInt(0));
+                client.setUser(getUser(cursor.getInt(1)));
+                client.setName(cursor.getString(2));
+                client.setKepler(cursor.getString(3));
+                client.setModifiedDate(cursor.getString(4));
+                client.setActive(cursor.getInt(5) == 1);
+                clients.add(client);
+            }
+            cursor.close();
+        }
+        return clients;
+    }
+
     public boolean saveClient(Client client) {
         if (client != null) {
             ContentValues values = new ContentValues();
@@ -413,6 +431,28 @@ public class Dao {
             return address;
         }
         return null;
+    }
+
+    public ArrayList<Address> getAddresses(Client client) {
+        Cursor cursor = db.getAllOrderBy(Database.ADDRESSES_TABLE, String.format("client='%s'", client.getId()), "address ASC");
+        ArrayList<Address> addresses = new ArrayList<Address>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Address address = new Address();
+                address.setId(cursor.getInt(0));
+                address.setClient(client);
+                address.setAddress(cursor.getString(2));
+                Coord coord = new Coord();
+                coord.setLatitude(cursor.getDouble(3));
+                coord.setLongitude(cursor.getDouble(4));
+                address.setCoord(coord);
+                address.setModifiedDate(cursor.getString(5));
+                address.setActive(cursor.getInt(5) == 1);
+                addresses.add(address);
+            }
+            cursor.close();
+        }
+        return addresses;
     }
 
     public boolean saveAdress(Address address) {

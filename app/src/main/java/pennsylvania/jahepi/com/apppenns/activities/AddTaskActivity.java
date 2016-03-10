@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
+import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
@@ -21,9 +23,11 @@ import pennsylvania.jahepi.com.apppenns.entities.Task;
 public class AddTaskActivity extends AuthActivity implements DialogListener {
 
     private final static String TAG = "AddTaskActivity";
+    public final static int REQUEST_CODE = 1;
 
-    private Button dateBtn;
+    private Button dateBtn, clientBtn;
     private DateDialog dialog;
+    private Address address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             }
         });
 
+        clientBtn = (Button) findViewById(R.id.clientBtn);
         dateBtn = (Button) findViewById(R.id.taskDateBtn);
         dateBtn.setText(date);
 
@@ -70,26 +75,31 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             }
         });
 
+        clientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(AddTaskActivity.this, ClientActivity.class), REQUEST_CODE);
+            }
+        });
+
         Button addButton = (Button) findViewById(R.id.addBtn);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                EditText clientEditText = (EditText) findViewById(R.id.clientEditText);
                 EditText descriptionEditText = (EditText) findViewById(R.id.taskDescEditText);
 
-                String client = clientEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
                 String date = dateBtn.getText().toString();
 
-                if (Util.isEmpty(client) || Util.isEmpty(description)) {
+                if (address == null) {
                     toast(getString(R.string.txt_error_send));
                     return;
                 }
-
+                String address = "test";
                 Task task = new Task();
                 task.setUser(application.getUser());
-                task.setClient(client);
+                task.setClient(address);
                 task.setDescription(description);
                 task.setDate(date);
                 task.setModifiedDate(Util.getDateTime());
@@ -103,6 +113,17 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (data.hasExtra(CustomApplication.GENERIC_INTENT)) {
+                address = (Address) data.getSerializableExtra(CustomApplication.GENERIC_INTENT);
+                TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
+                textView.setText(address.getClient().getName() + " " + address.getAddress());
+            }
+        }
     }
 
     @Override

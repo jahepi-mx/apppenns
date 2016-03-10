@@ -57,4 +57,9 @@ public class Client extends Entity {
     public Iterator<Address> getAddressIterator() {
         return addresses.iterator();
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

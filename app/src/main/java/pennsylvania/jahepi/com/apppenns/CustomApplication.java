@@ -222,6 +222,14 @@ public class CustomApplication extends Application {
         return dao.saveAdress(address);
     }
 
+    public ArrayList<Client> getClients(String name) {
+        return dao.getClients(user.getId(), name);
+    }
+
+    public ArrayList<Address> getAddresses(Client client) {
+        return dao.getAddresses(client);
+    }
+
     public void addMessageNotifierListener(ApplicationNotifierListener appNotifierListener) {
         if (!appNotifierListeners.contains(appNotifierListener)) {
             appNotifierListeners.add(appNotifierListener);
