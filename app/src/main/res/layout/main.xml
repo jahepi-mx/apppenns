@@ -59,7 +59,7 @@
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowColor="#000"
-        android:drawableRight="@drawable/task_menu"
+        android:drawableRight="@drawable/activity_menu"
         android:layout_margin="8dp"
         android:padding="10dp"
         android:textColor="#fff"

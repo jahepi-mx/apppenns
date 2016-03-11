@@ -51,10 +51,6 @@ public class User extends Entity {
         this.selected = selected;
     }
 
-    public boolean isNotDefined() {
-        return name == null || id == 0;
-    }
-
     @Override
     public boolean equals(Object o) {
         User user = (User) o;

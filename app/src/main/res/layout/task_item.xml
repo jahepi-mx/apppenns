@@ -47,7 +47,7 @@
     <TextView
         android:id="@+id/taskDistance"
         android:layout_width="fill_parent"
-        android:textColor="#ff3300"
+        android:textColor="#009900"
         android:layout_height="26dip"
         android:layout_toRightOf="@id/taskIcon"
         android:layout_below="@+id/taskStatus"

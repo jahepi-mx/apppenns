@@ -37,6 +37,7 @@ public class CustomApplication extends Application {
     public final static String PREFS_NAME = "com.pennsylvania.jahepi.preferences";
     public final static String GENERIC_INTENT = "GENERIC_INTENT";
     public final static String PREF_USER_EMAIL = "PREF_USER_EMAIL";
+    public final static String PREF_USER_ID = "PREF_USER_ID";
 
     private boolean logged;
     private boolean syncActive;
@@ -59,7 +60,6 @@ public class CustomApplication extends Application {
         startSync();
     }
 
-
     private void startSync() {
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(this, Sync.class);
@@ -68,9 +68,14 @@ public class CustomApplication extends Application {
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), Sync.INTERVAL, pintent);
     }
 
-    public String getUserEmail() {
+    public String getStoredUserEmail() {
         SharedPreferences preferences = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return preferences.getString(PREF_USER_EMAIL, "");
+    }
+
+    public int getStoredUserId() {
+        SharedPreferences preferences = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return preferences.getInt(PREF_USER_ID, 0);
     }
 
     public boolean login(String email, String password) {
@@ -82,6 +87,7 @@ public class CustomApplication extends Application {
             SharedPreferences preferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(PREF_USER_EMAIL, user.getEmail());
+            editor.putInt(PREF_USER_ID, user.getId());
             editor.commit();
         }
         return logged;
@@ -90,9 +96,16 @@ public class CustomApplication extends Application {
     public void logout() {
         user = null;
         logged = false;
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(PREF_USER_ID);
+        editor.apply();
     }
 
     public User getUser() {
+        if (user == null) {
+            user = dao.getUser(getStoredUserId());
+        }
         return user;
     }
 
@@ -105,7 +118,7 @@ public class CustomApplication extends Application {
     }
 
     public boolean isLogged() {
-        if (user == null || user.isNotDefined() || dao == null) {
+        if (getUser() == null) {
             logged = false;
         }
         return logged;
@@ -128,7 +141,7 @@ public class CustomApplication extends Application {
     }
 
     public int getNoReadMessagesTotal() {
-        return dao.getNoReadMessagesTotal(user.getId());
+        return dao.getNoReadMessagesTotal(getUser().getId());
     }
 
     public User getUser(int userId) {
@@ -144,15 +157,15 @@ public class CustomApplication extends Application {
     }
 
     public ArrayList<Message> getMessages() {
-        return dao.getMessages(user.getId());
+        return dao.getMessages(getUser().getId());
     }
 
     public ArrayList<Task> getNewTasks() {
-        return dao.getNewTasks(user.getId());
+        return dao.getNewTasks(getUser().getId());
     }
 
     public ArrayList<Task> getTasks(String date) {
-        return dao.getTasks(user.getId(), date);
+        return dao.getTasks(getUser().getId(), date);
     }
 
     public boolean saveTask(Task task) {
@@ -214,11 +227,11 @@ public class CustomApplication extends Application {
     }
 
     public ArrayList<Message> getMessagesRead() {
-        return dao.getMessagesRead(user.getId());
+        return dao.getMessagesRead(getUser().getId());
     }
 
     public ArrayList<Message> getNewMessages() {
-        return dao.getNewMessages(user.getId());
+        return dao.getNewMessages(getUser().getId());
     }
 
     public boolean updateMessageField(Message message, String field, String value) {
@@ -234,7 +247,7 @@ public class CustomApplication extends Application {
     }
 
     public ArrayList<Client> getClients(String name) {
-        return dao.getClients(user.getId(), name);
+        return dao.getClients(getUser().getId(), name);
     }
 
     public ArrayList<Address> getAddresses(Client client) {

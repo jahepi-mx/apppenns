@@ -35,7 +35,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         passInput = (EditText) findViewById(R.id.passwordInput);
         loginBtn = (Button) findViewById(R.id.loginBtn);
 
-        userInput.setText(application.getUserEmail());
+        userInput.setText(application.getStoredUserEmail());
 
         loginBtn.setOnClickListener(this);
     }
