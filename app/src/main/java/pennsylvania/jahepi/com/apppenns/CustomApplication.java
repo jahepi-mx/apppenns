@@ -136,6 +136,10 @@ public class CustomApplication extends Application {
         return gps.getLongitude();
     }
 
+    public boolean isGpsEnabled() {
+        return gps.isEnabled();
+    }
+
     public void setSyncActive(boolean syncActive) {
         this.syncActive = syncActive;
     }

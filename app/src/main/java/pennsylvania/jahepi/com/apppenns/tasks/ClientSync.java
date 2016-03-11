@@ -125,9 +125,13 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        dialog.setStatus(name);
-                        dialog.setTitle(String.format(activity.getString(R.string.txt_sync_status), (int) percentage + "%"));
-                        dialog.setProgress((int) percentage);
+                        try {
+                            dialog.setStatus(name);
+                            dialog.setTitle(String.format(activity.getString(R.string.txt_sync_status), (int) percentage + "%"));
+                            dialog.setProgress((int) percentage);
+                        } catch (Exception exp) {
+                            exp.printStackTrace();
+                        }
                     }
                 });
             }

@@ -16,8 +16,8 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 public class Gps implements LocationListener {
 
     private final static String TAG = "Gps";
-    private final static int INTERVAL = 300000;
-    private final static int MIN_TIME = 3 * 60 * 1000;
+    private final static int INTERVAL = 2 * 60 * 1000;
+    private final static int MIN_TIME = 2 * 60 * 1000;
     private final static int MIN_DISTANCE = 20;
 
     private CustomApplication application;
@@ -25,11 +25,13 @@ public class Gps implements LocationListener {
     private Handler handler;
     private double latitude;
     private double longitude;
+    private boolean isEnabled;
 
     public Gps(CustomApplication application) {
         this.application = application;
         handler = new Handler();
         locationManager = (LocationManager) this.application.getSystemService(Context.LOCATION_SERVICE);
+        isEnabled  = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     private class GpsThread extends Thread {
@@ -78,13 +80,17 @@ public class Gps implements LocationListener {
 
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
     @Override
     public void onProviderEnabled(String provider) {
-
+        isEnabled = true;
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        isEnabled = false;
     }
 }

@@ -118,7 +118,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
-            if (data.hasExtra(CustomApplication.GENERIC_INTENT)) {
+            if (data != null && data.hasExtra(CustomApplication.GENERIC_INTENT)) {
                 address = (Address) data.getSerializableExtra(CustomApplication.GENERIC_INTENT);
                 TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
                 textView.setText(address.getClient().getName() + " " + address.getAddress());
