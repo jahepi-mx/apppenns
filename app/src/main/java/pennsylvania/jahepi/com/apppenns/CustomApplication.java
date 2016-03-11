@@ -17,7 +17,6 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
-import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.User;
@@ -60,6 +59,7 @@ public class CustomApplication extends Application {
         startSync();
     }
 
+
     private void startSync() {
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(this, Sync.class);
@@ -76,14 +76,14 @@ public class CustomApplication extends Application {
     public boolean login(String email, String password) {
         password = Util.SHA1(password);
         User user = dao.getUser(email, password);
-        if (user != null) {
+        logged = (user != null);
+        if (logged) {
             this.user = user;
             SharedPreferences preferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(PREF_USER_EMAIL, user.getEmail());
             editor.commit();
         }
-        logged = (user != null);
         return logged;
     }
 
@@ -105,7 +105,7 @@ public class CustomApplication extends Application {
     }
 
     public boolean isLogged() {
-        if (user == null) {
+        if (user == null || user.isNotDefined() || dao == null) {
             logged = false;
         }
         return logged;
