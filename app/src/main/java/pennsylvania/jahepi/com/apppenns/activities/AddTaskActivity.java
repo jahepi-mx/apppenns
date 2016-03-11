@@ -70,8 +70,10 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                dialog.show(fm, TAG);
+                if (!dialog.isAdded()) {
+                    FragmentManager fm = getFragmentManager();
+                    dialog.show(fm, TAG);
+                }
             }
         });
 
