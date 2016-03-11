@@ -79,12 +79,17 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
 
         if (task.isCheckin() && !task.isCheckout()) {
             holder.taskStatus.setText(getContext().getString(R.string.txt_checkout));
-            holder.taskStatus.setTextColor(Color.RED);
+            holder.taskStatus.setTextColor(Color.CYAN);
         }
 
         if (task.isCheckin() && task.isCheckout()) {
             holder.taskStatus.setText(getContext().getString(R.string.txt_done));
             holder.taskStatus.setTextColor(Color.GRAY);
+        }
+
+        if (task.isCancelled()) {
+            holder.taskStatus.setText(getContext().getString(R.string.txt_cancelled));
+            holder.taskStatus.setTextColor(Color.RED);
         }
 
         holder.taskText.setText(Util.abbreviate(task.getAddress().getAddress(), MESSAGE_LENGTH));

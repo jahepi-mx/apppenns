@@ -36,6 +36,9 @@
     <string name="txt_pending">Pendiente</string>
     <string name="txt_checkin">Marcar Entrada</string>
     <string name="txt_checkout">Marcar Salida</string>
+    <string name="txt_cancelled">Cancelado</string>
+    <string name="txt_cancelled_title">Cancelacion</string>
+    <string name="txt_cancelled_message">Deseas cancelar la actividad?</string>
     <string name="txt_done">Finalizado</string>
     <string name="txt_add_task">Agregar Actividad</string>
     <string name="txt_date">Fecha:</string>

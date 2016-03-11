@@ -111,7 +111,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
 
     private void checkin() {
         if (task != null) {
-            if (!task.isCheckin() && !task.isCheckout()) {
+            if (!task.isCheckin() && !task.isCheckout() && !task.isCancelled()) {
                 task.setCheckInDate(Util.getDateTime());
                 task.setModifiedDate(Util.getDateTime());
                 Coord coord = new Coord();
@@ -135,7 +135,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
 
     private void checkout() {
         if (task != null) {
-            if (task.isCheckin() && !task.isCheckout()) {
+            if (task.isCheckin() && !task.isCheckout() && !task.isCancelled()) {
                 task.setCheckOutDate(Util.getDateTime());
                 task.setModifiedDate(Util.getDateTime());
                 Coord coord = new Coord();

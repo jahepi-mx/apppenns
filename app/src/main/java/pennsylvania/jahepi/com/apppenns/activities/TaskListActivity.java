@@ -1,6 +1,8 @@
 package pennsylvania.jahepi.com.apppenns.activities;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,14 +27,16 @@ import pennsylvania.jahepi.com.apppenns.entities.Task;
 /**
  * Created by jahepi on 05/03/16.
  */
-public class TaskListActivity extends AuthActivity implements DialogListener, AdapterView.OnItemClickListener, CustomApplication.ApplicationNotifierListener {
+public class TaskListActivity extends AuthActivity implements DialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener, DialogInterface.OnClickListener {
 
     private final static String TAG = "TaskListActivity";
 
-    private DateDialog dialog;
+    private DateDialog dateDialog;
     private Button dateBtn;
     private TaskAdapter adapter;
     private ArrayList<Task> tasks;
+    private AlertDialog.Builder cancelledDialog;
+    private Task selectedTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +49,15 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
             date = Util.getDate();
         }
 
-        dialog = new DateDialog();
-        dialog.setDate(date);
-        dialog.setListener(this);
+        dateDialog = new DateDialog();
+        dateDialog.setDate(date);
+        dateDialog.setListener(this);
+
+        cancelledDialog = new AlertDialog.Builder(this);
+        cancelledDialog.setTitle(R.string.txt_cancelled_title);
+        cancelledDialog.setMessage(R.string.txt_cancelled_message);
+        cancelledDialog.setPositiveButton(R.string.btn_yes, this);
+        cancelledDialog.setNegativeButton(R.string.btn_no, this);
 
         tasks = application.getTasks(date);
 
@@ -77,7 +87,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                dialog.show(fm, TAG);
+                dateDialog.show(fm, TAG);
             }
         });
 
@@ -87,6 +97,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         ListView listView = (ListView) findViewById(R.id.taskListView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
 
         onOnChangeLocation(application.getLatitude(), application.getLongitude());
     }
@@ -106,15 +117,35 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Task task = (Task) adapter.getItem(position);
-        Log.d(TAG, task.getClient().getName());
         Intent intent = new Intent(this, TaskViewActivity.class);
         intent.putExtra(CustomApplication.GENERIC_INTENT, task);
         startActivity(intent);
     }
 
     @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        selectedTask = (Task) adapter.getItem(position);
+        cancelledDialog.show();
+        return true;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            if (selectedTask != null) {
+                selectedTask.setSend(false);
+                selectedTask.setCancelled(true);
+                selectedTask.setModifiedDate(Util.getDateTime());
+                application.saveTask(selectedTask);
+                selectedTask = null;
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
     public void accept() {
-        String date = dialog.getDate();
+        String date = dateDialog.getDate();
         dateBtn.setText(date);
         adapter.clear();
         adapter.addAll(application.getTasks(date));

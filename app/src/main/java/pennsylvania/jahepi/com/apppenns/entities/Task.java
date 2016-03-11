@@ -21,6 +21,7 @@ public class Task extends Entity {
     private String date;
     private String conclusion;
     private float distance;
+    private boolean cancelled;
 
     public Task() {
         checkInCoord = new Coord();
@@ -155,6 +156,14 @@ public class Task extends Entity {
 
     public void setCheckOutDate(String checkOutDate) {
         this.checkOutDate = checkOutDate;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     public float getDistance() {

@@ -277,6 +277,7 @@ public class Dao {
         task.setCheckInDate(cursor.getString(13));
         task.setCheckOutDate(cursor.getString(14));
         task.setConclusion(cursor.getString(15));
+        task.setCancelled(cursor.getInt(26) == 1);
         return task;
     }
 
@@ -298,6 +299,7 @@ public class Dao {
             values.put("checkin_date", task.getCheckInDate());
             values.put("checkout_date", task.getCheckOutDate());
             values.put("conclusion", task.getConclusion());
+            values.put("cancelled", task.isCancelled() ? 1 : 0);
 
             Task taskDB = getTask(task);
             if (taskDB != null) {

@@ -119,7 +119,7 @@ public class CustomApplication extends Application {
 
     public boolean isLogged() {
         if (getUser() == null) {
-            logged = false;
+            logout();
         }
         return logged;
     }
