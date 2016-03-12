@@ -19,6 +19,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
+import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 import pennsylvania.jahepi.com.apppenns.model.Dao;
 import pennsylvania.jahepi.com.apppenns.services.Gps;
@@ -178,6 +179,14 @@ public class CustomApplication extends Application {
 
     public boolean updateTaskAsSend(Task task) {
         return dao.updateTaskAsSend(task);
+    }
+
+    public boolean saveType(Type type) {
+        return dao.saveType(type);
+    }
+
+    public ArrayList<Type> getTypes() {
+        return dao.getTypes();
     }
 
     public void notifyNewMessages(ArrayList<Message> messages) {

@@ -12,6 +12,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
+import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 import pennsylvania.jahepi.com.apppenns.model.database.Database;
 
@@ -89,6 +90,59 @@ public class Dao {
             } else {
                 values.put("id", user.getId());
                 db.insert(Database.USERS_TABLE, values);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public Type getType(int typeId) {
+        Cursor cursor = db.get(Database.TYPES_TABLE, String.format("id='%s'", typeId));
+        if (cursor != null) {
+            Type type = mapType(cursor);
+            cursor.close();
+            return type;
+        }
+        return null;
+    }
+
+    public ArrayList<Type> getTypes() {
+        ArrayList<Type> types = new ArrayList<Type>();
+        Cursor cursor = db.getAllOrderBy(Database.TYPES_TABLE, "active='1'", "name ASC");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Type type = mapType(cursor);
+                types.add(type);
+            }
+            cursor.close();
+        }
+        return types;
+    }
+
+    private Type mapType(Cursor cursor) {
+        Type type = new Type();
+        type.setId(cursor.getInt(0));
+        type.setName(cursor.getString(1));
+        type.setModifiedDate(cursor.getString(2));
+        type.setActive(cursor.getInt(3) != 0);
+        return type;
+    }
+
+    public boolean saveType(Type type) {
+        if (type != null) {
+            ContentValues values = new ContentValues();
+            values.put("name", type.getName());
+            values.put("active", type.isActive() ? 1 : 0);
+            values.put("date", type.getModifiedDateString());
+
+            Type typeDB = getType(type.getId());
+            if (typeDB != null) {
+                if (typeDB.isGreaterDate(type)) {
+                    db.update(Database.TYPES_TABLE, values, String.format("id='%s'", type.getId()));
+                }
+            } else {
+                values.put("id", type.getId());
+                db.insert(Database.TYPES_TABLE, values);
             }
             return true;
         }
@@ -278,6 +332,16 @@ public class Dao {
         task.setCheckOutDate(cursor.getString(14));
         task.setConclusion(cursor.getString(15));
         task.setCancelled(cursor.getInt(26) == 1);
+        task.setStartTime(cursor.getString(31));
+        task.setEndTime(cursor.getString(32));
+
+        Type type = new Type();
+        type.setId(cursor.getInt(27));
+        type.setName(cursor.getString(28));
+        type.setModifiedDate(cursor.getString(29));
+        type.setActive(cursor.getInt(30) == 1);
+        task.setType(type);
+
         return task;
     }
 
@@ -300,6 +364,9 @@ public class Dao {
             values.put("checkout_date", task.getCheckOutDate());
             values.put("conclusion", task.getConclusion());
             values.put("cancelled", task.isCancelled() ? 1 : 0);
+            values.put("type", task.getType().getId());
+            values.put("start_time", task.getStartTime());
+            values.put("end_time", task.getEndTime());
 
             Task taskDB = getTask(task);
             if (taskDB != null) {

@@ -17,8 +17,9 @@ public class Database {
     public static final String TASKS_TABLE = "tasks";
     public static final String ADDRESSES_TABLE = "addresses";
     public static final String CLIENTS_TABLE = "clients";
+    public static final String TYPES_TABLE = "types";
 
-    private static final int DB_VERSION = 20;
+    private static final int DB_VERSION = 21;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -71,11 +72,12 @@ public class Database {
     public Cursor getTasks(String where, String orderBy) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "SELECT tasks.id AS task_id, tasks.user, tasks.address AS address_id, tasks.description, tasks.date AS task_date, tasks.in_lat, tasks.in_lon, tasks.out_lat, tasks.out_lon, tasks.send, tasks.register_date, tasks.check_in, tasks.check_out, tasks.checkin_date, tasks.checkout_date, tasks.conclusion, " +
-                "addresses.client AS client_id, addresses.address, addresses.latitude, addresses.longitude, addresses.date AS address_date, addresses.active AS address_active, " +
-                "clients.name, clients.kepler, clients.date AS client_date, clients.active AS client_active, tasks.cancelled " +
-                "FROM tasks INNER JOIN addresses ON tasks.address = addresses.id " +
-                "INNER JOIN clients ON clients.id = addresses.client " +
-                where + " " + orderBy;
+            "addresses.client AS client_id, addresses.address, addresses.latitude, addresses.longitude, addresses.date AS address_date, addresses.active AS address_active, " +
+            "clients.name, clients.kepler, clients.date AS client_date, clients.active AS client_active, tasks.cancelled, types.id AS type_id, types.name AS type_name, types.date AS type_date, types.active AS type_active, tasks.start_time, tasks.end_time " +
+            "FROM tasks INNER JOIN addresses ON tasks.address = addresses.id " +
+            "INNER JOIN clients ON clients.id = addresses.client " +
+            "INNER JOIN types ON tasks.type = types.id " +
+            where + " " + orderBy;
         return db.rawQuery(sql, null);
     }
 
@@ -125,12 +127,14 @@ public class Database {
             Log.d(TAG, "Users table created!");
             db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
-            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT, cancelled INT)");
+            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT, cancelled INT, type INT, start_time TEXT, end_time TEXT)");
             Log.d(TAG, "Tasks table created!");
             db.execSQL("CREATE TABLE " + CLIENTS_TABLE + " (id INT, user INT, name TEXT, kepler TEXT, date TEXT, active INT, UNIQUE (id, user))");
             Log.d(TAG, "Clients table created!");
             db.execSQL("CREATE TABLE " + ADDRESSES_TABLE + " (id INT, client INT, address TEXT, latitude REAL, longitude REAL, date TEXT, active INT, UNIQUE (id, client))");
             Log.d(TAG, "Addresses table created!");
+            db.execSQL("CREATE TABLE " + TYPES_TABLE + " (id INT PRIMARY KEY, name TEXT, date TEXT, active INT)");
+            Log.d(TAG, "Types table created!");
         }
 
         @Override
@@ -145,6 +149,8 @@ public class Database {
             Log.d(TAG, "Clients table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + ADDRESSES_TABLE);
             Log.d(TAG, "Addresses table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + TYPES_TABLE);
+            Log.d(TAG, "Types table removed!");
             onCreate(db);
         }
     }

@@ -30,6 +30,7 @@ import java.util.Iterator;
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
+import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
@@ -87,6 +88,7 @@ public class Sync extends Service {
                     syncNewMessages();
                     syncReadMessages();
                     syncNewTasks();
+                    syncTypes();
                 }
                 syncUsers();
                 active = false;
@@ -135,6 +137,45 @@ public class Sync extends Service {
             Log.e(TAG, "URL fail: " + url);
         }
         Log.d(TAG, "syncUsers finalized");
+    }
+
+    private void syncTypes() {
+
+        String url = CustomApplication.SERVICE_URL + "intranet/android/getActivityTypes";
+
+        try {
+            HttpPost postRequest = new HttpPost(url);
+            HttpResponse response = httpClient.execute(postRequest);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+            String sResponse = null;
+            StringBuilder jsonStr = new StringBuilder();
+
+            while ((sResponse = reader.readLine()) != null) {
+                jsonStr = jsonStr.append(sResponse);
+            }
+
+            JSONObject jObject = new JSONObject(jsonStr.toString());
+            JSONArray types = jObject.getJSONArray("activity_types");
+
+            for (int i = 0; i < types.length(); i++) {
+                JSONObject json = types.getJSONObject(i);
+                Type type = new Type();
+                type.setId(json.getInt("id"));
+                type.setName(json.getString("name"));
+                type.setModifiedDate(json.getString("date"));
+                type.setActive(json.getInt("active") != 0);
+
+                if (application.saveType(type)) {
+                    Log.d(TAG, "syncTypes inserted: " + type.getName());
+                } else {
+                    Log.d(TAG, "syncTypes not inserted: " + type.getName());
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "URL fail: " + url);
+        }
+        Log.d(TAG, "syncTypes finalized");
     }
 
     private void getMessages() {
@@ -328,6 +369,7 @@ public class Sync extends Service {
                 post.addPart("id", new StringBody(Integer.toString(task.getId())));
                 post.addPart("user", new StringBody(Integer.toString(task.getUser().getId())));
                 post.addPart("address", new StringBody(Integer.toString(task.getAddress().getId())));
+                post.addPart("type", new StringBody(Integer.toString(task.getType().getId())));
                 post.addPart("description", new StringBody(task.getDescription()));
                 post.addPart("register_date", new StringBody(task.getDate()));
                 post.addPart("checkin_lat", new StringBody(Double.toString(task.getCheckInCoord().getLatitude())));

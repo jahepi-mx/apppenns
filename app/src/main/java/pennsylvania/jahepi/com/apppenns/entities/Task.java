@@ -21,6 +21,9 @@ public class Task extends Entity {
     private String date;
     private String conclusion;
     private float distance;
+    private Type type;
+    private String startTime;
+    private String endTime;
     private boolean cancelled;
 
     public Task() {
@@ -164,6 +167,30 @@ public class Task extends Entity {
 
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public float getDistance() {
