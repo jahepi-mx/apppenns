@@ -99,10 +99,9 @@ public class Sync extends Service {
     }
 
     private void syncUsers() {
-
-        String url = CustomApplication.SERVICE_URL + "intranet/android/getUsers";
-
+        String url = null;
         try {
+            url = CustomApplication.SERVICE_URL + "intranet/android/getUsers";
             HttpPost postRequest = new HttpPost(url);
             HttpResponse response = httpClient.execute(postRequest);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
@@ -140,10 +139,9 @@ public class Sync extends Service {
     }
 
     private void syncTypes() {
-
-        String url = CustomApplication.SERVICE_URL + "intranet/android/getActivityTypes";
-
+        String url = null;
         try {
+            url = CustomApplication.SERVICE_URL + "intranet/android/getActivityTypes";
             HttpPost postRequest = new HttpPost(url);
             HttpResponse response = httpClient.execute(postRequest);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
@@ -179,9 +177,10 @@ public class Sync extends Service {
     }
 
     private void getMessages() {
-        String url = CustomApplication.SERVICE_URL + "intranet/android/getMessages/" + application.getUser().getId();
+        String url = null;
         ArrayList<Message> messages = new ArrayList<Message>();
         try {
+            url = CustomApplication.SERVICE_URL + "intranet/android/getMessages/" + application.getUser().getId();
             HttpPost postRequest = new HttpPost(url);
             HttpResponse response = httpClient.execute(postRequest);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
@@ -246,9 +245,10 @@ public class Sync extends Service {
     }
 
     private void getReadMessages() {
-        String url = CustomApplication.SERVICE_URL + "intranet/android/getReadMessages/" + application.getUser().getId();
+        String url = null;
         ArrayList<Message> messages = new ArrayList<Message>();
         try {
+            url = CustomApplication.SERVICE_URL + "intranet/android/getReadMessages/" + application.getUser().getId();
             HttpPost postRequest = new HttpPost(url);
             HttpResponse response = httpClient.execute(postRequest);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
