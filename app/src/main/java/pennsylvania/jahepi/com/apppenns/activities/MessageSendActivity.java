@@ -70,7 +70,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                dialog.show(fm, TAG);
+                if (!dialog.isAdded()) {
+                    dialog.show(fm, TAG);
+                }
             }
         });
 

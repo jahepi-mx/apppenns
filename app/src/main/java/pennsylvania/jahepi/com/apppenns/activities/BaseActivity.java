@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
@@ -16,7 +20,6 @@ import pennsylvania.jahepi.com.apppenns.R;
  */
 public class BaseActivity extends Activity {
 
-    private Menu menu;
     protected CustomApplication application;
 
     @Override
@@ -33,33 +36,41 @@ public class BaseActivity extends Activity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.sync, menu);
-        this.menu = menu;
-        return true;
+    public void onBackPressed() {
     }
 
     @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        MenuItem item = this.menu.findItem(R.id.item1);
-        if (application.isSyncActive()) {
-            item.setIcon(R.drawable.active);
-            item.setTitle(this.getString(R.string.txt_sync));
-        } else {
-            item.setIcon(R.drawable.inactive);
-            item.setTitle(this.getString(R.string.txt_sync));
+    protected void onStart() {
+        super.onStart();
+        View mainContainer = findViewById(R.id.main_container);
+        if (mainContainer != null) {
+            setupUI(mainContainer);
         }
-        return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.item1) {
-            if (application.isSyncActive() == false) {
-                // startService(new Intent(this, Sync.class));
+    protected void setupUI(View view) {
+
+        //Set up touch listener for non-text box views to hide keyboard.
+        if(!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(BaseActivity.this);
+                    return false;
+                }
+
+            });
+        }
+        // If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
             }
         }
-        return true;
+    }
+
+    private void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

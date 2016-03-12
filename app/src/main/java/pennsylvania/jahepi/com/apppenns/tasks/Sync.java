@@ -372,6 +372,8 @@ public class Sync extends Service {
                 post.addPart("type", new StringBody(Integer.toString(task.getType().getId())));
                 post.addPart("description", new StringBody(task.getDescription()));
                 post.addPart("register_date", new StringBody(task.getDate()));
+                post.addPart("start_time", new StringBody(task.getStartTime()));
+                post.addPart("end_time", new StringBody(task.getEndTime()));
                 post.addPart("checkin_lat", new StringBody(Double.toString(task.getCheckInCoord().getLatitude())));
                 post.addPart("checkin_lon", new StringBody(Double.toString(task.getCheckInCoord().getLongitude())));
                 post.addPart("checkout_lat", new StringBody(Double.toString(task.getCheckOutCoord().getLatitude())));
