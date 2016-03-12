@@ -34,6 +34,8 @@
     <string name="txt_message">Mensaje:</string>
     <string name="txt_client">Cliente:</string>
     <string name="txt_type">Tipo:</string>
+    <string name="txt_start_time">Hora Inicio:</string>
+    <string name="txt_end_time">Hora Fin:</string>
     <string name="txt_add_client">Cliente/Sucursal</string>
     <string name="txt_pending">Pendiente</string>
     <string name="txt_checkin">Marcar Entrada</string>

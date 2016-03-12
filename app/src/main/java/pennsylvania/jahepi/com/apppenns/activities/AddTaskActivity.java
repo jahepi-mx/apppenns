@@ -18,6 +18,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
+import pennsylvania.jahepi.com.apppenns.dialogs.TimeDialog;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
@@ -29,9 +30,12 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
     private final static String TAG = "AddTaskActivity";
     public final static int REQUEST_CODE = 1;
+    private static enum TIME_TYPE {START, END};
+    private TIME_TYPE type;
 
-    private Button dateBtn, clientBtn;
-    private DateDialog dialog;
+    private Button dateBtn, clientBtn, startTimeBtn, endTimeBtn;
+    private DateDialog dateDialog;
+    private TimeDialog timeDialog;
     private Address address;
 
     @Override
@@ -50,9 +54,15 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             date = Util.getDate();
         }
 
-        dialog = new DateDialog();
-        dialog.setDate(date);
-        dialog.setListener(this);
+        String time = Util.getTime();
+
+        dateDialog = new DateDialog();
+        dateDialog.setDate(date);
+        dateDialog.setListener(this);
+
+        timeDialog = new TimeDialog();
+        timeDialog.setTime(time);
+        timeDialog.setListener(this);
 
         Button backBtn = (Button) findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,14 +85,42 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
         clientBtn = (Button) findViewById(R.id.clientBtn);
         dateBtn = (Button) findViewById(R.id.taskDateBtn);
+        startTimeBtn = (Button) findViewById(R.id.startTimeBtn);
+        endTimeBtn = (Button) findViewById(R.id.endTimeBtn);
         dateBtn.setText(date);
+        startTimeBtn.setText(time);
+        endTimeBtn.setText(time);
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!dialog.isAdded()) {
+                if (!dateDialog.isAdded()) {
                     FragmentManager fm = getFragmentManager();
-                    dialog.show(fm, TAG);
+                    dateDialog.show(fm, TAG);
+                }
+            }
+        });
+
+        startTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!timeDialog.isAdded()) {
+                    type = TIME_TYPE.START;
+                    FragmentManager fm = getFragmentManager();
+                    timeDialog.show(fm, TAG);
+                    timeDialog.setTime(startTimeBtn.getText().toString());
+                }
+            }
+        });
+
+        endTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!timeDialog.isAdded()) {
+                    type = TIME_TYPE.END;
+                    FragmentManager fm = getFragmentManager();
+                    timeDialog.show(fm, TAG);
+                    timeDialog.setTime(endTimeBtn.getText().toString());
                 }
             }
         });
@@ -103,6 +141,8 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
                 String description = descriptionEditText.getText().toString();
                 String date = dateBtn.getText().toString();
+                String startTime = startTimeBtn.getText().toString();
+                String endTime = endTimeBtn.getText().toString();
 
                 Type type = (Type) typeSpinner.getSelectedItem();
 
@@ -119,8 +159,8 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setModifiedDate(Util.getDateTime());
                 task.setConclusion("");
                 task.setType(type);
-                task.setStartTime("");
-                task.setEndTime("");
+                task.setStartTime(startTime);
+                task.setEndTime(endTime);
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
@@ -144,12 +184,22 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     }
 
     @Override
-    public void accept() {
-        dateBtn.setText(dialog.getDate());
+    public void accept(Object dialogParam) {
+        if (dialogParam == dateDialog) {
+            dateBtn.setText(dateDialog.getDate());
+        }
+        if (dialogParam == timeDialog) {
+            if (type == TIME_TYPE.START) {
+                startTimeBtn.setText(timeDialog.getTime());
+            }
+            if (type == TIME_TYPE.END) {
+                endTimeBtn.setText(timeDialog.getTime());
+            }
+        }
     }
 
     @Override
-    public void cancel() {
+    public void cancel(Object dialogParam) {
 
     }
 }

@@ -167,12 +167,12 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     }
 
     @Override
-    public void accept() {
+    public void accept(Object dialogParam) {
         checkout();
     }
 
     @Override
-    public void cancel() {
+    public void cancel(Object dialogParam) {
 
     }
 }

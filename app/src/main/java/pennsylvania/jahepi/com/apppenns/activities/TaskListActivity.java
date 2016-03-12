@@ -146,7 +146,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     }
 
     @Override
-    public void accept() {
+    public void accept(Object dialogParam) {
         String date = dateDialog.getDate();
         dateBtn.setText(date);
         adapter.clear();
@@ -154,7 +154,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     }
 
     @Override
-    public void cancel() {
+    public void cancel(Object dialogParam) {
 
     }
 

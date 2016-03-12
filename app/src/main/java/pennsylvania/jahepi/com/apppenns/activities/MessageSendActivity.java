@@ -86,7 +86,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     }
 
     @Override
-    public void accept() {
+    public void accept(Object dialogParam) {
         String toAll = "";
         Iterator<User> iterator = users.iterator();
         while (iterator.hasNext()) {
@@ -132,7 +132,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     }
 
     @Override
-    public void cancel() {
+    public void cancel(Object dialogParam) {
 
     }
 }

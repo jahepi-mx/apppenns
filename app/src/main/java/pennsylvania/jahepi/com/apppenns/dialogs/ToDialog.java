@@ -79,7 +79,7 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        listener.accept();
+        listener.accept(this);
     }
 
     public ArrayList<User> getUsers() {

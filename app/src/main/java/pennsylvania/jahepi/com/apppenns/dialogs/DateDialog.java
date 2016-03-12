@@ -58,6 +58,6 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, monthOfYear);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        listener.accept();
+        listener.accept(this);
     }
 }

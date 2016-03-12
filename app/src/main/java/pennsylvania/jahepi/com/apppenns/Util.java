@@ -90,6 +90,12 @@ public class Util {
         return dateFormat.format(date);
     }
 
+    public static String getTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
     public static String getDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();

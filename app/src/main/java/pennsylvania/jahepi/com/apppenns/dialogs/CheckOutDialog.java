@@ -39,7 +39,7 @@ public class CheckOutDialog extends AlertDialog implements DialogInterface.OnCli
     public void onClick(DialogInterface dialog, int which) {
         dismiss();
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            listener.accept();
+            listener.accept(this);
         }
     }
 }
