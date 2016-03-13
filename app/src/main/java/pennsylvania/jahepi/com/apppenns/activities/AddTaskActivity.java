@@ -31,12 +31,12 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     private final static String TAG = "AddTaskActivity";
     public final static int REQUEST_CODE = 1;
     private static enum TIME_TYPE {START, END};
-    private TIME_TYPE type;
 
     private Button dateBtn, clientBtn, startTimeBtn, endTimeBtn;
     private DateDialog dateDialog;
     private TimeDialog timeDialog;
     private Address address;
+    private TIME_TYPE type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

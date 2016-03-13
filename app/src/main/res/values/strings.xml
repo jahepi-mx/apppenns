@@ -16,6 +16,7 @@
     <string name="label_new_sms">%1$s</string>
     <string name="txt_message_title">Información Mensaje</string>
     <string name="txt_task_title">Información Actividad</string>
+    <string name="txt_calendar_title">Calendario</string>
     <string name="txt_message_send">Envío Mensaje</string>
     <string name="txt_error_send">Verifique que tenga los datos requeridos</string>
     <string name="txt_error_gps">Habilite el GPS para realizar la acción</string>
@@ -35,6 +36,8 @@
     <string name="txt_client">Cliente:</string>
     <string name="txt_type">Tipo:</string>
     <string name="txt_start_time">Hora Inicio:</string>
+    <string name="txt_time">Hora:</string>
+    <string name="txt_time_value">%1$s - %2$s hrs</string>
     <string name="txt_end_time">Hora Fin:</string>
     <string name="txt_add_client">Cliente/Sucursal</string>
     <string name="txt_pending">Pendiente</string>
@@ -59,6 +62,7 @@
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>
     <string name="btn_activity">Actividades</string>
+    <string name="btn_calendar">Calendario</string>
     <string name="btn_client_sync">Actualiza Clientes</string>
     <string name="btn_add">Agregar</string>
     <string name="btn_new">Nuevo</string>

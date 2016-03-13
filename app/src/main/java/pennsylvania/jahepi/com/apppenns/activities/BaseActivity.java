@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +19,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 /**
  * Created by javier.hernandez on 24/02/2016.
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     protected CustomApplication application;
 

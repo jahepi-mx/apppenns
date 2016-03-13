@@ -19,7 +19,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
 
     private TextView viewSms;
     private MessageNotifier messageNotifier;
-    private Button logoutBtn, smsBtn, activityBtn, clientSyncBtn;
+    private Button logoutBtn, smsBtn, activityBtn, clientSyncBtn, calendarBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         smsBtn = (Button) findViewById(R.id.smsBtn);
         activityBtn = (Button) findViewById(R.id.activityBtn);
         clientSyncBtn = (Button) findViewById(R.id.clientSyncBtn);
+        calendarBtn = (Button) findViewById(R.id.calendarBtn);
 
         TextView view = (TextView) findViewById(R.id.welcomeTextView);
         view.setText(application.getUser().getName());
@@ -41,6 +42,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         smsBtn.setOnClickListener(this);
         activityBtn.setOnClickListener(this);
         clientSyncBtn.setOnClickListener(this);
+        calendarBtn.setOnClickListener(this);
     }
 
     @Override
@@ -58,6 +60,9 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         if (v == clientSyncBtn) {
             ClientSync clientSync = new ClientSync(this);
             clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        if (v == calendarBtn) {
+            startActivity(new Intent(this, CalendarActivity.class));
         }
     }
 

@@ -158,7 +158,7 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
     }
 
     @Override
-    public void onOnChangeLocation(double latitude, double longitude) {
+    public void onChangeLocation(double latitude, double longitude) {
 
     }
 }

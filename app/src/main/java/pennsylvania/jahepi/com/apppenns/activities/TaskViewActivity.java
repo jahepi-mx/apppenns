@@ -56,10 +56,14 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             TextView dateTextView = (TextView) findViewById(R.id.taskDateValue);
             TextView clientTextView = (TextView) findViewById(R.id.taskClientValue);
             TextView descTextView = (TextView) findViewById(R.id.taskDescValue);
+            TextView timeTextView = (TextView) findViewById(R.id.taskTimeValue);
+            TextView typeTextView = (TextView) findViewById(R.id.taskTypeValue);
 
             clientTextView.setText(task.getClient().getName() + " " + task.getAddress().getAddress());
             descTextView.setText(task.getDescription());
             dateTextView.setText(task.getDate());
+            timeTextView.setText(String.format(getString(R.string.txt_time_value), task.getStartTime(), task.getEndTime()));
+            typeTextView.setText(task.getType().getName());
 
             if (task.isCheckin()) {
                 checkinBtn.getBackground().setAlpha(ALPHA);
@@ -105,6 +109,9 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         }
         if (v == backBtn) {
             Intent intent = new Intent(this, TaskListActivity.class);
+            if (task != null) {
+                intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
+            }
             startActivity(intent);
         }
     }

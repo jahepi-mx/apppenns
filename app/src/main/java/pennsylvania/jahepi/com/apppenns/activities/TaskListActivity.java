@@ -101,7 +101,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
 
-        onOnChangeLocation(application.getLatitude(), application.getLongitude());
+        onChangeLocation(application.getLatitude(), application.getLongitude());
     }
 
     @Override
@@ -151,6 +151,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         dateBtn.setText(date);
         adapter.clear();
         adapter.addAll(application.getTasks(date));
+        onChangeLocation(application.getLatitude(), application.getLongitude());
     }
 
     @Override
@@ -192,7 +193,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     }
 
     @Override
-    public void onOnChangeLocation(final double latitude, final double longitude) {
+    public void onChangeLocation(final double latitude, final double longitude) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

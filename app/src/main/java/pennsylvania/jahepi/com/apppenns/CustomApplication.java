@@ -234,7 +234,7 @@ public class CustomApplication extends Application {
         while (iterator.hasNext()) {
             ApplicationNotifierListener listener = iterator.next();
             if (listener != null) {
-                listener.onOnChangeLocation(latitude, longitude);
+                listener.onChangeLocation(latitude, longitude);
             }
         }
     }
@@ -282,6 +282,6 @@ public class CustomApplication extends Application {
         public void onMessagesSend(ArrayList<Message> messages);
         public void onMessagesRead(ArrayList<Message> messages);
         public void onTasksSend(ArrayList<Task> tasks);
-        public void onOnChangeLocation(double latitude, double longitude);
+        public void onChangeLocation(double latitude, double longitude);
     }
 }
