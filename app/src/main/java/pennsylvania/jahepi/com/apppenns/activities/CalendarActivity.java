@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,6 +18,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
@@ -27,6 +30,8 @@ import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
  * Created by jahepi on 12/03/16.
  */
 public class CalendarActivity extends AuthActivity implements View.OnClickListener {
+
+    private CustomCalendar caldroidFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +56,7 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
             }
         }
 
-        CustomCalendar caldroidFragment = new CustomCalendar();
+        caldroidFragment = new CustomCalendar();
         Bundle args = new Bundle();
         int month = cal.get(Calendar.MONTH) + 1;
         int year = cal.get(Calendar.YEAR);
@@ -59,9 +64,6 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
         args.putInt(CaldroidFragment.YEAR, year);
         caldroidFragment.setArguments(args);
         caldroidFragment.setSelectedDate(cal.getTime());
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("application", application);
-        caldroidFragment.setExtraData(map);
 
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendarFragment, caldroidFragment);
@@ -74,6 +76,17 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 intent.putExtra(CustomApplication.GENERIC_INTENT, dateFormat.format(date));
                 startActivity(intent);
+            }
+
+            public void onChangeMonth(int month, int year) {
+                ArrayList<CalendarData> list = application.getCalendarData(year, month);
+                Iterator<CalendarData> iterator = list.iterator();
+                HashMap<String, Object> extraData = new HashMap<String, Object>();
+                while (iterator.hasNext()) {
+                    CalendarData data = iterator.next();
+                    extraData.put(data.getDate(), data);
+                }
+                caldroidFragment.setExtraData(extraData);
             }
         });
     }
