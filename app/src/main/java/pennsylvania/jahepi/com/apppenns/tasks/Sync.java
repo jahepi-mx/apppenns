@@ -307,11 +307,12 @@ public class Sync extends Service {
 
     private void syncNewMessages() {
         ArrayList<Message> notifyMessages = new ArrayList<Message>();
-        ArrayList<Message> messages = application.getNewMessages();
-        Iterator<Message> iterator = messages.iterator();
-        String url = CustomApplication.SERVICE_URL + "intranet/android/newMessage";
-        while (iterator.hasNext()) {
-            try {
+        ArrayList<Message> messages = null;
+        try {
+            messages = application.getNewMessages();
+            Iterator<Message> iterator = messages.iterator();
+            String url = CustomApplication.SERVICE_URL + "intranet/android/newMessage";
+            while (iterator.hasNext()) {
                 Message message = (Message) iterator.next();
                 HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -345,9 +346,9 @@ public class Sync extends Service {
                     Log.d(TAG, "syncNewMessages code invalid");
                 }
 
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
             }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
         }
 
         if (notifyMessages.size() > 0) {
@@ -358,11 +359,12 @@ public class Sync extends Service {
 
     private void syncNewTasks() {
         ArrayList<Task> notifyTasks = new ArrayList<Task>();
-        ArrayList<Task> tasks = application.getNewTasks();
-        Iterator<Task> iterator = tasks.iterator();
-        String url = CustomApplication.SERVICE_URL + "intranet/android/newTask";
-        while (iterator.hasNext()) {
-            try {
+        ArrayList<Task> tasks = null;
+        try {
+            tasks = application.getNewTasks();
+            Iterator<Task> iterator = tasks.iterator();
+            String url = CustomApplication.SERVICE_URL + "intranet/android/newTask";
+            while (iterator.hasNext()) {
                 Task task = (Task) iterator.next();
                 HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -410,9 +412,9 @@ public class Sync extends Service {
                     Log.d(TAG, "syncNewTasks code invalid");
                 }
 
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
             }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
         }
         if (notifyTasks.size() > 0) {
             application.notifySendTasks(tasks);
@@ -421,11 +423,11 @@ public class Sync extends Service {
     }
 
     private void syncReadMessages() {
-        ArrayList<Message> messages = application.getMessagesRead();
-        Iterator<Message> iterator = messages.iterator();
-        String url = CustomApplication.SERVICE_URL + "intranet/android/updateReadMessage";
-        while (iterator.hasNext()) {
-            try {
+        try {
+            ArrayList<Message> messages = application.getMessagesRead();
+            Iterator<Message> iterator = messages.iterator();
+            String url = CustomApplication.SERVICE_URL + "intranet/android/updateReadMessage";
+            while (iterator.hasNext()) {
                 Message message = (Message) iterator.next();
                 HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -457,9 +459,9 @@ public class Sync extends Service {
                     Log.d(TAG, "syncReadMessages code invalid");
                 }
 
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
             }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
         }
         Log.d(TAG, "syncReadMessages finalized");
     }

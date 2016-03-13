@@ -7,15 +7,21 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidGridAdapter;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.components.CustomCalendar;
+import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 
 /**
  * Created by jahepi on 12/03/16.
@@ -45,12 +51,17 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
             }
         }
 
-        CaldroidFragment caldroidFragment = new CaldroidFragment();
+        CustomCalendar caldroidFragment = new CustomCalendar();
         Bundle args = new Bundle();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        args.putInt(CaldroidFragment.MONTH, month);
+        args.putInt(CaldroidFragment.YEAR, year);
         caldroidFragment.setArguments(args);
         caldroidFragment.setSelectedDate(cal.getTime());
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("application", application);
+        caldroidFragment.setExtraData(map);
 
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendarFragment, caldroidFragment);

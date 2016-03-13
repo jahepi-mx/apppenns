@@ -81,6 +81,16 @@ public class Database {
         return db.rawQuery(sql, null);
     }
 
+    public Cursor getCalendarData(int year, int month) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String monthStr = Integer.toString(month);
+        if (month < 10) {
+            monthStr = "0" + month;
+        }
+        String sql = "SELECT register_date, COUNT(*) AS quantity FROM tasks WHERE register_date LIKE '%s-%s-__' GROUP BY register_date";
+        return db.rawQuery(String.format(sql, year, monthStr), null);
+    }
+
     public int delete(String table, String condition) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         return db.delete(table, condition, null);

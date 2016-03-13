@@ -6,10 +6,11 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import pennsylvania.jahepi.com.apppenns.entities.Address;
+import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
-import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
@@ -508,5 +509,20 @@ public class Dao {
             return true;
         }
         return false;
+    }
+
+    public HashMap<String, Object> getCalendarData(int year, int month) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        Cursor cursor = db.getCalendarData(year, month);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                CalendarData data = new CalendarData();
+                data.setDate(cursor.getString(0));
+                data.setQuantity(cursor.getInt(1));
+                map.put(data.getDate(), data);
+            }
+            cursor.close();
+        }
+        return map;
     }
 }

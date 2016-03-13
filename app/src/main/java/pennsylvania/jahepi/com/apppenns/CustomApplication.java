@@ -13,9 +13,11 @@ import com.nullwire.trace.ExceptionHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.entities.Address;
+import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -261,6 +263,10 @@ public class CustomApplication extends Application {
 
     public ArrayList<Client> getClients(String name) {
         return dao.getClients(getUser().getId(), name);
+    }
+
+    public HashMap<String, Object> getCalendarData(int year, int month) {
+        return dao.getCalendarData(year, month);
     }
 
     public ArrayList<Address> getAddresses(Client client) {
