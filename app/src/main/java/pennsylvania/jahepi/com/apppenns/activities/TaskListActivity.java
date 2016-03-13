@@ -71,6 +71,16 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
             }
         });
 
+        Button calendarBtn = (Button) findViewById(R.id.calendarBtn);
+        calendarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TaskListActivity.this, CalendarActivity.class);
+                intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
+                startActivity(intent);
+            }
+        });
+
         ImageButton homeBtn = (ImageButton) findViewById(R.id.homeBtn);
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,9 +7,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
+import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 
 /**
@@ -38,6 +43,27 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendarFragment, caldroidFragment);
         t.commit();
+
+        Intent intent = getIntent();
+        String date = intent.getStringExtra(CustomApplication.GENERIC_INTENT);
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                caldroidFragment.setSelectedDate(dateFormat.parse(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        caldroidFragment.setCaldroidListener(new CaldroidListener() {
+            @Override
+            public void onSelectDate(Date date, View view) {
+                Intent intent = new Intent(CalendarActivity.this, TaskListActivity.class);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                intent.putExtra(CustomApplication.GENERIC_INTENT, dateFormat.format(date));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
