@@ -265,7 +265,7 @@ public class CustomApplication extends Application {
         return dao.getClients(getUser().getId(), name);
     }
 
-    public HashMap<String, Object> getCalendarData(int year, int month) {
+    public ArrayList<CalendarData> getCalendarData(int year, int month) {
         return dao.getCalendarData(year, month);
     }
 

@@ -511,18 +511,18 @@ public class Dao {
         return false;
     }
 
-    public HashMap<String, Object> getCalendarData(int year, int month) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+    public ArrayList<CalendarData> getCalendarData(int year, int month) {
+        ArrayList<CalendarData> list = new ArrayList<CalendarData>();
         Cursor cursor = db.getCalendarData(year, month);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 CalendarData data = new CalendarData();
                 data.setDate(cursor.getString(0));
                 data.setQuantity(cursor.getInt(1));
-                map.put(data.getDate(), data);
+                list.add(data);
             }
             cursor.close();
         }
-        return map;
+        return list;
     }
 }

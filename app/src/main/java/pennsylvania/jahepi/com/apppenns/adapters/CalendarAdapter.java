@@ -1,6 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import com.roomorama.caldroid.CaldroidGridAdapter;
 import java.util.Map;
 
 import hirondelle.date4j.DateTime;
-import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 
@@ -27,9 +27,18 @@ public class CalendarAdapter extends CaldroidGridAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
+        if (convertView == null || convertView.getTag() == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.calendar_cell, null);
+
+            TextView tv1 = (TextView) convertView.findViewById(R.id.tv1);
+            TextView tv2 = (TextView) convertView.findViewById(R.id.tv2);
+
+            ViewHolder holder = new ViewHolder();
+            holder.tv1 = tv1;
+            holder.tv2 = tv2;
+
+            convertView.setTag(holder);
         }
 
         int topPadding = convertView.getPaddingTop();
@@ -37,24 +46,52 @@ public class CalendarAdapter extends CaldroidGridAdapter {
         int bottomPadding = convertView.getPaddingBottom();
         int rightPadding = convertView.getPaddingRight();
 
-        TextView tv1 = (TextView) convertView.findViewById(R.id.tv1);
-        TextView tv2 = (TextView) convertView.findViewById(R.id.tv2);
+        ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        tv1.setTextColor(Color.BLACK);
-        tv2.setTextColor(Color.RED);
+        holder.tv1.setTextColor(Color.BLACK);
+        holder.tv2.setTextColor(Color.RED);
 
         DateTime dateTime = this.datetimeList.get(position);
+        Resources resources = context.getResources();
 
         String key = dateTime.format("YYYY-MM-DD");
-        CustomApplication application = (CustomApplication) extraData.get("application");
+        CalendarData calendarData = (CalendarData) getExtraData().get(key);
 
-        int year = dateTime.getYear();
-        int month = dateTime.getMonth();
-        Map<String, Object> map = application.getCalendarData(year, month);
-        CalendarData calendarData = (CalendarData) map.get(key);
-        tv1.setText("" + dateTime.getDay());
+        boolean hasTasks = false;
+        holder.tv1.setText("" + dateTime.getDay());
         if (calendarData != null) {
-            tv2.setText("" + calendarData.getQuantity());
+            holder.tv2.setText("" + calendarData.getQuantity());
+            holder.tv2.setBackgroundColor(Color.RED);
+            holder.tv2.setTextColor(Color.WHITE);
+            hasTasks = true;
+        } else {
+            holder.tv2.setText("");
+            holder.tv2.setBackgroundColor(Color.WHITE);
+        }
+
+        if (dateTime.getMonth() != month) {
+            holder.tv1.setTextColor(resources.getColor(com.caldroid.R.color.caldroid_darker_gray));
+        }
+
+        boolean shouldResetSelectedView = false;
+        // Customize for selected dates
+        if (selectedDates != null && selectedDates.indexOf(dateTime) != -1) {
+            convertView.setBackgroundColor(resources.getColor(com.caldroid.R.color.caldroid_sky_blue));
+            holder.tv1.setTextColor(Color.BLACK);
+            if (!hasTasks) {
+                holder.tv2.setBackgroundColor(Color.TRANSPARENT);
+            }
+        } else {
+            shouldResetSelectedView = true;
+        }
+
+        if (shouldResetSelectedView) {
+            // Customize for today
+            if (dateTime.equals(getToday())) {
+                convertView.setBackgroundResource(com.caldroid.R.drawable.red_border);
+            } else {
+                convertView.setBackgroundResource(com.caldroid.R.drawable.cell_bg);
+            }
         }
 
         // Somehow after setBackgroundResource, the padding collapse.
@@ -62,5 +99,9 @@ public class CalendarAdapter extends CaldroidGridAdapter {
         convertView.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
 
         return convertView;
+    }
+
+    private static class ViewHolder {
+        TextView tv1, tv2;
     }
 }
