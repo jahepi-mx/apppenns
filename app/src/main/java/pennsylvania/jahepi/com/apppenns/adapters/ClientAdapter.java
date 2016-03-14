@@ -19,11 +19,8 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
  */
 public class ClientAdapter extends ArrayAdapter<Client> {
 
-    private CustomApplication application;
-
-    public ClientAdapter(Context context, CustomApplication application, int resource) {
+    public ClientAdapter(Context context, int resource) {
         super(context, resource);
-        this.application = application;
     }
 
     @Override
@@ -53,7 +50,7 @@ public class ClientAdapter extends ArrayAdapter<Client> {
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 if (constraint != null) {
-                    ArrayList<Client> clients = application.getClients(constraint.toString());
+                    ArrayList<Client> clients = ((CustomApplication) getContext()).getClients(constraint.toString());
                     results.count = clients.size();
                     results.values = clients;
                     if (clients.size() > 0) {

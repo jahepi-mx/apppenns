@@ -12,6 +12,6 @@ public class CustomCalendar extends CaldroidFragment {
 
     @Override
     public CaldroidGridAdapter getNewDatesGridAdapter(int month, int year) {
-        return new CalendarAdapter(getActivity(), month, year, getCaldroidData(), extraData);
+        return new CalendarAdapter(getActivity().getApplicationContext(), month, year, getCaldroidData(), extraData);
     }
 }

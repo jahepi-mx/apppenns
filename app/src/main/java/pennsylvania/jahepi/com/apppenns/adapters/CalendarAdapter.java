@@ -66,7 +66,7 @@ public class CalendarAdapter extends CaldroidGridAdapter {
             hasTasks = true;
         } else {
             holder.tv2.setText("");
-            holder.tv2.setBackgroundColor(Color.WHITE);
+            holder.tv2.setBackgroundColor(Color.TRANSPARENT);
         }
 
         if (dateTime.getMonth() != month) {

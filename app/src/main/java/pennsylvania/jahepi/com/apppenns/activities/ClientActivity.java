@@ -34,8 +34,8 @@ public class ClientActivity extends AuthActivity implements AdapterView.OnItemCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.client_search);
-        clientAdapter = new ClientAdapter(this, application, R.layout.generic_item);
-        addressAdapter = new AddressAdapter(this, R.layout.generic_item);
+        clientAdapter = new ClientAdapter(getApplicationContext(), R.layout.generic_item);
+        addressAdapter = new AddressAdapter(getApplicationContext(), R.layout.generic_item);
 
         addressListView = (ListView) findViewById(R.id.addressListView);
         addressListView.setAdapter(addressAdapter);

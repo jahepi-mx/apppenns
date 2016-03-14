@@ -3,10 +3,12 @@ package pennsylvania.jahepi.com.apppenns.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.tasks.ClientSync;
 
@@ -70,16 +72,40 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
     protected void onStart() {
         super.onStart();
         messageNotifier = new MessageNotifier();
+        messageNotifier.setContext(application);
+        messageNotifier.setView(viewSms);
         messageNotifier.execute();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        messageNotifier.cancel(true);
+        if (messageNotifier != null) {
+            messageNotifier.cancel(true);
+            messageNotifier.clear();
+            messageNotifier = null;
+        }
     }
 
-    private class MessageNotifier extends AsyncTask {
+    private static class MessageNotifier extends AsyncTask {
+
+        private CustomApplication context;
+        private TextView view;
+        private Handler handler = new Handler();
+
+        public void setContext(CustomApplication context) {
+            this.context = context;
+        }
+
+        public void setView(TextView view) {
+            this.view = view;
+        }
+
+        public void clear() {
+            view = null;
+            context = null;
+            handler = null;
+        }
 
         @Override
         protected Object doInBackground(Object[] params) {
@@ -89,13 +115,14 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                final int total = application.getNoReadMessagesTotal();
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewSms.setText(String.format(getString(R.string.label_new_sms), total));
-                    }
+                final int total = context.getNoReadMessagesTotal();
+                handler.post(new Runnable() {
+                     @Override
+                     public void run() {
+                         view.setText(String.format(context.getString(R.string.label_new_sms), total));
+                     }
                 });
+
             }
             return null;
         }

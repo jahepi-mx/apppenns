@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.entities.Entity;
@@ -28,9 +29,9 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
 
     private User user;
 
-    public MessageAdapter(Context context, int resource, User user) {
+    public MessageAdapter(Context context, int resource) {
         super(context, resource);
-        this.user = user;
+        this.user = ((CustomApplication) context).getUser();
     }
 
     @Override

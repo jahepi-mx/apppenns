@@ -103,7 +103,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
             }
         });
 
-        adapter = new TaskAdapter(this, R.layout.task_item);
+        adapter = new TaskAdapter(getApplicationContext(), R.layout.task_item);
         adapter.addAll(tasks);
 
         ListView listView = (ListView) findViewById(R.id.taskListView);
