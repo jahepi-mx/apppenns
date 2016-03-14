@@ -92,6 +92,14 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.remove(caldroidFragment);
+        caldroidFragment = null;
+    }
+
+    @Override
     public void onClick(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

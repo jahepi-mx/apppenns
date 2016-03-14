@@ -133,6 +133,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 task.setSend(false);
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(this, TaskListActivity.class);
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
                     startActivity(intent);
                     return;
                 }
@@ -162,6 +163,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 task.setConclusion(checkOutAlert.getConclusion());
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(this, TaskListActivity.class);
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
                     startActivity(intent);
                     return;
                 }
