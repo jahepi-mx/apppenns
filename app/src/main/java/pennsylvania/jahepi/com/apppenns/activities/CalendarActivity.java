@@ -52,13 +52,8 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
             }
         }
 
-        caldroidFragment = new CustomCalendar();
-        Bundle args = new Bundle();
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
-        args.putInt(CaldroidFragment.MONTH, month);
-        args.putInt(CaldroidFragment.YEAR, year);
-        caldroidFragment.setArguments(args);
+        caldroidFragment = CustomCalendar.getInstance();
+        caldroidFragment.clearSelectedDates();
         caldroidFragment.setSelectedDate(cal.getTime());
 
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -83,8 +78,22 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
                     extraData.put(data.getDate(), data);
                 }
                 caldroidFragment.setExtraData(extraData);
+                caldroidFragment.refreshView();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        caldroidFragment.setCaldroidListener(null);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.remove(caldroidFragment);
+        t.commit();
     }
 
     @Override
