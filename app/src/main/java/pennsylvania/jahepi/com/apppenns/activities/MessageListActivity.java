@@ -38,7 +38,7 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
         listView = (ListView) findViewById(R.id.messageListView);
         messages = application.getMessages();
 
-        adapter = new MessageAdapter(this, R.layout.message_item, application.getUser());
+        adapter = new MessageAdapter(getApplicationContext(), R.layout.message_item, application.getUser());
         adapter.addAll(messages);
 
         listView.setAdapter(adapter);
