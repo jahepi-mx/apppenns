@@ -2,13 +2,11 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidGridAdapter;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.text.ParseException;
@@ -18,8 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
@@ -89,14 +85,6 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
                 caldroidFragment.setExtraData(extraData);
             }
         });
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        t.remove(caldroidFragment);
-        caldroidFragment = null;
     }
 
     @Override
