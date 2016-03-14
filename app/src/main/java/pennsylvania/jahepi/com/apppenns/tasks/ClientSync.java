@@ -3,6 +3,7 @@ package pennsylvania.jahepi.com.apppenns.tasks;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,17 +40,17 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
     private static final String TAG = "ClientSync";
 
     private ProgressDialog dialog;
-    private Activity activity;
+    private Context context;
 
-    public ClientSync(Activity activity) {
+    public ClientSync(Context context) {
         dialog = new ProgressDialog();
         dialog.setListener(this);
-        this.activity = activity;
+        this.context = context;
     }
 
     @Override
     protected void onPreExecute() {
-        dialog.show(activity.getFragmentManager(), TAG);
+        dialog.show(((Activity) context).getFragmentManager(), TAG);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
     protected void onPostExecute(Void aVoid) {
         cancel(true);
         dialog.dismiss();
-        activity = null;
+        context = null;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
 
     private void syncClients() {
         try {
-            CustomApplication application = (CustomApplication) activity.getApplication();
+            CustomApplication application = (CustomApplication) ((Activity) context).getApplication();
             String url = CustomApplication.SERVICE_URL + "intranet/android/getClients/" + application.getUser().getId();
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost postRequest = new HttpPost(url);
@@ -122,12 +123,12 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
                 }
 
                 final float percentage = (float) i / (float) clients.length() * 100;
-                activity.runOnUiThread(new Runnable() {
+                ((Activity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
                             dialog.setStatus(name);
-                            dialog.setTitle(String.format(activity.getString(R.string.txt_sync_status), (int) percentage + "%"));
+                            dialog.setTitle(String.format(context.getString(R.string.txt_sync_status), (int) percentage + "%"));
                             dialog.setProgress((int) percentage);
                         } catch (Exception exp) {
                             exp.printStackTrace();
@@ -145,7 +146,7 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
     public void onClick(View v) {
         cancel(true);
         dialog.dismiss();
-        activity = null;
+        context = null;
     }
 
     public static class ProgressDialog extends DialogFragment {
