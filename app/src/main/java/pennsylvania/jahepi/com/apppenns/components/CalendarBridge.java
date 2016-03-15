@@ -32,30 +32,18 @@ public class CalendarBridge {
 
     public long addEvent(String startDateTime, String endDateTime, String title, String description) {
         long eventID = 0;
-
-        Calendar beginTime = Calendar.getInstance();
         try {
+            Calendar beginTime = Calendar.getInstance();
             beginTime.setTime(dateFormat.parse(startDateTime));
-        } catch (Exception exp) {
-            exp.printStackTrace();
-        }
-
-        Calendar endTime = Calendar.getInstance();
-        try {
+            Calendar endTime = Calendar.getInstance();
             endTime.setTime(dateFormat.parse(endDateTime));
-        } catch (Exception exp) {
-            exp.printStackTrace();
-        }
-
-        ContentValues values = new ContentValues();
-        values.put(Events.DTSTART, beginTime.getTimeInMillis());
-        values.put(Events.DTEND, endTime.getTimeInMillis());
-        values.put(Events.TITLE, title);
-        values.put(Events.DESCRIPTION, description);
-        values.put(Events.CALENDAR_ID, CalendarBridge.ID);
-        values.put(Events.EVENT_TIMEZONE, CalendarBridge.TIMEZONE);
-
-        try {
+            ContentValues values = new ContentValues();
+            values.put(Events.DTSTART, beginTime.getTimeInMillis());
+            values.put(Events.DTEND, endTime.getTimeInMillis());
+            values.put(Events.TITLE, title);
+            values.put(Events.DESCRIPTION, description);
+            values.put(Events.CALENDAR_ID, CalendarBridge.ID);
+            values.put(Events.EVENT_TIMEZONE, CalendarBridge.TIMEZONE);
             Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
             eventID = Long.parseLong(uri.getLastPathSegment());
             ContentValues valuesReminder = new ContentValues();
@@ -65,13 +53,14 @@ public class CalendarBridge {
             contentResolver.insert(Reminders.CONTENT_URI, valuesReminder);
         } catch (SecurityException exp) {
             exp.printStackTrace();
+        } catch (Exception exp) {
+            exp.printStackTrace();
         }
         return eventID;
     }
 
     public boolean removeEvent(int id) {
-        Uri deleteUri = null;
-        deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, id);
+        Uri deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, id);
         int rows = contentResolver.delete(deleteUri, null, null);
         return rows > 0;
     }
