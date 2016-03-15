@@ -117,10 +117,14 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
                 }
                 final int total = context.getNoReadMessagesTotal();
                 handler.post(new Runnable() {
-                     @Override
-                     public void run() {
-                         view.setText(String.format(context.getString(R.string.label_new_sms), total));
-                     }
+                    @Override
+                    public void run() {
+                        try {
+                            view.setText(String.format(context.getString(R.string.label_new_sms), total));
+                        } catch (Exception exp) {
+                            exp.printStackTrace();
+                        }
+                    }
                 });
 
             }
