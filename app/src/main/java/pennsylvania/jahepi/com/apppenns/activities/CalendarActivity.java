@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.components.CustomCalendar;
 import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 
@@ -43,18 +44,28 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
         Calendar cal = Calendar.getInstance();
         Intent intent = getIntent();
         String date = intent.getStringExtra(CustomApplication.GENERIC_INTENT);
+
+        Date dateObj = null;
+        if (date == null) {
+            date = Util.getDate();
+        }
         if (date != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                cal.setTime(dateFormat.parse(date));
+                dateObj = dateFormat.parse(date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
 
         caldroidFragment = CustomCalendar.getInstance();
+        Bundle args = caldroidFragment.getArguments();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        args.putInt(CaldroidFragment.MONTH, month);
+        args.putInt(CaldroidFragment.YEAR, year);
         caldroidFragment.clearSelectedDates();
-        caldroidFragment.setSelectedDate(cal.getTime());
+        caldroidFragment.setSelectedDate(dateObj);
 
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendarFragment, caldroidFragment);
@@ -78,7 +89,6 @@ public class CalendarActivity extends AuthActivity implements View.OnClickListen
                     extraData.put(data.getDate(), data);
                 }
                 caldroidFragment.setExtraData(extraData);
-                caldroidFragment.refreshView();
             }
         });
     }
