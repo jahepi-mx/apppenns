@@ -19,7 +19,12 @@ public class CustomCalendar extends CaldroidFragment {
     public static CustomCalendar getInstance() {
         if (self == null) {
             self = new CustomCalendar();
+            Calendar cal = Calendar.getInstance();
             Bundle args = new Bundle();
+            int month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            args.putInt(CaldroidFragment.MONTH, month);
+            args.putInt(CaldroidFragment.YEAR, year);
             self.setArguments(args);
         }
         return self;
