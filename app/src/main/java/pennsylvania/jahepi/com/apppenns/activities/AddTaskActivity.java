@@ -161,6 +161,12 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setType(type);
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);
+
+                // Add event to calendar provider
+                long calendarEventId  = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
+
+                task.setEventId((int) calendarEventId);
+
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());

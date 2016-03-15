@@ -25,6 +25,7 @@ public class Task extends Entity {
     private String startTime;
     private String endTime;
     private boolean cancelled;
+    private int eventId;
 
     public Task() {
         checkInCoord = new Coord();
@@ -161,6 +162,14 @@ public class Task extends Entity {
         this.checkOutDate = checkOutDate;
     }
 
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
+    }
+
     public boolean isCancelled() {
         return cancelled;
     }
@@ -199,6 +208,14 @@ public class Task extends Entity {
 
     public void setDistance(double latitude, double longitude) {
         distance = Util.getDistance(latitude, longitude, address.getCoord().getLatitude(), address.getCoord().getLongitude());
+    }
+
+    public String getStartDateTime() {
+        return date + " " + startTime;
+    }
+
+    public String getEndDateTime() {
+        return date + " " + endTime;
     }
 
     @Override

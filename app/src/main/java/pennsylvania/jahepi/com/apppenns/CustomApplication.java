@@ -3,6 +3,7 @@ package pennsylvania.jahepi.com.apppenns;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,9 +14,9 @@ import com.nullwire.trace.ExceptionHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
 
+import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
@@ -46,6 +47,7 @@ public class CustomApplication extends Application {
     private boolean syncActive;
     private Gps gps;
     private Dao dao;
+    private CalendarBridge calendarBridge;
     private User user;
     private String androidId;
     private ArrayList<ApplicationNotifierListener> appNotifierListeners;
@@ -59,6 +61,7 @@ public class CustomApplication extends Application {
         gps = new Gps(this);
         dao = new Dao(getApplicationContext());
         gps.start();
+        calendarBridge = new CalendarBridge(this);
         appNotifierListeners = new ArrayList<ApplicationNotifierListener>();
         startSync();
     }
@@ -103,6 +106,18 @@ public class CustomApplication extends Application {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove(PREF_USER_ID);
         editor.apply();
+    }
+
+    public long addEvent(String startDateTime, String endDateTime, String title, String description) {
+        return calendarBridge.addEvent(startDateTime, endDateTime, title, description);
+    }
+
+    public boolean removeEvent(int id) {
+        return calendarBridge.removeEvent(id);
+    }
+
+    public void startCalendar(Context context, String date) {
+        calendarBridge.startCalendar(context, date);
     }
 
     public User getUser() {
@@ -258,7 +273,7 @@ public class CustomApplication extends Application {
     }
 
     public boolean saveAddress(Address address) {
-        return dao.saveAdress(address);
+        return dao.saveAddress(address);
     }
 
     public ArrayList<Client> getClients(String name) {

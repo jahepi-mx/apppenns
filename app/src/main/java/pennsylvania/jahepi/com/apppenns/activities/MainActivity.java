@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.tasks.ClientSync;
 
 /**
@@ -64,7 +66,8 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
             clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         if (v == calendarBtn) {
-            startActivity(new Intent(this, CalendarActivity.class));
+            // startActivity(new Intent(this, CalendarActivity.class));
+            CalendarBridge.startCalendar(this, Util.getDate());
         }
     }
 

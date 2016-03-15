@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
 
     <application
         android:allowBackup="true"
@@ -20,14 +23,14 @@
         <service android:name=".tasks.Sync"></service>
         <activity android:name=".activities.CalendarActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.MainActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.MessageViewActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.MessageSendActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.MessageListActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.MessageViewActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
+        <activity android:name=".activities.MessageSendActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
+        <activity android:name=".activities.MessageListActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.AddTaskActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.TaskListActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.ClientActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait">
+        <activity android:name=".activities.ClientActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
+        <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

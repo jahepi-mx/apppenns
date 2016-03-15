@@ -334,6 +334,7 @@ public class Dao {
         task.setCancelled(cursor.getInt(26) == 1);
         task.setStartTime(cursor.getString(31));
         task.setEndTime(cursor.getString(32));
+        task.setEventId(cursor.getInt(33));
 
         Type type = new Type();
         type.setId(cursor.getInt(27));
@@ -367,6 +368,7 @@ public class Dao {
             values.put("type", task.getType().getId());
             values.put("start_time", task.getStartTime());
             values.put("end_time", task.getEndTime());
+            values.put("event_id", task.getEventId());
 
             Task taskDB = getTask(task);
             if (taskDB != null) {
@@ -375,7 +377,8 @@ public class Dao {
                 }
             } else {
                 Log.d(TAG, task.toString());
-                db.insert(Database.TASKS_TABLE, values);
+                long id = db.insert(Database.TASKS_TABLE, values);
+                task.setId((int) id);
             }
             return true;
         }
@@ -485,7 +488,7 @@ public class Dao {
         return address;
     }
 
-    public boolean saveAdress(Address address) {
+    public boolean saveAddress(Address address) {
         if (address != null) {
             ContentValues values = new ContentValues();
             values.put("id", address.getId());

@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,6 +18,7 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.TaskAdapter;
+import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
@@ -75,9 +75,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         calendarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TaskListActivity.this, CalendarActivity.class);
-                intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
-                startActivity(intent);
+                CalendarBridge.startCalendar(TaskListActivity.this, dateBtn.getText().toString());
             }
         });
 
@@ -121,9 +119,26 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        try {
+            adapter.clear();
+            adapter.addAll(application.getTasks(dateBtn.getText().toString()));
+            onChangeLocation(application.getLatitude(), application.getLongitude());
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         application.removeMessageNotifierListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -149,6 +164,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
                 selectedTask.setCancelled(true);
                 selectedTask.setModifiedDate(Util.getDateTime());
                 application.saveTask(selectedTask);
+                application.removeEvent(selectedTask.getEventId());
                 selectedTask = null;
                 adapter.notifyDataSetChanged();
             }
