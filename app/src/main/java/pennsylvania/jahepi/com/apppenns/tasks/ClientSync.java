@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -89,7 +90,7 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
 
             JSONObject jObject = new JSONObject(jsonStr.toString());
             JSONArray clients = jObject.getJSONArray("clients");
-            for(int i = 0; i < clients.length() && !isCancelled(); i++) {
+            for (int i = 0; i < clients.length() && !isCancelled(); i++) {
 
                 JSONObject jsonClients = clients.getJSONObject(i);
                 final String name = jsonClients.getString("name");
@@ -139,10 +140,15 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
 
         } catch (Exception exp) {
             exp.printStackTrace();
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, context.getString(R.string.txt_error_client_sync), Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
-
-    @Override
+            @Override
     public void onClick(View v) {
         cancel(true);
         dialog.dismiss();

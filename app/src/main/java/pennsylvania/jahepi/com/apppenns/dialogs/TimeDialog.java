@@ -53,7 +53,7 @@ public class TimeDialog extends DialogFragment implements TimePickerDialog.OnTim
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        calendar.set(Calendar.HOUR, hourOfDay);
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         calendar.set(Calendar.MINUTE, minute);
         listener.accept(this);
     }
