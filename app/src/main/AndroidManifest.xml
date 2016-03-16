@@ -21,7 +21,6 @@
         android:name=".CustomApplication">
 
         <service android:name=".tasks.Sync"></service>
-        <activity android:name=".activities.CalendarActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.MainActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.MessageViewActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.MessageSendActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
