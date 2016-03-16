@@ -32,5 +32,4 @@ dependencies {
     compile files('libs/httpmime-4.1.2.jar')
     compile files('libs/jackson-all-1.9.11.jar')
     compile files('libs/tracer.jar')
-    compile 'com.roomorama:caldroid:3.0.1'
 }
