@@ -18,9 +18,9 @@ import java.util.Calendar;
  */
 public class CalendarBridge {
 
-    public static final long ID = 2;
     public static final String TIMEZONE = "America/Mexico_City";
     public static final int REMIDER_TIME = 15;
+    public static final int ID = 1;
 
     private ContentResolver contentResolver;
     private SimpleDateFormat dateFormat;
