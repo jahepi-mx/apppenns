@@ -54,12 +54,15 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         if (v == logoutBtn) {
             application.logout();
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
         if (v == smsBtn) {
             startActivity(new Intent(this, MessageListActivity.class));
+            finish();
         }
         if (v == activityBtn) {
             startActivity(new Intent(this, TaskListActivity.class));
+            finish();
         }
         if (v == clientSyncBtn) {
             ClientSync clientSync = new ClientSync(this);

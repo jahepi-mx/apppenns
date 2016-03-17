@@ -68,6 +68,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
                 Intent intent = new Intent(TaskListActivity.this, AddTaskActivity.class);
                 intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
                 startActivity(intent);
+                TaskListActivity.this.finish();
             }
         });
 
@@ -85,6 +86,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
             public void onClick(View v) {
                 Intent intent = new Intent(TaskListActivity.this, MainActivity.class);
                 startActivity(intent);
+                TaskListActivity.this.finish();
             }
         });
 
@@ -147,6 +149,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         Intent intent = new Intent(this, TaskViewActivity.class);
         intent.putExtra(CustomApplication.GENERIC_INTENT, task);
         startActivity(intent);
+        finish();
     }
 
     @Override

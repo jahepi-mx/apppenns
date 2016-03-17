@@ -71,6 +71,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
                 intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
                 startActivity(intent);
+                AddTaskActivity.this.finish();
             }
         });
 
@@ -80,6 +81,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             public void onClick(View v) {
                 Intent intent = new Intent(AddTaskActivity.this, MainActivity.class);
                 startActivity(intent);
+                AddTaskActivity.this.finish();
             }
         });
 
@@ -171,6 +173,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                     Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
                     startActivity(intent);
+                    finish();
                 } else {
                     toast(getString(R.string.txt_error_database));
                 }
