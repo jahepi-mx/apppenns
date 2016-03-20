@@ -280,8 +280,8 @@ public class CustomApplication extends Application {
         return dao.getClients(getUser().getId(), name);
     }
 
-    public ArrayList<CalendarData> getCalendarData(int year, int month) {
-        return dao.getCalendarData(year, month);
+    public ArrayList<String> getUserEmails(String keyword) {
+        return dao.getUserEmails(keyword);
     }
 
     public ArrayList<Address> getAddresses(Client client) {

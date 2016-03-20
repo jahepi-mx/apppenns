@@ -35,12 +35,19 @@ public class ClientAdapter extends ArrayAdapter<Client> {
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
         Client client = getItem(position);
-        holder.textView.setText(client.getName());
+        if (client != null) {
+            holder.textView.setText(client.getName());
+        }
         return convertView;
     }
 
-    private static class ViewHolder {
-        TextView textView;
+    @Override
+    public Client getItem(int position) {
+        try {
+            return super.getItem(position);
+        } catch (Exception exp) {
+            return null;
+        }
     }
 
     @Override
@@ -53,10 +60,6 @@ public class ClientAdapter extends ArrayAdapter<Client> {
                     ArrayList<Client> clients = ((CustomApplication) getContext()).getClients(constraint.toString());
                     results.count = clients.size();
                     results.values = clients;
-                    if (clients.size() > 0) {
-                        ClientAdapter.this.clear();
-                        ClientAdapter.this.addAll(clients);
-                    }
                 }
                 return results;
             }
@@ -64,10 +67,18 @@ public class ClientAdapter extends ArrayAdapter<Client> {
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 if (results != null && results.count > 0) {
+                    clear();
+                    addAll((ArrayList<Client>) results.values);
                     notifyDataSetChanged();
+                } else {
+                    notifyDataSetInvalidated();
                 }
             }
         };
         return filter;
+    }
+
+    private static class ViewHolder {
+        TextView textView;
     }
 }
