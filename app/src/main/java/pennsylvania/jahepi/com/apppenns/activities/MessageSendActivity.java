@@ -153,7 +153,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE && data != null) {
             String file = data.getStringExtra(Config.KEY_FILE_SELECTED);
             if (file != null) {
                 Log.d(TAG, file);
