@@ -28,10 +28,12 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
     private final static String TICK = "✔";
 
     private User user;
+    private int mResource;
 
     public MessageAdapter(Context context, int resource) {
         super(context, resource);
         this.user = ((CustomApplication) context).getUser();
+        mResource = resource;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
         if (convertView == null || convertView.getTag() == null) {
 
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.message_item, parent, false);
+            convertView = inflater.inflate(mResource, parent, false);
             TextView title = (TextView) convertView.findViewById(R.id.messageTitle);
             TextView text = (TextView) convertView.findViewById(R.id.messageText);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.messageIcon);

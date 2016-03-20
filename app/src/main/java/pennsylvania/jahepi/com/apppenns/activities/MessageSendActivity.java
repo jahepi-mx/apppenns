@@ -1,9 +1,9 @@
 package pennsylvania.jahepi.com.apppenns.activities;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +15,8 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
+import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.dialogs.ToDialog;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
@@ -26,6 +28,8 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 public class MessageSendActivity extends AuthActivity implements DialogListener {
 
     private static final String TAG = "MessageSendActivity";
+
+    private static final int REQUEST_CODE = 1;
 
     private ToDialog dialog;
     private ArrayList<User> users;
@@ -47,12 +51,21 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         toTextView = (TextView) findViewById(R.id.toAllTextView);
         messageEditText = (EditText) findViewById(R.id.messageEditText);
 
+        Button filesBtn = (Button) findViewById(R.id.filesBtn);
+        filesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(MessageSendActivity.this, FileChooserActivity.class), REQUEST_CODE);
+            }
+        });
+
         Button backBtn = (Button) findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MessageSendActivity.this, MessageListActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -62,6 +75,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             public void onClick(View v) {
                 Intent intent = new Intent(MessageSendActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -129,10 +143,21 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         dialog.reset();
         Intent intent = new Intent(MessageSendActivity.this, MessageListActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void cancel(Object dialogParam) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            String file = data.getStringExtra(Config.KEY_FILE_SELECTED);
+            if (file != null) {
+                Log.d(TAG, file);
+            }
+        }
     }
 }

@@ -98,6 +98,33 @@
             android:layout_height="wrap_content"
             android:padding="10dp">
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" />
+
+            <Button
+                android:layout_width="0dp"
+                android:id="@+id/filesBtn"
+                android:layout_weight="1"
+                android:text="@string/btn_attachment"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_button"
+                android:textColor="#fff"
+                android:layout_margin="5dp"
+                android:shadowRadius="1"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="2"

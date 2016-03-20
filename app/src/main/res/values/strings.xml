@@ -60,6 +60,7 @@
     <string name="btn_to">Agregar Remitentes</string>
     <string name="btn_login">Acceder</string>
     <string name="btn_send">Enviar</string>
+    <string name="btn_attachment">Agregar Archivo</string>
     <string name="btn_cancel">Cancelar</string>
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>
@@ -72,4 +73,6 @@
     <string name="btn_checkout">Salida</string>
     <string name="btn_yes">Si</string>
     <string name="btn_no">No</string>
+    <string name="txt_file_size">Tamaño</string>
+    <string name="txt_current_dir">Directorio Actual</string>
 </resources>

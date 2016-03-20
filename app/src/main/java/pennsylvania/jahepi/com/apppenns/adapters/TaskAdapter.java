@@ -25,16 +25,18 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
     private final static String URI_TASK =  "@drawable/task";
     private final static String TICK = "✔";
 
+    private int mResource;
 
     public TaskAdapter(Context context, int resource) {
         super(context, resource);
+        mResource = resource;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null || convertView.getTag() == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.task_item, parent, false);
+            convertView = inflater.inflate(mResource, parent, false);
 
             TextView taskText = (TextView) convertView.findViewById(R.id.taskText);
             TextView taskTitle = (TextView) convertView.findViewById(R.id.taskTitle);

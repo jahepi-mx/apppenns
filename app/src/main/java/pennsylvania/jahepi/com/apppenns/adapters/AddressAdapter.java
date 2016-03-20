@@ -15,15 +15,18 @@ import pennsylvania.jahepi.com.apppenns.entities.Address;
  */
 public class AddressAdapter extends ArrayAdapter<Address> {
 
+    private int mResource;
+
     public AddressAdapter(Context context, int resource) {
         super(context, resource);
+        mResource = resource;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null || convertView.getTag() == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.generic_item, null);
+            convertView = inflater.inflate(mResource, null);
             TextView textView = (TextView) convertView.findViewById(R.id.name);
             ViewHolder holder = new ViewHolder();
             holder.textView = textView;

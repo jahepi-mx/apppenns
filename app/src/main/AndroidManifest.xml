@@ -23,12 +23,13 @@
         <service android:name=".tasks.Sync"></service>
         <activity android:name=".activities.MainActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.MessageViewActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
-        <activity android:name=".activities.MessageSendActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
+        <activity android:name=".activities.MessageSendActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.MessageListActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.AddTaskActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.TaskListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.ClientActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
+        <activity android:name=".components.filechooser.activities.FileChooserActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
