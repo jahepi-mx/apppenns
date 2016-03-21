@@ -160,6 +160,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setDate(date);
                 task.setModifiedDate(Util.getDateTime());
                 task.setConclusion("");
+                task.setEmails("");
                 task.setType(type);
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);

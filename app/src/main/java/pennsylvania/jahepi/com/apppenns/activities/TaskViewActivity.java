@@ -161,6 +161,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 task.setCheckout(true);
                 task.setSend(false);
                 task.setConclusion(checkOutAlert.getConclusion());
+                task.setEmails(checkOutAlert.getEmails());
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());

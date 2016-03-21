@@ -51,6 +51,10 @@ public class CheckOutDialog extends AlertDialog implements DialogInterface.OnCli
         return editText.getText().toString();
     }
 
+    public String getEmails() {
+        return emailTextiew.getText().toString();
+    }
+
     @Override
     public void onClick(DialogInterface dialog, int which) {
         dismiss();
