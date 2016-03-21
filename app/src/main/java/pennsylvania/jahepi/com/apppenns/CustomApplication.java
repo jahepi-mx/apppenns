@@ -3,7 +3,6 @@ package pennsylvania.jahepi.com.apppenns;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +17,6 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
-import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -204,6 +202,18 @@ public class CustomApplication extends Application {
 
     public ArrayList<Type> getTypes() {
         return dao.getTypes();
+    }
+
+    public boolean saveFile(Message.File file) {
+        return dao.saveFile(file);
+    }
+
+    public ArrayList<Message.File> getNotSendFiles() {
+        return dao.getNotSendFiles();
+    }
+
+    public boolean updateFileAsSend(Message.File file) {
+        return dao.updateFileAsSend(file);
     }
 
     public void notifyNewMessages(ArrayList<Message> messages) {

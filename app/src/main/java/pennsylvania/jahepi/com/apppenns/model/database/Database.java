@@ -19,8 +19,9 @@ public class Database {
     public static final String CLIENTS_TABLE = "clients";
     public static final String TYPES_TABLE = "types";
     public static final String ATTACHMENTS_TABLE = "attachments";
+    public static final String FILES_TABLE = "files";
 
-    private static final int DB_VERSION = 23;
+    private static final int DB_VERSION = 24;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -79,6 +80,15 @@ public class Database {
             "INNER JOIN clients ON clients.id = addresses.client " +
             "INNER JOIN types ON tasks.type = types.id " +
             where + " " + orderBy;
+        return db.rawQuery(sql, null);
+    }
+
+    public Cursor getAttachments(String where, String orderBy) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String sql = "SELECT attachments.id AS attachment_id, files.id AS file_id, files.name, files.mime, files.path, files.date, files.active, files.send " +
+                "FROM attachments " +
+                "INNER JOIN files ON files.id = attachments.file " +
+                where + " " + orderBy;
         return db.rawQuery(sql, null);
     }
 
@@ -142,8 +152,10 @@ public class Database {
             Log.d(TAG, "Addresses table created!");
             db.execSQL("CREATE TABLE " + TYPES_TABLE + " (id INT PRIMARY KEY, name TEXT, date TEXT, active INT)");
             Log.d(TAG, "Types table created!");
-            db.execSQL("CREATE TABLE " + ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, message INT, path TEXT, name TEXT, date TEXT, active INT)");
+            db.execSQL("CREATE TABLE " + ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, message INT, file INT)");
             Log.d(TAG, "Attachments table created!");
+            db.execSQL("CREATE TABLE " + FILES_TABLE + " (id INTEGER PRIMARY KEY, path TEXT, name TEXT, mime TEXT, date TEXT, active INT, send INT)");
+            Log.d(TAG, "Files table created!");
         }
 
         @Override
@@ -162,6 +174,8 @@ public class Database {
             Log.d(TAG, "Types table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + ATTACHMENTS_TABLE);
             Log.d(TAG, "Attachments table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + FILES_TABLE);
+            Log.d(TAG, "Files table removed!");
             onCreate(db);
         }
     }

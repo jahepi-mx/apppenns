@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.entities.Address;
-import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -150,17 +149,91 @@ public class Dao {
         return false;
     }
 
+    public Message.File getFile(int fileId) {
+        Cursor cursor = db.get(Database.FILES_TABLE, String.format("id='%s'", fileId));
+        if (cursor != null) {
+            Message.File file = mapFile(cursor);
+            cursor.close();
+            return file;
+        }
+        return null;
+    }
+
+    public ArrayList<Message.File> getNotSendFiles() {
+        Cursor cursor = db.getAll(Database.FILES_TABLE, String.format("send='%s'", 0));
+        ArrayList<Message.File> files = new ArrayList<Message.File>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Message.File file = mapFile(cursor);
+                files.add(file);
+            }
+            cursor.close();
+        }
+        return files;
+    }
+
+    private Message.File mapFile(Cursor cursor) {
+        Message.File file = new Message.File();
+        file.setId(cursor.getInt(0));
+        file.setPath(cursor.getString(1));
+        file.setName(cursor.getString(2));
+        file.setMime(cursor.getString(3));
+        file.setModifiedDate(cursor.getString(4));
+        file.setActive(cursor.getInt(5) != 0);
+        file.setSend(cursor.getInt(6) == 1);
+        return file;
+    }
+
+    public boolean saveFile(Message.File file) {
+        if (file != null) {
+            ContentValues values = new ContentValues();
+            values.put("name", file.getName());
+            values.put("path", file.getPath());
+            values.put("mime", file.getMime());
+            values.put("send", file.isSend() ? 1 : 0);
+            values.put("active", file.isActive() ? 1 : 0);
+            values.put("date", file.getModifiedDateString());
+
+            Message.File fileDB = getFile(file.getId());
+            if (fileDB != null) {
+                if (fileDB.isGreaterDate(file)) {
+                    db.update(Database.FILES_TABLE, values, String.format("id='%s'", file.getId()));
+                }
+            } else {
+                values.put("id", file.getId());
+                long id = db.insert(Database.FILES_TABLE, values);
+                file.setId((int) id);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateFileAsSend(Message.File file) {
+        if (file != null) {
+            ContentValues values = new ContentValues();
+            values.put("send", "1");
+            return db.update(Database.FILES_TABLE, values, String.format("id='%s'", file.getId()));
+        }
+        return false;
+    }
+
     public ArrayList<Message.Attachment> getAttachments(Message message) {
         ArrayList<Message.Attachment> attachments = new ArrayList<Message.Attachment>();
-        Cursor cursor = db.getAllOrderBy(Database.ATTACHMENTS_TABLE, String.format("message='%s'", message.getId()), "id DESC");
+        Cursor cursor = db.getAttachments(String.format("WHERE attachments.message='%s'", message.getId()), "");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Message.Attachment attachment = new Message.Attachment();
                 attachment.setId(cursor.getInt(0));
-                attachment.setPath(cursor.getString(2));
-                attachment.setName(cursor.getString(3));
-                attachment.setModifiedDate(cursor.getString(4));
-                attachment.setActive(cursor.getInt(5) == 1);
+                Message.File file = new Message.File();
+                file.setId(cursor.getInt(1));
+                file.setName(cursor.getString(2));
+                file.setMime(cursor.getString(3));
+                file.setPath(cursor.getString(4));
+                file.setModifiedDate(cursor.getString(5));
+                file.setActive(cursor.getInt(6) == 1);
+                file.setSend(cursor.getInt(7) == 1);
+                attachment.setFile(file);
                 attachments.add(attachment);
             }
             cursor.close();
@@ -258,10 +331,7 @@ public class Dao {
                     ContentValues attachmentValues = new ContentValues();
                     Message.Attachment attachment = iterator.next();
                     attachmentValues.put("message", message.getId());
-                    attachmentValues.put("path", attachment.getPath());
-                    attachmentValues.put("name", attachment.getName());
-                    attachmentValues.put("date", attachment.getModifiedDateString());
-                    attachmentValues.put("active", attachment.isActive() ? 1 : 0);
+                    attachmentValues.put("file", attachment.getFile().getId());
                     db.insert(Database.ATTACHMENTS_TABLE, attachmentValues);
                 }
             }

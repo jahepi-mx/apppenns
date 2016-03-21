@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,7 +18,7 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
-import pennsylvania.jahepi.com.apppenns.adapters.AttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
@@ -39,14 +40,14 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     private TextView toTextView;
     private EditText messageEditText;
     private ListView attachmentList;
-    private AttachmentAdapter attachmentAdapter;
+    private FileAttachmentAdapter fileAttachmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_send);
 
-        attachmentAdapter = new AttachmentAdapter(getApplicationContext(), R.layout.generic_item);
+        fileAttachmentAdapter = new FileAttachmentAdapter(getApplicationContext(), R.layout.generic_item);
 
         users = application.getUsers();
         users.remove(application.getUser());
@@ -59,7 +60,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         messageEditText = (EditText) findViewById(R.id.messageEditText);
 
         attachmentList = (ListView) findViewById(R.id.attachmentsListView);
-        attachmentList.setAdapter(attachmentAdapter);
+        attachmentList.setAdapter(fileAttachmentAdapter);
 
         Button filesBtn = (Button) findViewById(R.id.filesBtn);
         filesBtn.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +140,16 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             return;
         }
 
+        ArrayList<Message.Attachment> attachments = new ArrayList<Message.Attachment>();
+        for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
+            Message.File file = fileAttachmentAdapter.getItem(i);
+            if (application.saveFile(file)) {
+                Message.Attachment attachment = new Message.Attachment();
+                attachment.setFile(file);
+                attachments.add(attachment);
+            }
+        }
+
         Iterator<User> tmpIterator = tmpUsers.iterator();
         while (tmpIterator.hasNext()) {
             User user = tmpIterator.next();
@@ -147,6 +158,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             message.setTo(user);
             message.setMessage(messageStr);
             message.setModifiedDate(Util.getDateTime());
+            message.addAttachments(attachments);
             application.saveMessage(message);
         }
 
@@ -167,12 +179,18 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
             if (file != null) {
                 Log.d(TAG, file.getAbsolutePath());
-                Message.Attachment attachment = new Message.Attachment();
-                attachment.setPath(file.getAbsolutePath());
-                attachment.setName(file.getName());
-                attachment.setModifiedDate(Util.getDateTime());
-                attachmentAdapter.add(attachment);
-                attachmentAdapter.notifyDataSetChanged();
+                Message.File attachmentFile = new Message.File();
+                attachmentFile.setPath(file.getAbsolutePath());
+                attachmentFile.setName(file.getName());
+                String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+                String mime = "";
+                if (extension != null) {
+                    mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                }
+                attachmentFile.setMime(mime);
+                attachmentFile.setModifiedDate(Util.getDateTime());
+                fileAttachmentAdapter.add(attachmentFile);
+                fileAttachmentAdapter.notifyDataSetChanged();
             }
         }
     }

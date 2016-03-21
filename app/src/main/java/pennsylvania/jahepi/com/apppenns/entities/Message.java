@@ -1,5 +1,6 @@
 package pennsylvania.jahepi.com.apppenns.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -118,11 +119,35 @@ public class Message extends Entity {
         return "to: " + to.getId() + " from: " + from.getId() + " date: " + getModifiedDateString();
     }
 
-    public static class Attachment extends Entity {
+    public static class Attachment implements Serializable {
+
+        private int id;
+        private File file;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
+        public void setFile(File file) {
+            this.file = file;
+        }
+    }
+
+    public static class File extends Entity {
 
         private int id;
         private String name;
         private String path;
+        private String mime;
+        private boolean send;
 
         public int getId() {
             return id;
@@ -146,6 +171,22 @@ public class Message extends Entity {
 
         public void setPath(String path) {
             this.path = path;
+        }
+
+        public String getMime() {
+            return mime;
+        }
+
+        public void setMime(String mime) {
+            this.mime = mime;
+        }
+
+        public boolean isSend() {
+            return send;
+        }
+
+        public void setSend(boolean send) {
+            this.send = send;
         }
     }
 }

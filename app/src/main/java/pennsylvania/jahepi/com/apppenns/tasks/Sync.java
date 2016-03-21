@@ -320,6 +320,16 @@ public class Sync extends Service {
                 post.addPart("to", new StringBody(Integer.toString(message.getTo().getId())));
                 post.addPart("from", new StringBody(Integer.toString(message.getFrom().getId())));
                 post.addPart("date", new StringBody(message.getModifiedDateString()));
+
+                Iterator<Message.Attachment> attachmentIterator = message.getAttachmentsIterator();
+                while (attachmentIterator.hasNext()) {
+                    Message.Attachment attachment = attachmentIterator.next();
+                    post.addPart("attachment_name[]", new StringBody(attachment.getFile().getName()));
+                    post.addPart("attachment_path[]", new StringBody(attachment.getFile().getPath()));
+                    post.addPart("attachment_mime[]", new StringBody(attachment.getFile().getMime()));
+                    post.addPart("attachment_date[]", new StringBody(attachment.getFile().getModifiedDateString()));
+                }
+
                 postRequest.setEntity(post);
                 HttpResponse response = httpClient.execute(postRequest);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));

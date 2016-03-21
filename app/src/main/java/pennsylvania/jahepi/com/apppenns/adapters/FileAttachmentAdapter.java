@@ -13,11 +13,11 @@ import pennsylvania.jahepi.com.apppenns.entities.Message;
 /**
  * Created by jahepi on 20/03/16.
  */
-public class AttachmentAdapter extends ArrayAdapter<Message.Attachment> {
+public class FileAttachmentAdapter extends ArrayAdapter<Message.File> {
 
     private int mResource;
 
-    public AttachmentAdapter(Context context, int resource) {
+    public FileAttachmentAdapter(Context context, int resource) {
         super(context, resource);
         mResource = resource;
     }
