@@ -385,6 +385,7 @@ public class Sync extends Service {
                 post.addPart("checkin_date", new StringBody(task.getCheckInDate()));
                 post.addPart("checkout_date", new StringBody(task.getCheckOutDate()));
                 post.addPart("conclusion", new StringBody(task.getConclusion()));
+                post.addPart("emails", new StringBody(task.getEmails()));
                 post.addPart("cancelled", new StringBody(task.isCancelled() ? "1" : "0"));
                 postRequest.setEntity(post);
                 HttpResponse response = httpClient.execute(postRequest);

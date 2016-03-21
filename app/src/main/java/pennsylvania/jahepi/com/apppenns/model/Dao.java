@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.CalendarData;
@@ -149,6 +150,24 @@ public class Dao {
         return false;
     }
 
+    public ArrayList<Message.Attachment> getAttachments(Message message) {
+        ArrayList<Message.Attachment> attachments = new ArrayList<Message.Attachment>();
+        Cursor cursor = db.getAllOrderBy(Database.ATTACHMENTS_TABLE, String.format("message='%s'", message.getId()), "id DESC");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Message.Attachment attachment = new Message.Attachment();
+                attachment.setId(cursor.getInt(0));
+                attachment.setPath(cursor.getString(2));
+                attachment.setName(cursor.getString(3));
+                attachment.setModifiedDate(cursor.getString(4));
+                attachment.setActive(cursor.getInt(5) == 1);
+                attachments.add(attachment);
+            }
+            cursor.close();
+        }
+        return attachments;
+    }
+
     public ArrayList<Message> getMessages(int userId) {
         ArrayList<Message> messages = new ArrayList<Message>();
         Cursor cursor = db.getAllOrderBy(Database.MESSAGES_TABLE, String.format("from_user='%s' OR to_user='%s'", userId, userId), "id DESC");
@@ -208,6 +227,8 @@ public class Dao {
         message.setDelivered(cursor.getInt(5) == 1);
         message.setRead(cursor.getInt(6) == 1);
         message.setSend(cursor.getInt(7) == 1);
+        ArrayList<Message.Attachment> attachments = getAttachments(message);
+        message.addAttachments(attachments);
         return message;
     }
 
@@ -230,7 +251,19 @@ public class Dao {
                 }
             } else {
                 Log.d(TAG, message.toString());
-                db.insert(Database.MESSAGES_TABLE, values);
+                long id = db.insert(Database.MESSAGES_TABLE, values);
+                message.setId((int) id);
+                Iterator<Message.Attachment> iterator = message.getAttachmentsIterator();
+                while (iterator.hasNext()) {
+                    ContentValues attachmentValues = new ContentValues();
+                    Message.Attachment attachment = iterator.next();
+                    attachmentValues.put("message", message.getId());
+                    attachmentValues.put("path", attachment.getPath());
+                    attachmentValues.put("name", attachment.getName());
+                    attachmentValues.put("date", attachment.getModifiedDateString());
+                    attachmentValues.put("active", attachment.isActive() ? 1 : 0);
+                    db.insert(Database.ATTACHMENTS_TABLE, attachmentValues);
+                }
             }
             return true;
         }
@@ -335,6 +368,7 @@ public class Dao {
         task.setStartTime(cursor.getString(31));
         task.setEndTime(cursor.getString(32));
         task.setEventId(cursor.getInt(33));
+        task.setEmails(cursor.getString(34));
 
         Type type = new Type();
         type.setId(cursor.getInt(27));
@@ -369,6 +403,7 @@ public class Dao {
             values.put("start_time", task.getStartTime());
             values.put("end_time", task.getEndTime());
             values.put("event_id", task.getEventId());
+            values.put("emails", task.getEmails());
 
             Task taskDB = getTask(task);
             if (taskDB != null) {

@@ -26,6 +26,7 @@ public class Task extends Entity {
     private String endTime;
     private boolean cancelled;
     private int eventId;
+    private String emails;
 
     public Task() {
         checkInCoord = new Coord();
@@ -216,6 +217,14 @@ public class Task extends Entity {
 
     public String getEndDateTime() {
         return date + " " + endTime;
+    }
+
+    public String getEmails() {
+        return emails;
+    }
+
+    public void setEmails(String emails) {
+        this.emails = emails;
     }
 
     @Override

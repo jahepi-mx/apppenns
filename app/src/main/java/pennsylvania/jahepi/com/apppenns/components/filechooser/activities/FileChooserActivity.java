@@ -114,7 +114,7 @@ public class FileChooserActivity extends ListActivity {
         } else {
             fileSelected = new File(fileDescriptor.getPath());
             Intent intent = new Intent();
-            intent.putExtra(Config.KEY_FILE_SELECTED, fileSelected.getAbsolutePath());
+            intent.putExtra(Config.KEY_FILE_SELECTED, fileSelected);
             setResult(Activity.RESULT_OK, intent);
             Log.i(TAG, "result ok");
             finish();

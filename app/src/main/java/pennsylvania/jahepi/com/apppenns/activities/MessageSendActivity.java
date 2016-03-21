@@ -8,13 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.adapters.AttachmentAdapter;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
@@ -35,11 +38,15 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     private ArrayList<User> users;
     private TextView toTextView;
     private EditText messageEditText;
+    private ListView attachmentList;
+    private AttachmentAdapter attachmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_send);
+
+        attachmentAdapter = new AttachmentAdapter(getApplicationContext(), R.layout.generic_item);
 
         users = application.getUsers();
         users.remove(application.getUser());
@@ -50,6 +57,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
 
         toTextView = (TextView) findViewById(R.id.toAllTextView);
         messageEditText = (EditText) findViewById(R.id.messageEditText);
+
+        attachmentList = (ListView) findViewById(R.id.attachmentsListView);
+        attachmentList.setAdapter(attachmentAdapter);
 
         Button filesBtn = (Button) findViewById(R.id.filesBtn);
         filesBtn.setOnClickListener(new View.OnClickListener() {
@@ -154,9 +164,15 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && data != null) {
-            String file = data.getStringExtra(Config.KEY_FILE_SELECTED);
+            File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
             if (file != null) {
-                Log.d(TAG, file);
+                Log.d(TAG, file.getAbsolutePath());
+                Message.Attachment attachment = new Message.Attachment();
+                attachment.setPath(file.getAbsolutePath());
+                attachment.setName(file.getName());
+                attachment.setModifiedDate(Util.getDateTime());
+                attachmentAdapter.add(attachment);
+                attachmentAdapter.notifyDataSetChanged();
             }
         }
     }

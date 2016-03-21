@@ -1,5 +1,8 @@
 package pennsylvania.jahepi.com.apppenns.entities;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Created by javier.hernandez on 24/02/2016.
  */
@@ -13,6 +16,27 @@ public class Message extends Entity {
     private boolean read;
     private boolean readSync;
     private boolean send;
+    private ArrayList<Attachment> attachments;
+
+    public Message() {
+        attachments = new ArrayList<Attachment>();
+    }
+
+    public void addAttachment(Attachment attachment) {
+        attachments.add(attachment);
+    }
+
+    public void addAttachments(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public void removeAttachment(Attachment attachment) {
+        attachments.remove(attachment);
+    }
+
+    public Iterator<Attachment> getAttachmentsIterator() {
+        return attachments.iterator();
+    }
 
     public User getFrom() {
         return from;
@@ -92,5 +116,36 @@ public class Message extends Entity {
 
     public String toString() {
         return "to: " + to.getId() + " from: " + from.getId() + " date: " + getModifiedDateString();
+    }
+
+    public static class Attachment extends Entity {
+
+        private int id;
+        private String name;
+        private String path;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
     }
 }
