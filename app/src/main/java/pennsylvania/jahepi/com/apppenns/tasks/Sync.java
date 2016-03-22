@@ -83,6 +83,7 @@ public class Sync extends Service {
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 if (application.isLogged()) {
+                    syncFiles();
                     getMessages();
                     getReadMessages();
                     syncNewMessages();
@@ -215,6 +216,7 @@ public class Sync extends Service {
                     file.setPath(jsonAttachment.getString("path"));
                     file.setMime(jsonAttachment.getString("mime"));
                     file.setModifiedDate(jsonAttachment.getString("date"));
+                    file.setSend(true);
                     attachment.setFile(file);
                     message.addAttachment(attachment);
                 }
@@ -378,6 +380,48 @@ public class Sync extends Service {
             application.notifySendMessages(messages);
         }
         Log.d(TAG, "syncNewMessages finalized");
+    }
+
+    private void syncFiles() {
+        try {
+            ArrayList<Message.File> files = application.getNotSendFiles();
+            Iterator<Message.File> iterator = files.iterator();
+            String url = CustomApplication.SERVICE_URL + "intranet/android/uploadFile";
+            while (iterator.hasNext()) {
+                Message.File file = iterator.next();
+                HttpPost postRequest = new HttpPost(url);
+                MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                File fileRef = new File(file.getPath().substring(0, file.getPath().lastIndexOf(File.separator)), file.getName());
+                post.addPart("file", new FileBody(fileRef));
+                postRequest.setEntity(post);
+                HttpResponse response = httpClient.execute(postRequest);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
+                String sResponse = null;
+                StringBuilder jsonStr = new StringBuilder();
+
+                while ((sResponse = reader.readLine()) != null) {
+                    jsonStr = jsonStr.append(sResponse);
+                }
+
+                JSONObject jObject = new JSONObject(jsonStr.toString());
+                String messageStr = jObject.getString("message");
+                int code = jObject.getInt("code");
+
+                if (code == SUCCESS) {
+                    if (application.updateFileAsSend(file)) {
+                        Log.d(TAG, "syncFiles inserted: " + file.getName());
+                    } else {
+                        Log.d(TAG, "syncFiles not inserted: " + file.getName());
+                    }
+                } else {
+                    Log.d(TAG, "syncFiles code invalid");
+                }
+
+            }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+        Log.d(TAG, "syncFiles finalized");
     }
 
     private void syncNewTasks() {
