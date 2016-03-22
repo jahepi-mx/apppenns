@@ -1,19 +1,10 @@
 package pennsylvania.jahepi.com.apppenns.tasks;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -30,6 +21,7 @@ import java.io.InputStreamReader;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.dialogs.ProgressDialog;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 
@@ -51,7 +43,9 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
 
     @Override
     protected void onPreExecute() {
-        dialog.show(((Activity) context).getFragmentManager(), TAG);
+        if (!dialog.isAdded()) {
+            dialog.show(((Activity) context).getFragmentManager(), TAG);
+        }
     }
 
     @Override
@@ -153,51 +147,5 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
         cancel(true);
         dialog.dismiss();
         context = null;
-    }
-
-    public static class ProgressDialog extends DialogFragment {
-
-        private ProgressBar progressBar;
-        private Button cancelBtn;
-        private TextView statusTextView;
-        private View.OnClickListener listener;
-
-        public ProgressDialog() {
-            super();
-            setCancelable(false);
-        }
-
-        @Override
-        public void onStart() {
-            super.onStart();
-            setTitle(getString(R.string.txt_sync_start));
-        }
-
-        public void setTitle(String title ) {
-            getDialog().setTitle(title);
-        }
-
-        public void setStatus(String status) {
-            statusTextView.setText(status);
-        }
-
-        public void setProgress(final int progress) {
-            progressBar.setProgress(progress);
-        }
-
-        public void setListener(View.OnClickListener listener) {
-            this.listener = listener;
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.progress_dialog, container);
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-            cancelBtn = (Button) view.findViewById(R.id.cancelBtn);
-            statusTextView = (TextView) view.findViewById(R.id.statusTextView);
-            cancelBtn.setOnClickListener(listener);
-            return view;
-        }
     }
 }

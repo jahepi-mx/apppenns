@@ -10,16 +10,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
+import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.tasks.AttachmentTask;
 
 /**
  * Created by jahepi on 20/03/16.
  */
-public class FileAttachmentAdapter extends ArrayAdapter<Message.File> {
+public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements AttachmentTask.AttachmentTaskListener {
 
     private static final int REQUEST_CODE = 1;
 
@@ -75,14 +78,29 @@ public class FileAttachmentAdapter extends ArrayAdapter<Message.File> {
             @Override
             public void onClick(View v) {
                 Message.File file = getItem(position);
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(new File(file.getPath())), file.getMime());
-                ((Activity) getContext()).startActivityForResult(intent, REQUEST_CODE);
+                AttachmentTask attachmentTask = new AttachmentTask(getContext());
+                attachmentTask.setFile(file);
+                attachmentTask.setListener(FileAttachmentAdapter.this);
+                attachmentTask.execute();
             }
         });
 
         return convertView;
+    }
+
+    @Override
+    public void onFinish(boolean success, boolean downloaded, Message.File file) {
+        if (success) {
+            if (downloaded) {
+                ((CustomApplication) getContext().getApplicationContext()).saveFile(file);
+            }
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(new File(file.getPath())), file.getMime());
+            ((Activity) getContext()).startActivityForResult(intent, REQUEST_CODE);
+        } else {
+            Toast.makeText(getContext(), R.string.txt_error_file, Toast.LENGTH_LONG).show();
+        }
     }
 
     private static class ViewHolder {

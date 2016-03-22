@@ -391,7 +391,7 @@ public class Sync extends Service {
                 Message.File file = iterator.next();
                 HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                File fileRef = new File(file.getPath().substring(0, file.getPath().lastIndexOf(File.separator)), file.getName());
+                File fileRef = new File(file.getPathNoName(), file.getName());
                 post.addPart("file", new FileBody(fileRef));
                 postRequest.setEntity(post);
                 HttpResponse response = httpClient.execute(postRequest);

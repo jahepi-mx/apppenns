@@ -1,5 +1,6 @@
 package pennsylvania.jahepi.com.apppenns.entities;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -187,6 +188,10 @@ public class Message extends Entity {
 
         public void setSend(boolean send) {
             this.send = send;
+        }
+
+        public String getPathNoName() {
+            return getPath().substring(0, getPath().lastIndexOf(java.io.File.separator));
         }
     }
 }
