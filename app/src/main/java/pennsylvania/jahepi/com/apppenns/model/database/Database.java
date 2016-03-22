@@ -21,7 +21,7 @@ public class Database {
     public static final String ATTACHMENTS_TABLE = "attachments";
     public static final String FILES_TABLE = "files";
 
-    private static final int DB_VERSION = 24;
+    private static final int DB_VERSION = 25;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;

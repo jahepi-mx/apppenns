@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -47,7 +48,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_send);
 
-        fileAttachmentAdapter = new FileAttachmentAdapter(getApplicationContext(), R.layout.generic_item);
+        fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
 
         users = application.getUsers();
         users.remove(application.getUser());
@@ -182,8 +183,13 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
                 Message.File attachmentFile = new Message.File();
                 attachmentFile.setPath(file.getAbsolutePath());
                 attachmentFile.setName(file.getName());
-                String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+                String extension = "";
                 String mime = "";
+                try {
+                    extension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toURL().toString());
+                } catch (MalformedURLException exp) {
+                    exp.printStackTrace();;
+                }
                 if (extension != null) {
                     mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
                 }

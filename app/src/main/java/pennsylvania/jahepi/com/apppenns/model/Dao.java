@@ -200,7 +200,6 @@ public class Dao {
                     db.update(Database.FILES_TABLE, values, String.format("id='%s'", file.getId()));
                 }
             } else {
-                values.put("id", file.getId());
                 long id = db.insert(Database.FILES_TABLE, values);
                 file.setId((int) id);
             }

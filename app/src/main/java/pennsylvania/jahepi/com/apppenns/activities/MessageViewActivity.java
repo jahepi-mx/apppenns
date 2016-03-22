@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 
 /**
@@ -18,6 +22,8 @@ public class MessageViewActivity extends AuthActivity {
 
     private static final String TAG = "MessageViewActivity";
 
+    private FileAttachmentAdapter fileAttachmentAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +32,18 @@ public class MessageViewActivity extends AuthActivity {
         Message message = (Message) getIntent().getSerializableExtra(CustomApplication.GENERIC_INTENT);
 
         if (message != null) {
+
+            fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+            fileAttachmentAdapter.setHideDeleteOption(true);
+
+            Iterator<Message.Attachment> iterator = message.getAttachmentsIterator();
+            while (iterator.hasNext()) {
+                Message.Attachment attachment = iterator.next();
+                fileAttachmentAdapter.add(attachment.getFile());
+            }
+
+            ListView attachmentList = (ListView) findViewById(R.id.attachmentsListView);
+            attachmentList.setAdapter(fileAttachmentAdapter);
 
             TextView date = (TextView) findViewById(R.id.messageDateValue);
             TextView from = (TextView) findViewById(R.id.messageFromValue);
@@ -44,6 +62,7 @@ public class MessageViewActivity extends AuthActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MessageViewActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -53,6 +72,7 @@ public class MessageViewActivity extends AuthActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MessageViewActivity.this, MessageListActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

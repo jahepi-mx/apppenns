@@ -40,7 +40,7 @@ public class Sync extends Service {
 
     private static final String TAG = "SyncService";
 
-    public static long INTERVAL = 30000;
+    public static long INTERVAL = 1 * 30 * 1000;
     private static final int SUCCESS = 1;
 
     private CustomApplication application;
@@ -205,6 +205,19 @@ public class Sync extends Service {
                 message.setRead(false);
                 message.setDelivered(true);
                 message.setSend(true);
+
+                JSONArray jsonAttachments = json.getJSONArray("attachments");
+                for (int e = 0; e < jsonAttachments.length(); e++) {
+                    JSONObject jsonAttachment = jsonAttachments.getJSONObject(e);
+                    Message.Attachment attachment = new Message.Attachment();
+                    Message.File file = new Message.File();
+                    file.setName(jsonAttachment.getString("name"));
+                    file.setPath(jsonAttachment.getString("path"));
+                    file.setMime(jsonAttachment.getString("mime"));
+                    file.setModifiedDate(jsonAttachment.getString("date"));
+                    attachment.setFile(file);
+                    message.addAttachment(attachment);
+                }
 
                 if (application.saveMessage(message)) {
                     Log.d(TAG, "getMessages inserted: " + message.getMessage());
