@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="5dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/view"
         android:layout_gravity="center_vertical"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
+        android:layout_toLeftOf="@+id/deleteFileBtn"
+        android:layout_marginRight="10dp"
         android:id="@+id/viewFileBtn" />
 
     <ImageButton

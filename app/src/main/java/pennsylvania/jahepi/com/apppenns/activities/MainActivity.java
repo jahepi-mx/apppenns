@@ -65,8 +65,10 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
             finish();
         }
         if (v == clientSyncBtn) {
-            ClientSync clientSync = new ClientSync(this);
-            clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            ClientSync clientSync = ClientSync.getInstance(this);
+            if (!clientSync.isRunning()) {
+                clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
         if (v == calendarBtn) {
             CalendarBridge.startCalendar(this, Util.getDate());

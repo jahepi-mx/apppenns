@@ -24,6 +24,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Message;
 public class AttachmentTask extends AsyncTask<Void, Void, Void> {
 
     private static final String TAG = "AttachmentTask";
+    private static AttachmentTask self;
 
     private ProgressDialog dialog;
     private Context context;
@@ -31,7 +32,7 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
     private boolean downloadFlag;
     private AttachmentTaskListener listener;
 
-    public AttachmentTask(Context context) {
+    private AttachmentTask(Context context) {
         this.context = context;
         dialog = new ProgressDialog();
 
@@ -48,6 +49,23 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
                 listener = null;
             }
         });
+    }
+
+    public static AttachmentTask getInstance(Context context) {
+        if (self == null) {
+            self = new AttachmentTask(context);
+        } else if (self.isCancelled()) {
+            self = new AttachmentTask(context);
+        } else if (self.getStatus() == Status.RUNNING || self.getStatus() == Status.PENDING) {
+            return self;
+        } else {
+            self = new AttachmentTask(context);
+        }
+        return self;
+    }
+
+    public boolean isRunning() {
+        return self.getStatus() == Status.RUNNING && !isCancelled();
     }
 
     public void setFile(Message.File file) {
@@ -76,7 +94,7 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         File downloadFile = new File(file.getPathNoName(), file.getName());
-        listener.onFinish(downloadFile.exists() && (downloadFile.length() / 1024) > 1, downloadFlag, file);
+        listener.onFinish(downloadFile.exists(), downloadFlag, file);
         if (downloadFlag) {
             dialog.dismiss();
         }
@@ -98,23 +116,22 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
                 connection.setDoOutput(true);
                 connection.connect();
 
-                int size = connection.getContentLength();
+                final int size = connection.getContentLength();
                 int downloaded = 0;
 
                 InputStream inputStream = connection.getInputStream();
                 byte[] buffer = new byte[1024];
                 int length = 0;
                 while ((length = inputStream.read(buffer)) > 0) {
-
                     fOut.write(buffer, 0, length);
                     downloaded += length;
-
+                    final int downloadedBytes = downloaded;
                     final float percentage = (float) downloaded / (float) size * 100;
                     ((Activity) context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                dialog.setStatus(String.format(context.getString(R.string.txt_sync_status), (int) percentage + "%"));
+                                dialog.setStatus(String.format(context.getString(R.string.txt_sync_progress), downloadedBytes / 1024, size / 1024));
                                 dialog.setTitle(String.format(context.getString(R.string.txt_sync_status), (int) percentage + "%"));
                                 dialog.setProgress((int) percentage);
                             } catch (Exception exp) {
@@ -130,6 +147,7 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
             } catch (IOException e) {
                 e.printStackTrace();
                 downloadFile.delete();
+                downloadFlag = false;
             }
         }
         return null;

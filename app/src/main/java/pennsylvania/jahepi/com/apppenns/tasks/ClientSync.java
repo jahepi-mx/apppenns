@@ -31,14 +31,32 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
 public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.OnClickListener {
 
     private static final String TAG = "ClientSync";
+    private static ClientSync self;
 
     private ProgressDialog dialog;
     private Context context;
 
-    public ClientSync(Context context) {
+    private ClientSync(Context context) {
         dialog = new ProgressDialog();
         dialog.setListener(this);
         this.context = context;
+    }
+
+    public static ClientSync getInstance(Context context) {
+        if (self == null) {
+            self = new ClientSync(context);
+        } else if (self.isCancelled()) {
+            self = new ClientSync(context);
+        } else if (self.getStatus() == Status.RUNNING || self.getStatus() == Status.PENDING) {
+           return self;
+        } else {
+           self = new ClientSync(context);
+        }
+        return self;
+    }
+
+    public boolean isRunning() {
+        return self.getStatus() == Status.RUNNING && !isCancelled();
     }
 
     @Override

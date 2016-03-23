@@ -78,10 +78,12 @@ public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements
             @Override
             public void onClick(View v) {
                 Message.File file = getItem(position);
-                AttachmentTask attachmentTask = new AttachmentTask(getContext());
-                attachmentTask.setFile(file);
-                attachmentTask.setListener(FileAttachmentAdapter.this);
-                attachmentTask.execute();
+                AttachmentTask attachmentTask = AttachmentTask.getInstance(getContext());
+                if (!attachmentTask.isRunning()) {
+                    attachmentTask.setFile(file);
+                    attachmentTask.setListener(FileAttachmentAdapter.this);
+                    attachmentTask.execute();
+                }
             }
         });
 
