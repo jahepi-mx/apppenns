@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/view"
         android:layout_gravity="center_vertical"
-        android:layout_toLeftOf="@+id/deleteFileBtn"
-        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="45dp"
         android:id="@+id/viewFileBtn" />
 
     <ImageButton

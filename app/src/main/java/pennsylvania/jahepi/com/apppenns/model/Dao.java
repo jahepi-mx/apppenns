@@ -329,8 +329,12 @@ public class Dao {
                 while (iterator.hasNext()) {
                     ContentValues attachmentValues = new ContentValues();
                     Message.Attachment attachment = iterator.next();
+                    Message.File file = attachment.getFile();
+                    if (file.getId() == 0) {
+                        saveFile(file);
+                    }
                     attachmentValues.put("message", message.getId());
-                    attachmentValues.put("file", attachment.getFile().getId());
+                    attachmentValues.put("file", file.getId());
                     db.insert(Database.ATTACHMENTS_TABLE, attachmentValues);
                 }
             }
