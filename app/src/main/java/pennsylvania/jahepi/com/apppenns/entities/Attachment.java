@@ -59,7 +59,10 @@ public class Attachment implements Serializable {
         }
 
         public String getMime() {
-            return mime;
+            if (mime != null) {
+                return mime;
+            }
+            return "";
         }
 
         public void setMime(String mime) {

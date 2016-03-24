@@ -6,24 +6,20 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -46,14 +42,12 @@ public class Sync extends Service {
 
     private CustomApplication application;
     private boolean active;
-    private HttpClient httpClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
         application = (CustomApplication) getApplication();
         active = false;
-        httpClient = new DefaultHttpClient();
     }
 
     @Nullable
@@ -101,17 +95,19 @@ public class Sync extends Service {
     }
 
     private void syncUsers() {
-        String url = null;
+        String url = CustomApplication.SERVICE_URL + "intranet/android/getUsers";
         try {
-            url = CustomApplication.SERVICE_URL + "intranet/android/getUsers";
-            HttpPost postRequest = new HttpPost(url);
-            HttpResponse response = httpClient.execute(postRequest);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-            String sResponse = null;
-            StringBuilder jsonStr = new StringBuilder();
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
 
-            while ((sResponse = reader.readLine()) != null) {
-                jsonStr = jsonStr.append(sResponse);
+            InputStream inputStream = connection.getInputStream();
+            StringBuilder jsonStr = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                jsonStr = jsonStr.append(line);
             }
 
             JSONObject jObject = new JSONObject(jsonStr.toString());
@@ -141,17 +137,19 @@ public class Sync extends Service {
     }
 
     private void syncTypes() {
-        String url = null;
+        String url = CustomApplication.SERVICE_URL + "intranet/android/getActivityTypes";
         try {
-            url = CustomApplication.SERVICE_URL + "intranet/android/getActivityTypes";
-            HttpPost postRequest = new HttpPost(url);
-            HttpResponse response = httpClient.execute(postRequest);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-            String sResponse = null;
-            StringBuilder jsonStr = new StringBuilder();
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
 
-            while ((sResponse = reader.readLine()) != null) {
-                jsonStr = jsonStr.append(sResponse);
+            InputStream inputStream = connection.getInputStream();
+            StringBuilder jsonStr = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                jsonStr = jsonStr.append(line);
             }
 
             JSONObject jObject = new JSONObject(jsonStr.toString());
@@ -183,14 +181,17 @@ public class Sync extends Service {
         ArrayList<Message> messages = new ArrayList<Message>();
         try {
             url = CustomApplication.SERVICE_URL + "intranet/android/getMessages/" + application.getUser().getId();
-            HttpPost postRequest = new HttpPost(url);
-            HttpResponse response = httpClient.execute(postRequest);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-            String sResponse = null;
-            StringBuilder jsonStr = new StringBuilder();
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
 
-            while ((sResponse = reader.readLine()) != null) {
-                jsonStr = jsonStr.append(sResponse);
+            InputStream inputStream = connection.getInputStream();
+            StringBuilder jsonStr = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                jsonStr = jsonStr.append(line);
             }
 
             JSONObject jObject = new JSONObject(jsonStr.toString());
@@ -242,16 +243,13 @@ public class Sync extends Service {
     }
 
     private boolean updateSendMessage(Message message) {
-        String date = "";
+        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + message.getModifiedDateString();
         try {
-            date = URLEncoder.encode(message.getModifiedDateString(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + date;
-        try {
-            HttpPost postRequest = new HttpPost(url);
-            httpClient.execute(postRequest);
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            connection.getInputStream();
             return true;
         } catch (Exception e) {
             Log.e(TAG, "URL fail: " + url);
@@ -265,14 +263,17 @@ public class Sync extends Service {
         ArrayList<Message> messages = new ArrayList<Message>();
         try {
             url = CustomApplication.SERVICE_URL + "intranet/android/getReadMessages/" + application.getUser().getId();
-            HttpPost postRequest = new HttpPost(url);
-            HttpResponse response = httpClient.execute(postRequest);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-            String sResponse = null;
-            StringBuilder jsonStr = new StringBuilder();
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
 
-            while ((sResponse = reader.readLine()) != null) {
-                jsonStr = jsonStr.append(sResponse);
+            InputStream inputStream = connection.getInputStream();
+            StringBuilder jsonStr = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                jsonStr = jsonStr.append(line);
             }
 
             JSONObject jObject = new JSONObject(jsonStr.toString());
@@ -303,16 +304,13 @@ public class Sync extends Service {
     }
 
     private boolean updateDeliveredMessage(Message message) {
-        String date = "";
+        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncReadMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + message.getModifiedDateString();
         try {
-            date = URLEncoder.encode(message.getModifiedDateString(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncReadMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + date;
-        try {
-            HttpPost postRequest = new HttpPost(url);
-            httpClient.execute(postRequest);
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            connection.getInputStream();
             return true;
         } catch (Exception e) {
             Log.e(TAG, "URL fail: " + url);
@@ -330,9 +328,8 @@ public class Sync extends Service {
             String url = CustomApplication.SERVICE_URL + "intranet/android/newMessage";
             while (iterator.hasNext()) {
                 Message message = (Message) iterator.next();
-                HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                post.addPart("message", new StringBody(message.getMessage(), Charset.forName(HTTP.UTF_8)));
+                post.addPart("message", new StringBody(message.getMessage()));
                 post.addPart("to", new StringBody(Integer.toString(message.getTo().getId())));
                 post.addPart("from", new StringBody(Integer.toString(message.getFrom().getId())));
                 post.addPart("date", new StringBody(message.getModifiedDateString()));
@@ -346,14 +343,27 @@ public class Sync extends Service {
                     post.addPart("attachment_date[]", new StringBody(attachment.getFile().getModifiedDateString()));
                 }
 
-                postRequest.setEntity(post);
-                HttpResponse response = httpClient.execute(postRequest);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                String sResponse = null;
-                StringBuilder jsonStr = new StringBuilder();
+                URL urlRef = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.addRequestProperty("Content-length", post.getContentLength() + "");
+                connection.addRequestProperty(post.getContentType().getName(), post.getContentType().getValue());
 
-                while ((sResponse = reader.readLine()) != null) {
-                    jsonStr = jsonStr.append(sResponse);
+                OutputStream os = connection.getOutputStream();
+                post.writeTo(connection.getOutputStream());
+                os.close();
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                StringBuilder jsonStr = new StringBuilder();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    jsonStr = jsonStr.append(line);
                 }
 
                 JSONObject jObject = new JSONObject(jsonStr.toString());
@@ -390,18 +400,31 @@ public class Sync extends Service {
             String url = CustomApplication.SERVICE_URL + "intranet/android/uploadFile";
             while (iterator.hasNext()) {
                 Attachment.File file = iterator.next();
-                HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 File fileRef = new File(file.getPathNoName(), file.getName());
                 post.addPart("file", new FileBody(fileRef));
-                postRequest.setEntity(post);
-                HttpResponse response = httpClient.execute(postRequest);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                String sResponse = null;
-                StringBuilder jsonStr = new StringBuilder();
 
-                while ((sResponse = reader.readLine()) != null) {
-                    jsonStr = jsonStr.append(sResponse);
+                URL urlRef = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.addRequestProperty("Content-length", post.getContentLength() + "");
+                connection.addRequestProperty(post.getContentType().getName(), post.getContentType().getValue());
+
+                OutputStream os = connection.getOutputStream();
+                post.writeTo(connection.getOutputStream());
+                os.close();
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                StringBuilder jsonStr = new StringBuilder();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    jsonStr = jsonStr.append(line);
                 }
 
                 JSONObject jObject = new JSONObject(jsonStr.toString());
@@ -434,7 +457,6 @@ public class Sync extends Service {
             String url = CustomApplication.SERVICE_URL + "intranet/android/newTask";
             while (iterator.hasNext()) {
                 Task task = (Task) iterator.next();
-                HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 post.addPart("id", new StringBody(Integer.toString(task.getId())));
                 post.addPart("user", new StringBody(Integer.toString(task.getUser().getId())));
@@ -465,14 +487,27 @@ public class Sync extends Service {
                     post.addPart("attachment_date[]", new StringBody(attachment.getFile().getModifiedDateString()));
                 }
 
-                postRequest.setEntity(post);
-                HttpResponse response = httpClient.execute(postRequest);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                String sResponse = null;
-                StringBuilder jsonStr = new StringBuilder();
+                URL urlRef = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.addRequestProperty("Content-length", post.getContentLength() + "");
+                connection.addRequestProperty(post.getContentType().getName(), post.getContentType().getValue());
 
-                while ((sResponse = reader.readLine()) != null) {
-                    jsonStr = jsonStr.append(sResponse);
+                OutputStream os = connection.getOutputStream();
+                post.writeTo(connection.getOutputStream());
+                os.close();
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                StringBuilder jsonStr = new StringBuilder();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    jsonStr = jsonStr.append(line);
                 }
 
                 JSONObject jObject = new JSONObject(jsonStr.toString());
@@ -508,20 +543,33 @@ public class Sync extends Service {
             String url = CustomApplication.SERVICE_URL + "intranet/android/updateReadMessage";
             while (iterator.hasNext()) {
                 Message message = (Message) iterator.next();
-                HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                post.addPart("message", new StringBody(message.getMessage(), Charset.forName(HTTP.UTF_8)));
+                post.addPart("message", new StringBody(message.getMessage()));
                 post.addPart("to", new StringBody(Integer.toString(message.getTo().getId())));
                 post.addPart("from", new StringBody(Integer.toString(message.getFrom().getId())));
                 post.addPart("date", new StringBody(message.getModifiedDateString()));
-                postRequest.setEntity(post);
-                HttpResponse response = httpClient.execute(postRequest);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-                String sResponse = null;
-                StringBuilder jsonStr = new StringBuilder();
 
-                while ((sResponse = reader.readLine()) != null) {
-                    jsonStr = jsonStr.append(sResponse);
+                URL urlRef = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.addRequestProperty("Content-length", post.getContentLength() + "");
+                connection.addRequestProperty(post.getContentType().getName(), post.getContentType().getValue());
+
+                OutputStream os = connection.getOutputStream();
+                post.writeTo(connection.getOutputStream());
+                os.close();
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                StringBuilder jsonStr = new StringBuilder();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    jsonStr = jsonStr.append(line);
                 }
 
                 JSONObject jObject = new JSONObject(jsonStr.toString());
