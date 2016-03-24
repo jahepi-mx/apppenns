@@ -223,17 +223,7 @@ public class Dao {
         Cursor cursor = db.getAttachments(String.format("WHERE attachments.message='%s'", message.getId()), "");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Attachment attachment = new Attachment();
-                attachment.setId(cursor.getInt(0));
-                Attachment.File file = new Attachment.File();
-                file.setId(cursor.getInt(1));
-                file.setName(cursor.getString(2));
-                file.setMime(cursor.getString(3));
-                file.setPath(cursor.getString(4));
-                file.setModifiedDate(cursor.getString(5));
-                file.setActive(cursor.getInt(6) == 1);
-                file.setSend(cursor.getInt(7) == 1);
-                attachment.setFile(file);
+                Attachment attachment = mapAttachment(cursor);
                 attachments.add(attachment);
             }
             cursor.close();
@@ -331,9 +321,7 @@ public class Dao {
                     ContentValues attachmentValues = new ContentValues();
                     Attachment attachment = iterator.next();
                     Attachment.File file = attachment.getFile();
-                    if (file.getId() == 0) {
-                        saveFile(file);
-                    }
+                    saveFile(file);
                     attachmentValues.put("message", message.getId());
                     attachmentValues.put("file", file.getId());
                     db.insert(Database.ATTACHMENTS_TABLE, attachmentValues);
@@ -362,6 +350,34 @@ public class Dao {
             return n;
         }
         return 0;
+    }
+
+    public ArrayList<Attachment> getAttachments(Task task) {
+        ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+        Cursor cursor = db.getTaskAttachments(String.format("WHERE task_attachments.task='%s'", task.getId()), "");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Attachment attachment = mapAttachment(cursor);
+                attachments.add(attachment);
+            }
+            cursor.close();
+        }
+        return attachments;
+    }
+
+    private Attachment mapAttachment(Cursor cursor) {
+        Attachment attachment = new Attachment();
+        attachment.setId(cursor.getInt(0));
+        Attachment.File file = new Attachment.File();
+        file.setId(cursor.getInt(1));
+        file.setName(cursor.getString(2));
+        file.setMime(cursor.getString(3));
+        file.setPath(cursor.getString(4));
+        file.setModifiedDate(cursor.getString(5));
+        file.setActive(cursor.getInt(6) == 1);
+        file.setSend(cursor.getInt(7) == 1);
+        attachment.setFile(file);
+        return attachment;
     }
 
     public ArrayList<Task> getNewTasks(int userId) {
@@ -450,6 +466,7 @@ public class Dao {
         type.setModifiedDate(cursor.getString(29));
         type.setActive(cursor.getInt(30) == 1);
         task.setType(type);
+        task.addAttachments(getAttachments(task));
 
         return task;
     }
@@ -488,6 +505,17 @@ public class Dao {
                 Log.d(TAG, task.toString());
                 long id = db.insert(Database.TASKS_TABLE, values);
                 task.setId((int) id);
+            }
+            db.delete(Database.TASK_ATTACHMENTS_TABLE, String.format("task='%s'", task.getId()));
+            Iterator<Attachment> iterator = task.getAttachmentsIterator();
+            while (iterator.hasNext()) {
+                ContentValues attachmentValues = new ContentValues();
+                Attachment attachment = iterator.next();
+                Attachment.File file = attachment.getFile();
+                saveFile(file);
+                attachmentValues.put("task", task.getId());
+                attachmentValues.put("file", file.getId());
+                db.insert(Database.TASK_ATTACHMENTS_TABLE, attachmentValues);
             }
             return true;
         }

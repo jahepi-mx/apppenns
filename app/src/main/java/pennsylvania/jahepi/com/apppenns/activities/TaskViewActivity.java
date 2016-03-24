@@ -7,13 +7,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
 import pennsylvania.jahepi.com.apppenns.dialogs.CheckOutDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 
@@ -29,6 +34,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     private AlertDialog.Builder checkInAlert;
     private CheckOutDialog checkOutAlert;
     private Task task;
+    private FileAttachmentAdapter fileAttachmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             public void onClick(View v) {
                 Intent intent = new Intent(TaskViewActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -52,6 +59,18 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         backBtn = (Button) findViewById(R.id.backBtn);
 
         if (task != null) {
+
+            fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+            fileAttachmentAdapter.setHideDeleteOption(true);
+
+            Iterator<Attachment> iterator = task.getAttachmentsIterator();
+            while (iterator.hasNext()) {
+                Attachment attachment = iterator.next();
+                fileAttachmentAdapter.add(attachment);
+            }
+
+            ListView attachmentList = (ListView) findViewById(R.id.attachmentsListView);
+            attachmentList.setAdapter(fileAttachmentAdapter);
 
             TextView dateTextView = (TextView) findViewById(R.id.taskDateValue);
             TextView clientTextView = (TextView) findViewById(R.id.taskClientValue);
@@ -113,6 +132,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
             }
             startActivity(intent);
+            finish();
         }
     }
 
@@ -135,6 +155,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                     Intent intent = new Intent(this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
                     startActivity(intent);
+                    finish();
                     return;
                 }
             } else {
@@ -166,6 +187,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                     Intent intent = new Intent(this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
                     startActivity(intent);
+                    finish();
                     return;
                 }
             } else {

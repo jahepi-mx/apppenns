@@ -1,5 +1,8 @@
 package pennsylvania.jahepi.com.apppenns.entities;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import pennsylvania.jahepi.com.apppenns.Util;
 
 /**
@@ -27,10 +30,12 @@ public class Task extends Entity {
     private boolean cancelled;
     private int eventId;
     private String emails;
+    private ArrayList<Attachment> attachments;
 
     public Task() {
         checkInCoord = new Coord();
         checkOutCoord = new Coord();
+        attachments = new ArrayList<Attachment>();
     }
 
     public void setCheckOutLatitude(double latitude) {
@@ -225,6 +230,22 @@ public class Task extends Entity {
 
     public void setEmails(String emails) {
         this.emails = emails;
+    }
+
+    public void addAttachment(Attachment attachment) {
+        attachments.add(attachment);
+    }
+
+    public void addAttachments(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public void removeAttachment(Attachment attachment) {
+        attachments.remove(attachment);
+    }
+
+    public Iterator<Attachment> getAttachmentsIterator() {
+        return attachments.iterator();
     }
 
     @Override

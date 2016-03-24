@@ -26,7 +26,7 @@
         <activity android:name=".activities.MessageSendActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.MessageListActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.AddTaskActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
+        <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TaskListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.ClientActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".components.filechooser.activities.FileChooserActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>

@@ -19,9 +19,10 @@ public class Database {
     public static final String CLIENTS_TABLE = "clients";
     public static final String TYPES_TABLE = "types";
     public static final String ATTACHMENTS_TABLE = "attachments";
+    public static final String TASK_ATTACHMENTS_TABLE = "task_attachments";
     public static final String FILES_TABLE = "files";
 
-    private static final int DB_VERSION = 25;
+    private static final int DB_VERSION = 26;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -92,6 +93,15 @@ public class Database {
         return db.rawQuery(sql, null);
     }
 
+    public Cursor getTaskAttachments(String where, String orderBy) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String sql = "SELECT task_attachments.id AS attachment_id, files.id AS file_id, files.name, files.mime, files.path, files.date, files.active, files.send " +
+                "FROM task_attachments " +
+                "INNER JOIN files ON files.id = task_attachments.file " +
+                where + " " + orderBy;
+        return db.rawQuery(sql, null);
+    }
+
     public Cursor getUserEmails(String keyword) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "SELECT email FROM users WHERE email LIKE '%" + keyword + "%' OR name LIKE '%" + keyword+ "%'";
@@ -154,6 +164,8 @@ public class Database {
             Log.d(TAG, "Types table created!");
             db.execSQL("CREATE TABLE " + ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, message INT, file INT)");
             Log.d(TAG, "Attachments table created!");
+            db.execSQL("CREATE TABLE " + TASK_ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, task INT, file INT)");
+            Log.d(TAG, "Task attachments table created!");
             db.execSQL("CREATE TABLE " + FILES_TABLE + " (id INTEGER PRIMARY KEY, path TEXT, name TEXT, mime TEXT, date TEXT, active INT, send INT)");
             Log.d(TAG, "Files table created!");
         }
@@ -174,6 +186,8 @@ public class Database {
             Log.d(TAG, "Types table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + ATTACHMENTS_TABLE);
             Log.d(TAG, "Attachments table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + TASK_ATTACHMENTS_TABLE);
+            Log.d(TAG, "Task attachments table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + FILES_TABLE);
             Log.d(TAG, "Files table removed!");
             onCreate(db);

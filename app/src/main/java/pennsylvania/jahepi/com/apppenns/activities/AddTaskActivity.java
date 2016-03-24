@@ -3,23 +3,32 @@ package pennsylvania.jahepi.com.apppenns.activities;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
+import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.dialogs.TimeDialog;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
 
@@ -30,6 +39,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
     private final static String TAG = "AddTaskActivity";
     public final static int REQUEST_CODE = 1;
+    public final static int REQUEST_CODE_FILE = 2;
     private static enum TIME_TYPE {START, END};
 
     private Button dateBtn, clientBtn, startTimeBtn, endTimeBtn;
@@ -37,11 +47,17 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     private TimeDialog timeDialog;
     private Address address;
     private TIME_TYPE type;
+    private FileAttachmentAdapter fileAttachmentAdapter;
+    private ListView attachmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_add);
+
+        fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+        attachmentList = (ListView) findViewById(R.id.attachmentsListView);
+        attachmentList.setAdapter(fileAttachmentAdapter);
 
         ArrayList<Type> types = application.getTypes();
         final Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
@@ -63,6 +79,14 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         timeDialog = new TimeDialog();
         timeDialog.setTime(time);
         timeDialog.setListener(this);
+
+        Button filesBtn = (Button) findViewById(R.id.filesBtn);
+        filesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(AddTaskActivity.this, FileChooserActivity.class), REQUEST_CODE_FILE);
+            }
+        });
 
         Button backBtn = (Button) findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -167,8 +191,13 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
                 // Add event to calendar provider
                 long calendarEventId  = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
-
                 task.setEventId((int) calendarEventId);
+
+                ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+                for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
+                    attachments.add(fileAttachmentAdapter.getItem(i));
+                }
+                task.addAttachments(attachments);
 
                 if (application.saveTask(task)) {
                     Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
@@ -189,6 +218,33 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 address = (Address) data.getSerializableExtra(CustomApplication.GENERIC_INTENT);
                 TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
                 textView.setText(address.getClient().getName() + " " + address.getAddress());
+            }
+        } else if (requestCode == REQUEST_CODE_FILE) {
+            if (data != null) {
+                File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
+                if (file != null) {
+                    Log.d(TAG, file.getAbsolutePath());
+                    Attachment.File attachmentFile = new Attachment.File();
+                    attachmentFile.setPath(file.getAbsolutePath());
+                    attachmentFile.setName(file.getName());
+                    String extension = "";
+                    String mime = "";
+                    try {
+                        extension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toURL().toString());
+                    } catch (MalformedURLException exp) {
+                        exp.printStackTrace();
+                        ;
+                    }
+                    if (extension != null) {
+                        mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                    }
+                    attachmentFile.setMime(mime);
+                    attachmentFile.setModifiedDate(Util.getDateTime());
+                    Attachment attachment = new Attachment();
+                    attachment.setFile(attachmentFile);
+                    fileAttachmentAdapter.add(attachment);
+                    fileAttachmentAdapter.notifyDataSetChanged();
+                }
             }
         }
     }

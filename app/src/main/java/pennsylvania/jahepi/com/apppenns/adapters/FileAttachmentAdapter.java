@@ -28,7 +28,6 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
 
     private int mResource;
     private boolean hideDeleteOption;
-    private RemoveListener removeListener;
 
     public FileAttachmentAdapter(Context context, int resource) {
         super(context, resource);
@@ -41,10 +40,6 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
 
     public void setHideDeleteOption(boolean hideDeleteOption) {
         this.hideDeleteOption = hideDeleteOption;
-    }
-
-    public void setRemoveListener(RemoveListener removeListener) {
-        this.removeListener = removeListener;
     }
 
     @Override
@@ -71,7 +66,6 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
             holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeListener.onRemoveAttachment(getItem(position));
                     remove(getItem(position));
                     notifyDataSetChanged();
                 }
@@ -114,9 +108,5 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
     private static class ViewHolder {
         TextView textViewName;
         ImageButton deleteBtn, viewBtn;
-    }
-
-    public static interface RemoveListener {
-        public void onRemoveAttachment(Attachment attachment);
     }
 }

@@ -50,12 +50,6 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         setContentView(R.layout.message_send);
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
-        fileAttachmentAdapter.setRemoveListener(new FileAttachmentAdapter.RemoveListener() {
-            @Override
-            public void onRemoveAttachment(Attachment attachment) {
-                Log.d(TAG, "Removed: " + attachment.getFile().getName());
-            }
-        });
 
         users = application.getUsers();
         users.remove(application.getUser());

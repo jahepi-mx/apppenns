@@ -71,6 +71,7 @@
     <string name="btn_calendar">Calendario</string>
     <string name="btn_client_sync">Actualiza Clientes</string>
     <string name="btn_add">Agregar</string>
+    <string name="btn_register">Registrar</string>
     <string name="btn_new">Nuevo</string>
     <string name="btn_checkin">Entrada</string>
     <string name="btn_checkout">Salida</string>
