@@ -38,6 +38,10 @@ public class Message extends Entity {
         return attachments.iterator();
     }
 
+    public ArrayList<Attachment> getAttachments() {
+        return attachments;
+    }
+
     public User getFrom() {
         return from;
     }

@@ -36,12 +36,7 @@ public class MessageViewActivity extends AuthActivity {
 
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
             fileAttachmentAdapter.setHideDeleteOption(true);
-
-            Iterator<Attachment> iterator = message.getAttachmentsIterator();
-            while (iterator.hasNext()) {
-                Attachment attachment = iterator.next();
-                fileAttachmentAdapter.add(attachment);
-            }
+            fileAttachmentAdapter.addAll(message.getAttachments());
 
             ListView attachmentList = (ListView) findViewById(R.id.attachmentsListView);
             attachmentList.setAdapter(fileAttachmentAdapter);

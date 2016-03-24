@@ -4,18 +4,25 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
+import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.CheckOutDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
@@ -29,6 +36,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
 
     private static final String TAG = "TaskViewActivity";
     private static final int ALPHA = 50;
+    public final static int REQUEST_CODE_FILE = 2;
 
     private Button checkinBtn, checkoutBtn, backBtn;
     private AlertDialog.Builder checkInAlert;
@@ -51,6 +59,14 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             }
         });
 
+        Button filesBtn = (Button) findViewById(R.id.filesBtn);
+        filesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(TaskViewActivity.this, FileChooserActivity.class), REQUEST_CODE_FILE);
+            }
+        });
+
         Intent intent = getIntent();
         task = (Task) intent.getSerializableExtra(CustomApplication.GENERIC_INTENT);
 
@@ -61,13 +77,21 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         if (task != null) {
 
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
-            fileAttachmentAdapter.setHideDeleteOption(true);
-
+            fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.OnChangeListener() {
+                @Override
+                public void onChange(Attachment attachment) {
+                    task.setSend(false);
+                    task.setModifiedDate(Util.getDateTime());
+                    ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+                    for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
+                        attachments.add(fileAttachmentAdapter.getItem(i));
+                    }
+                    task.addAttachments(attachments);
+                    application.saveTask(task);
+                }
+            });
             Iterator<Attachment> iterator = task.getAttachmentsIterator();
-            while (iterator.hasNext()) {
-                Attachment attachment = iterator.next();
-                fileAttachmentAdapter.add(attachment);
-            }
+            fileAttachmentAdapter.addAll(task.getAttachments());
 
             ListView attachmentList = (ListView) findViewById(R.id.attachmentsListView);
             attachmentList.setAdapter(fileAttachmentAdapter);
@@ -196,6 +220,35 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             }
         }
         toast(getString(R.string.txt_error_task));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_FILE && data != null) {
+            File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
+            if (file != null) {
+                Log.d(TAG, file.getAbsolutePath());
+                Attachment.File attachmentFile = new Attachment.File();
+                attachmentFile.setPath(file.getAbsolutePath());
+                attachmentFile.setName(file.getName());
+                String extension = "";
+                String mime = "";
+                try {
+                    extension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toURL().toString());
+                } catch (MalformedURLException exp) {
+                    exp.printStackTrace();;
+                }
+                if (extension != null) {
+                    mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                }
+                attachmentFile.setMime(mime);
+                attachmentFile.setModifiedDate(Util.getDateTime());
+                Attachment attachment = new Attachment();
+                attachment.setFile(attachmentFile);
+                fileAttachmentAdapter.add(attachment);
+                fileAttachmentAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override

@@ -248,6 +248,10 @@ public class Task extends Entity {
         return attachments.iterator();
     }
 
+    public ArrayList<Attachment> getAttachments() {
+        return attachments;
+    }
+
     @Override
     public boolean equals(Object o) {
         Task task = (Task) o;
