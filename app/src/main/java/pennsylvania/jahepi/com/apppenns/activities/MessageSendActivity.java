@@ -196,8 +196,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
                 attachmentFile.setModifiedDate(Util.getDateTime());
                 Attachment attachment = new Attachment();
                 attachment.setFile(attachmentFile);
-                fileAttachmentAdapter.add(attachment);
-                fileAttachmentAdapter.notifyDataSetChanged();
+                if (fileAttachmentAdapter.addAttachment(attachment)) {
+                    fileAttachmentAdapter.notifyDataSetChanged();
+                }
             }
         }
     }

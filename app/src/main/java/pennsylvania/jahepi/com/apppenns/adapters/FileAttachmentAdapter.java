@@ -25,6 +25,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.AttachmentTask;
 public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements AttachmentTask.AttachmentTaskListener {
 
     private static final int REQUEST_CODE = 1;
+    private static final int MAX_FILE_SIZE = 1024 * 1024 * 5;
 
     private int mResource;
     private boolean hideDeleteOption;
@@ -47,12 +48,18 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
         this.changeListener = changeListener;
     }
 
-    @Override
-    public void add(Attachment attachment) {
+    public boolean addAttachment(Attachment attachment) {
+        Attachment.File file = attachment.getFile();
+        File fileRef = new File(file.getPathNoName(), file.getName());
+        if (fileRef.length() > MAX_FILE_SIZE) {
+            Toast.makeText(getContext(), getContext().getString(R.string.txt_error_attachment), Toast.LENGTH_LONG).show();
+            return false;
+        }
         super.add(attachment);
         if (changeListener != null) {
             changeListener.onChange(attachment);
         }
+        return true;
     }
 
     @Override

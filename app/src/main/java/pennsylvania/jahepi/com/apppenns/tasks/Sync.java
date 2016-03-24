@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -413,23 +414,28 @@ public class Sync extends Service {
                 connection.setRequestProperty("Connection", "Keep-Alive");
                 connection.addRequestProperty("Content-length", post.getContentLength() + "");
                 connection.addRequestProperty(post.getContentType().getName(), post.getContentType().getValue());
+                int code = 0;
 
-                OutputStream os = connection.getOutputStream();
-                post.writeTo(connection.getOutputStream());
-                os.close();
-                connection.connect();
+                try {
+                    OutputStream os = connection.getOutputStream();
+                    post.writeTo(connection.getOutputStream());
+                    os.close();
+                    connection.connect();
 
-                InputStream inputStream = connection.getInputStream();
-                StringBuilder jsonStr = new StringBuilder();
-                BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
-                String line = "";
-                while ((line = rd.readLine()) != null) {
-                    jsonStr = jsonStr.append(line);
+                    InputStream inputStream = connection.getInputStream();
+                    StringBuilder jsonStr = new StringBuilder();
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+                    String line = "";
+                    while ((line = rd.readLine()) != null) {
+                        jsonStr = jsonStr.append(line);
+                    }
+
+                    JSONObject jObject = new JSONObject(jsonStr.toString());
+                    String messageStr = jObject.getString("message");
+                    code = jObject.getInt("code");
+                } catch (FileNotFoundException exp) {
+                    code = SUCCESS;
                 }
-
-                JSONObject jObject = new JSONObject(jsonStr.toString());
-                String messageStr = jObject.getString("message");
-                int code = jObject.getInt("code");
 
                 if (code == SUCCESS) {
                     if (application.updateFileAsSend(file)) {
@@ -440,7 +446,6 @@ public class Sync extends Service {
                 } else {
                     Log.d(TAG, "syncFiles code invalid");
                 }
-
             }
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());

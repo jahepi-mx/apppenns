@@ -95,8 +95,10 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         File downloadFile = new File(file.getPathNoName(), file.getName());
         listener.onFinish(downloadFile.exists(), downloadFlag, file);
-        if (downloadFlag) {
+        try {
             dialog.dismiss();
+        } catch (Exception exp) {
+            exp.printStackTrace();
         }
         cancel(true);
         context = null;
