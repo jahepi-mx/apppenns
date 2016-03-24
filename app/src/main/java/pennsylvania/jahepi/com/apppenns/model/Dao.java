@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.entities.Address;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -149,22 +150,22 @@ public class Dao {
         return false;
     }
 
-    public Message.File getFile(int fileId) {
+    public Attachment.File getFile(int fileId) {
         Cursor cursor = db.get(Database.FILES_TABLE, String.format("id='%s'", fileId));
         if (cursor != null) {
-            Message.File file = mapFile(cursor);
+            Attachment.File file = mapFile(cursor);
             cursor.close();
             return file;
         }
         return null;
     }
 
-    public ArrayList<Message.File> getNotSendFiles() {
+    public ArrayList<Attachment.File> getNotSendFiles() {
         Cursor cursor = db.getAll(Database.FILES_TABLE, String.format("send='%s'", 0));
-        ArrayList<Message.File> files = new ArrayList<Message.File>();
+        ArrayList<Attachment.File> files = new ArrayList<Attachment.File>();
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Message.File file = mapFile(cursor);
+                Attachment.File file = mapFile(cursor);
                 files.add(file);
             }
             cursor.close();
@@ -172,8 +173,8 @@ public class Dao {
         return files;
     }
 
-    private Message.File mapFile(Cursor cursor) {
-        Message.File file = new Message.File();
+    private Attachment.File mapFile(Cursor cursor) {
+        Attachment.File file = new Attachment.File();
         file.setId(cursor.getInt(0));
         file.setPath(cursor.getString(1));
         file.setName(cursor.getString(2));
@@ -184,7 +185,7 @@ public class Dao {
         return file;
     }
 
-    public boolean saveFile(Message.File file) {
+    public boolean saveFile(Attachment.File file) {
         if (file != null) {
             ContentValues values = new ContentValues();
             values.put("name", file.getName());
@@ -194,7 +195,7 @@ public class Dao {
             values.put("active", file.isActive() ? 1 : 0);
             values.put("date", file.getModifiedDateString());
 
-            Message.File fileDB = getFile(file.getId());
+            Attachment.File fileDB = getFile(file.getId());
             if (fileDB != null) {
                 if (fileDB.isGreaterDate(file)) {
                     db.update(Database.FILES_TABLE, values, String.format("id='%s'", file.getId()));
@@ -208,7 +209,7 @@ public class Dao {
         return false;
     }
 
-    public boolean updateFileAsSend(Message.File file) {
+    public boolean updateFileAsSend(Attachment.File file) {
         if (file != null) {
             ContentValues values = new ContentValues();
             values.put("send", "1");
@@ -217,14 +218,14 @@ public class Dao {
         return false;
     }
 
-    public ArrayList<Message.Attachment> getAttachments(Message message) {
-        ArrayList<Message.Attachment> attachments = new ArrayList<Message.Attachment>();
+    public ArrayList<Attachment> getAttachments(Message message) {
+        ArrayList<Attachment> attachments = new ArrayList<Attachment>();
         Cursor cursor = db.getAttachments(String.format("WHERE attachments.message='%s'", message.getId()), "");
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Message.Attachment attachment = new Message.Attachment();
+                Attachment attachment = new Attachment();
                 attachment.setId(cursor.getInt(0));
-                Message.File file = new Message.File();
+                Attachment.File file = new Attachment.File();
                 file.setId(cursor.getInt(1));
                 file.setName(cursor.getString(2));
                 file.setMime(cursor.getString(3));
@@ -299,7 +300,7 @@ public class Dao {
         message.setDelivered(cursor.getInt(5) == 1);
         message.setRead(cursor.getInt(6) == 1);
         message.setSend(cursor.getInt(7) == 1);
-        ArrayList<Message.Attachment> attachments = getAttachments(message);
+        ArrayList<Attachment> attachments = getAttachments(message);
         message.addAttachments(attachments);
         return message;
     }
@@ -325,11 +326,11 @@ public class Dao {
                 Log.d(TAG, message.toString());
                 long id = db.insert(Database.MESSAGES_TABLE, values);
                 message.setId((int) id);
-                Iterator<Message.Attachment> iterator = message.getAttachmentsIterator();
+                Iterator<Attachment> iterator = message.getAttachmentsIterator();
                 while (iterator.hasNext()) {
                     ContentValues attachmentValues = new ContentValues();
-                    Message.Attachment attachment = iterator.next();
-                    Message.File file = attachment.getFile();
+                    Attachment attachment = iterator.next();
+                    Attachment.File file = attachment.getFile();
                     if (file.getId() == 0) {
                         saveFile(file);
                     }

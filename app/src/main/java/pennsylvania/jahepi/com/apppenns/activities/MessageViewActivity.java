@@ -13,6 +13,7 @@ import java.util.Iterator;
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 
 /**
@@ -36,10 +37,10 @@ public class MessageViewActivity extends AuthActivity {
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
             fileAttachmentAdapter.setHideDeleteOption(true);
 
-            Iterator<Message.Attachment> iterator = message.getAttachmentsIterator();
+            Iterator<Attachment> iterator = message.getAttachmentsIterator();
             while (iterator.hasNext()) {
-                Message.Attachment attachment = iterator.next();
-                fileAttachmentAdapter.add(attachment.getFile());
+                Attachment attachment = iterator.next();
+                fileAttachmentAdapter.add(attachment);
             }
 
             ListView attachmentList = (ListView) findViewById(R.id.attachmentsListView);

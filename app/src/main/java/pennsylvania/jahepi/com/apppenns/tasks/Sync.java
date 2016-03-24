@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
@@ -210,8 +211,8 @@ public class Sync extends Service {
                 JSONArray jsonAttachments = json.getJSONArray("attachments");
                 for (int e = 0; e < jsonAttachments.length(); e++) {
                     JSONObject jsonAttachment = jsonAttachments.getJSONObject(e);
-                    Message.Attachment attachment = new Message.Attachment();
-                    Message.File file = new Message.File();
+                    Attachment attachment = new Attachment();
+                    Attachment.File file = new Attachment.File();
                     file.setName(jsonAttachment.getString("name"));
                     file.setPath(jsonAttachment.getString("path"));
                     file.setMime(jsonAttachment.getString("mime"));
@@ -336,9 +337,9 @@ public class Sync extends Service {
                 post.addPart("from", new StringBody(Integer.toString(message.getFrom().getId())));
                 post.addPart("date", new StringBody(message.getModifiedDateString()));
 
-                Iterator<Message.Attachment> attachmentIterator = message.getAttachmentsIterator();
+                Iterator<Attachment> attachmentIterator = message.getAttachmentsIterator();
                 while (attachmentIterator.hasNext()) {
-                    Message.Attachment attachment = attachmentIterator.next();
+                    Attachment attachment = attachmentIterator.next();
                     post.addPart("attachment_name[]", new StringBody(attachment.getFile().getName()));
                     post.addPart("attachment_path[]", new StringBody(attachment.getFile().getPath()));
                     post.addPart("attachment_mime[]", new StringBody(attachment.getFile().getMime()));
@@ -384,11 +385,11 @@ public class Sync extends Service {
 
     private void syncFiles() {
         try {
-            ArrayList<Message.File> files = application.getNotSendFiles();
-            Iterator<Message.File> iterator = files.iterator();
+            ArrayList<Attachment.File> files = application.getNotSendFiles();
+            Iterator<Attachment.File> iterator = files.iterator();
             String url = CustomApplication.SERVICE_URL + "intranet/android/uploadFile";
             while (iterator.hasNext()) {
-                Message.File file = iterator.next();
+                Attachment.File file = iterator.next();
                 HttpPost postRequest = new HttpPost(url);
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 File fileRef = new File(file.getPathNoName(), file.getName());

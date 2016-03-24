@@ -16,18 +16,19 @@ import java.io.File;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
-import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.tasks.AttachmentTask;
 
 /**
  * Created by jahepi on 20/03/16.
  */
-public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements AttachmentTask.AttachmentTaskListener {
+public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements AttachmentTask.AttachmentTaskListener {
 
     private static final int REQUEST_CODE = 1;
 
     private int mResource;
     private boolean hideDeleteOption;
+    private RemoveListener removeListener;
 
     public FileAttachmentAdapter(Context context, int resource) {
         super(context, resource);
@@ -40,6 +41,10 @@ public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements
 
     public void setHideDeleteOption(boolean hideDeleteOption) {
         this.hideDeleteOption = hideDeleteOption;
+    }
+
+    public void setRemoveListener(RemoveListener removeListener) {
+        this.removeListener = removeListener;
     }
 
     @Override
@@ -60,12 +65,13 @@ public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements
         }
 
         ViewHolder holder = (ViewHolder) convertView.getTag();
-        holder.textViewName.setText(getItem(position).getName());
+        holder.textViewName.setText(getItem(position).getFile().getName());
 
         if (!isHideDeleteOption()) {
             holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    removeListener.onRemoveAttachment(getItem(position));
                     remove(getItem(position));
                     notifyDataSetChanged();
                 }
@@ -77,7 +83,7 @@ public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements
         holder.viewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message.File file = getItem(position);
+                Attachment.File file = getItem(position).getFile();
                 AttachmentTask attachmentTask = AttachmentTask.getInstance(getContext());
                 if (!attachmentTask.isRunning()) {
                     attachmentTask.setFile(file);
@@ -91,7 +97,7 @@ public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements
     }
 
     @Override
-    public void onFinish(boolean success, boolean downloaded, Message.File file) {
+    public void onFinish(boolean success, boolean downloaded, Attachment.File file) {
         if (success) {
             if (downloaded) {
                 ((CustomApplication) getContext().getApplicationContext()).saveFile(file);
@@ -108,5 +114,9 @@ public class FileAttachmentAdapter extends ArrayAdapter<Message.File> implements
     private static class ViewHolder {
         TextView textViewName;
         ImageButton deleteBtn, viewBtn;
+    }
+
+    public static interface RemoveListener {
+        public void onRemoveAttachment(Attachment attachment);
     }
 }

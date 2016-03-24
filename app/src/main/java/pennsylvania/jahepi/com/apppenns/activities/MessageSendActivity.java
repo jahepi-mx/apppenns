@@ -24,6 +24,7 @@ import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.dialogs.ToDialog;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
@@ -49,6 +50,12 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         setContentView(R.layout.message_send);
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+        fileAttachmentAdapter.setRemoveListener(new FileAttachmentAdapter.RemoveListener() {
+            @Override
+            public void onRemoveAttachment(Attachment attachment) {
+                Log.d(TAG, "Removed: " + attachment.getFile().getName());
+            }
+        });
 
         users = application.getUsers();
         users.remove(application.getUser());
@@ -141,12 +148,10 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             return;
         }
 
-        ArrayList<Message.Attachment> attachments = new ArrayList<Message.Attachment>();
+        ArrayList<Attachment> attachments = new ArrayList<Attachment>();
         for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
-            Message.File file = fileAttachmentAdapter.getItem(i);
-            if (application.saveFile(file)) {
-                Message.Attachment attachment = new Message.Attachment();
-                attachment.setFile(file);
+            Attachment attachment = fileAttachmentAdapter.getItem(i);
+            if (application.saveFile(attachment.getFile())) {
                 attachments.add(attachment);
             }
         }
@@ -180,7 +185,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
             if (file != null) {
                 Log.d(TAG, file.getAbsolutePath());
-                Message.File attachmentFile = new Message.File();
+                Attachment.File attachmentFile = new Attachment.File();
                 attachmentFile.setPath(file.getAbsolutePath());
                 attachmentFile.setName(file.getName());
                 String extension = "";
@@ -195,7 +200,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
                 }
                 attachmentFile.setMime(mime);
                 attachmentFile.setModifiedDate(Util.getDateTime());
-                fileAttachmentAdapter.add(attachmentFile);
+                Attachment attachment = new Attachment();
+                attachment.setFile(attachmentFile);
+                fileAttachmentAdapter.add(attachment);
                 fileAttachmentAdapter.notifyDataSetChanged();
             }
         }

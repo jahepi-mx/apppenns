@@ -16,7 +16,7 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.dialogs.ProgressDialog;
-import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 
 /**
  * Created by jahepi on 22/03/16.
@@ -28,7 +28,7 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
 
     private ProgressDialog dialog;
     private Context context;
-    private Message.File file;
+    private Attachment.File file;
     private boolean downloadFlag;
     private AttachmentTaskListener listener;
 
@@ -68,11 +68,11 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
         return self.getStatus() == Status.RUNNING && !isCancelled();
     }
 
-    public void setFile(Message.File file) {
+    public void setFile(Attachment.File file) {
         this.file = file;
     }
 
-    public Message.File getFile() {
+    public Attachment.File getFile() {
         return file;
     }
 
@@ -154,6 +154,6 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
     }
 
     public static interface AttachmentTaskListener {
-        public void onFinish(boolean success, boolean downloaded, Message.File file);
+        public void onFinish(boolean success, boolean downloaded, Attachment.File file);
     }
 }

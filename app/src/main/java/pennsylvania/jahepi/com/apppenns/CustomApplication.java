@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -204,15 +205,15 @@ public class CustomApplication extends Application {
         return dao.getTypes();
     }
 
-    public boolean saveFile(Message.File file) {
+    public boolean saveFile(Attachment.File file) {
         return dao.saveFile(file);
     }
 
-    public ArrayList<Message.File> getNotSendFiles() {
+    public ArrayList<Attachment.File> getNotSendFiles() {
         return dao.getNotSendFiles();
     }
 
-    public boolean updateFileAsSend(Message.File file) {
+    public boolean updateFileAsSend(Attachment.File file) {
         return dao.updateFileAsSend(file);
     }
 
