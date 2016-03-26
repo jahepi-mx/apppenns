@@ -137,6 +137,8 @@ public class CustomApplication extends Application {
     public boolean isLogged() {
         if (getUser() == null) {
             logout();
+        } else {
+            logged = true;
         }
         return logged;
     }
