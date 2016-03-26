@@ -25,18 +25,20 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
 /**
  * Created by jahepi on 09/03/16.
  */
-public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.OnClickListener {
+public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean> implements View.OnClickListener {
 
     private static final String TAG = "ClientSync";
     private static ClientSync self;
 
     private ProgressDialog dialog;
     private Context context;
+    private DownloadInfo downloadInfo;
 
     private ClientSync(Context context) {
         dialog = new ProgressDialog();
         dialog.setListener(this);
         this.context = context;
+        downloadInfo = new DownloadInfo();
     }
 
     public static ClientSync getInstance(Context context) {
@@ -58,29 +60,37 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
 
     @Override
     protected void onPreExecute() {
-        if (!dialog.isAdded()) {
-            dialog.show(((Activity) context).getFragmentManager(), TAG);
+        dialog.show(((Activity) context).getFragmentManager(), TAG);
+    }
+
+    @Override
+    protected void onProgressUpdate(DownloadInfo... values) {
+        try {
+            DownloadInfo info = values[0];
+            dialog.setStatus(info.name);
+            dialog.setTitle(String.format(context.getString(R.string.txt_sync_status), info.percentage + "%"));
+            dialog.setProgress(info.percentage);
+        } catch (Exception exp) {
+            exp.printStackTrace();
         }
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values) {
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
+    protected void onPostExecute(Boolean success) {
+        if (!success) {
+            Toast.makeText(context, context.getString(R.string.txt_error_client_sync), Toast.LENGTH_LONG).show();
+        }
         cancel(true);
         dialog.dismiss();
         context = null;
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-        syncClients();
-        return null;
+    protected Boolean doInBackground(Void... params) {
+        return syncClients();
     }
 
-    private void syncClients() {
+    private Boolean syncClients() {
         try {
             CustomApplication application = (CustomApplication) ((Activity) context).getApplication();
             String url = CustomApplication.SERVICE_URL + "intranet/android/getClients/" + application.getUser().getId();
@@ -134,34 +144,26 @@ public class ClientSync extends AsyncTask<Void, Integer, Void> implements View.O
                 }
 
                 final float percentage = (float) i / (float) clients.length() * 100;
-                ((Activity) context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            dialog.setStatus(name);
-                            dialog.setTitle(String.format(context.getString(R.string.txt_sync_status), (int) percentage + "%"));
-                            dialog.setProgress((int) percentage);
-                        } catch (Exception exp) {
-                            exp.printStackTrace();
-                        }
-                    }
-                });
+                downloadInfo.percentage = (int) percentage;
+                downloadInfo.name = name;
+                publishProgress(downloadInfo);
             }
 
         } catch (Exception exp) {
             exp.printStackTrace();
-            ((Activity) context).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(context, context.getString(R.string.txt_error_client_sync), Toast.LENGTH_LONG).show();
-                }
-            });
+            return false;
         }
+        return true;
     }
             @Override
     public void onClick(View v) {
         cancel(true);
         dialog.dismiss();
         context = null;
+    }
+
+    public static class DownloadInfo {
+        int percentage;
+        String name;
     }
 }

@@ -3,7 +3,6 @@ package pennsylvania.jahepi.com.apppenns.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -94,11 +93,10 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         }
     }
 
-    private static class MessageNotifier extends AsyncTask {
+    private static class MessageNotifier extends AsyncTask<Void, Integer, Void> {
 
         private CustomApplication context;
         private TextView view;
-        private Handler handler = new Handler();
 
         public void setContext(CustomApplication context) {
             this.context = context;
@@ -111,29 +109,27 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         public void clear() {
             view = null;
             context = null;
-            handler = null;
         }
 
         @Override
-        protected Object doInBackground(Object[] params) {
+        protected void onProgressUpdate(Integer... values) {
+            try {
+                view.setText(String.format(context.getString(R.string.label_new_sms), values[0]));
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
             while (!isCancelled()) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                final int total = context.getNoReadMessagesTotal();
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            view.setText(String.format(context.getString(R.string.label_new_sms), total));
-                        } catch (Exception exp) {
-                            exp.printStackTrace();
-                        }
-                    }
-                });
-
+                int total = context.getNoReadMessagesTotal();
+                publishProgress(total);
             }
             return null;
         }

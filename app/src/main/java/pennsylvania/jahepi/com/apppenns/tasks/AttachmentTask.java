@@ -7,7 +7,6 @@ import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,7 +20,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 /**
  * Created by jahepi on 22/03/16.
  */
-public class AttachmentTask extends AsyncTask<Void, Void, Void> {
+public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo, Void> {
 
     private static final String TAG = "AttachmentTask";
     private static AttachmentTask self;
@@ -31,11 +30,12 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
     private Attachment.File file;
     private boolean downloadFlag;
     private AttachmentTaskListener listener;
+    private DownloadInfo downloadInfo;
 
     private AttachmentTask(Context context) {
         this.context = context;
+        downloadInfo = new DownloadInfo();
         dialog = new ProgressDialog();
-
         dialog.setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,9 +85,7 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
         File fileRef = new File(file.getPathNoName(), file.getName());
         downloadFlag = !fileRef.exists();
         if (downloadFlag) {
-            if (!dialog.isAdded()) {
-                dialog.show(((Activity) context).getFragmentManager(), TAG);
-            }
+            dialog.show(((Activity) context).getFragmentManager(), TAG);
         }
     }
 
@@ -106,6 +104,18 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
+    protected void onProgressUpdate(DownloadInfo... values) {
+        try {
+            DownloadInfo info = values[0];
+            dialog.setStatus(String.format(context.getString(R.string.txt_sync_progress), info.downloadedBytes, info.size));
+            dialog.setTitle(String.format(context.getString(R.string.txt_sync_status), info.percentage + "%"));
+            dialog.setProgress(info.percentage);
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+    }
+
+    @Override
     protected Void doInBackground(Void... params) {
         if (downloadFlag) {
             File downloadFile = new File(CustomApplication.SDCARD_PATH, file.getName());
@@ -118,7 +128,7 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
                 connection.setDoOutput(true);
                 connection.connect();
 
-                final int size = connection.getContentLength();
+                int size = connection.getContentLength();
                 int downloaded = 0;
 
                 InputStream inputStream = connection.getInputStream();
@@ -127,26 +137,17 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
                 while ((length = inputStream.read(buffer)) > 0) {
                     fOut.write(buffer, 0, length);
                     downloaded += length;
-                    final int downloadedBytes = downloaded;
-                    final float percentage = (float) downloaded / (float) size * 100;
-                    ((Activity) context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                dialog.setStatus(String.format(context.getString(R.string.txt_sync_progress), downloadedBytes / 1024, size / 1024));
-                                dialog.setTitle(String.format(context.getString(R.string.txt_sync_status), (int) percentage + "%"));
-                                dialog.setProgress((int) percentage);
-                            } catch (Exception exp) {
-                                exp.printStackTrace();
-                            }
-                        }
-                    });
-
+                    int downloadedBytes = downloaded;
+                    float percentage = (float) downloaded / (float) size * 100;
+                    downloadInfo.percentage = (int) percentage;
+                    downloadInfo.size = size / 1024;
+                    downloadInfo.downloadedBytes = downloadedBytes / 1024;
+                    publishProgress(downloadInfo);
                 }
                 fOut.close();
                 file.setModifiedDate(Util.getDateTime());
                 file.setPath(CustomApplication.SDCARD_PATH + File.separator + file.getName());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 downloadFile.delete();
                 downloadFlag = false;
@@ -157,5 +158,10 @@ public class AttachmentTask extends AsyncTask<Void, Void, Void> {
 
     public static interface AttachmentTaskListener {
         public void onFinish(boolean success, boolean downloaded, Attachment.File file);
+    }
+
+    public static class DownloadInfo {
+        int percentage;
+        float size, downloadedBytes;
     }
 }
