@@ -104,6 +104,7 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
                 AttachmentTask attachmentTask = AttachmentTask.getInstance(getContext());
                 if (!attachmentTask.isRunning()) {
                     attachmentTask.setFile(file);
+                    attachmentTask.setManager(((Activity) getContext()).getFragmentManager());
                     attachmentTask.setListener(FileAttachmentAdapter.this);
                     attachmentTask.execute();
                 }

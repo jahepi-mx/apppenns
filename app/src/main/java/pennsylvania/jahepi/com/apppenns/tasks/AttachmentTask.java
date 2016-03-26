@@ -1,6 +1,6 @@
 package pennsylvania.jahepi.com.apppenns.tasks;
 
-import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
@@ -31,6 +31,7 @@ public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo,
     private boolean downloadFlag;
     private AttachmentTaskListener listener;
     private DownloadInfo downloadInfo;
+    private FragmentManager manager;
 
     private AttachmentTask(Context context) {
         this.context = context;
@@ -47,6 +48,7 @@ public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo,
                 cancel(true);
                 AttachmentTask.this.context = null;
                 listener = null;
+                manager = null;
             }
         });
     }
@@ -58,6 +60,10 @@ public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo,
             self = new AttachmentTask(context);
         }
         return self;
+    }
+
+    public void setManager(FragmentManager manager) {
+        this.manager = manager;
     }
 
     public boolean isRunning() {
@@ -81,7 +87,7 @@ public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo,
         File fileRef = new File(file.getPathNoName(), file.getName());
         downloadFlag = !fileRef.exists();
         if (downloadFlag) {
-            dialog.show(((Activity) context).getFragmentManager(), TAG);
+            dialog.show(manager, TAG);
         }
     }
 
@@ -97,6 +103,7 @@ public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo,
         cancel(true);
         context = null;
         listener = null;
+        manager = null;
     }
 
     @Override

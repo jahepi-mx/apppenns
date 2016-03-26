@@ -64,8 +64,9 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
             finish();
         }
         if (v == clientSyncBtn) {
-            ClientSync clientSync = ClientSync.getInstance(this);
+            ClientSync clientSync = ClientSync.getInstance(getApplicationContext());
             if (!clientSync.isRunning()) {
+                clientSync.setManager(getFragmentManager());
                 clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }

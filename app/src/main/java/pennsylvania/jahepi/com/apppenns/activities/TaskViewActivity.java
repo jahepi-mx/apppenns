@@ -32,7 +32,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Task;
 /**
  * Created by jahepi on 06/03/16.
  */
-public class TaskViewActivity extends AuthActivity implements View.OnClickListener, DialogInterface.OnClickListener, DialogListener {
+public class TaskViewActivity extends AuthActivity implements View.OnClickListener, DialogInterface.OnClickListener {
 
     private static final String TAG = "TaskViewActivity";
     private static final int ALPHA = 50;
@@ -128,7 +128,17 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         checkInAlert.setMessage(getString(R.string.txt_confirm_checkin));
         checkInAlert.setIcon(R.drawable.task);
 
-        checkOutAlert = new CheckOutDialog(this, this);
+        checkOutAlert = new CheckOutDialog(this, new DialogListener() {
+            @Override
+            public void accept(Object dialog) {
+                checkout();
+            }
+
+            @Override
+            public void cancel(Object dialog) {
+
+            }
+        });
 
         backBtn.setOnClickListener(this);
         checkinBtn.setOnClickListener(this);
@@ -250,15 +260,5 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 }
             }
         }
-    }
-
-    @Override
-    public void accept(Object dialogParam) {
-        checkout();
-    }
-
-    @Override
-    public void cancel(Object dialogParam) {
-
     }
 }

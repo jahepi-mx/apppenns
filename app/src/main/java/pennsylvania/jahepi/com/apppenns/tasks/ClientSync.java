@@ -1,6 +1,6 @@
 package pennsylvania.jahepi.com.apppenns.tasks;
 
-import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -33,6 +33,7 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
     private ProgressDialog dialog;
     private Context context;
     private DownloadInfo downloadInfo;
+    private FragmentManager manager;
 
     private ClientSync(Context context) {
         dialog = new ProgressDialog();
@@ -50,13 +51,17 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
         return self;
     }
 
+    public void setManager(FragmentManager manager) {
+        this.manager = manager;
+    }
+
     public boolean isRunning() {
         return self.getStatus() == Status.RUNNING && !isCancelled();
     }
 
     @Override
     protected void onPreExecute() {
-        dialog.show(((Activity) context).getFragmentManager(), TAG);
+        dialog.show(manager, TAG);
     }
 
     @Override
@@ -79,6 +84,7 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
         cancel(true);
         dialog.dismiss();
         context = null;
+        manager = null;
     }
 
     @Override
@@ -88,7 +94,7 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
 
     private Boolean syncClients() {
         try {
-            CustomApplication application = (CustomApplication) ((Activity) context).getApplication();
+            CustomApplication application = (CustomApplication) context;
             String url = CustomApplication.SERVICE_URL + "intranet/android/getClients/" + application.getUser().getId();
 
             URL urlRef = new URL(url);
@@ -157,6 +163,7 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
         cancel(true);
         dialog.dismiss();
         context = null;
+        manager = null;
     }
 
     public static class DownloadInfo {
