@@ -2,7 +2,6 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -67,11 +66,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         if (v == clientSyncBtn) {
             ClientSync clientSync = ClientSync.getInstance(this);
             if (!clientSync.isRunning()) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
-                    clientSync.execute();
-                }
+                clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
         if (v == calendarBtn) {
@@ -85,11 +80,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         messageNotifier = new MessageNotifier();
         messageNotifier.setContext(application);
         messageNotifier.setView(viewSms);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            messageNotifier.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            messageNotifier.execute();
-        }
+        messageNotifier.execute();
     }
 
     @Override

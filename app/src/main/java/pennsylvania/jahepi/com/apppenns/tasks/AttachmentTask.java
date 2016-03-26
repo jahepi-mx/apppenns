@@ -52,11 +52,7 @@ public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo,
     }
 
     public static AttachmentTask getInstance(Context context) {
-        if (self == null) {
-            self = new AttachmentTask(context);
-        } else if (self.isCancelled()) {
-            self = new AttachmentTask(context);
-        } else if (self.getStatus() == Status.RUNNING || self.getStatus() == Status.PENDING) {
+        if (self != null && !self.isCancelled() && (self.getStatus() == Status.RUNNING || self.getStatus() == Status.PENDING)) {
             return self;
         } else {
             self = new AttachmentTask(context);

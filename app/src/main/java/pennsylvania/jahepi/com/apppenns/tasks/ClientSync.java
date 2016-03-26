@@ -42,12 +42,8 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
     }
 
     public static ClientSync getInstance(Context context) {
-        if (self == null) {
-            self = new ClientSync(context);
-        } else if (self.isCancelled()) {
-            self = new ClientSync(context);
-        } else if (self.getStatus() == Status.RUNNING || self.getStatus() == Status.PENDING) {
-           return self;
+        if (self != null && !self.isCancelled() && (self.getStatus() == Status.RUNNING || self.getStatus() == Status.PENDING)) {
+            return self;
         } else {
            self = new ClientSync(context);
         }
@@ -113,7 +109,7 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
             for (int i = 0; i < clients.length() && !isCancelled(); i++) {
 
                 JSONObject jsonClients = clients.getJSONObject(i);
-                final String name = jsonClients.getString("name");
+                String name = jsonClients.getString("name");
 
                 Client client = new Client();
                 client.setId(jsonClients.getInt("id"));
@@ -143,7 +139,7 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
                     Log.d(TAG, "Could not save client " + client.getName());
                 }
 
-                final float percentage = (float) i / (float) clients.length() * 100;
+                float percentage = (float) i / (float) clients.length() * 100;
                 downloadInfo.percentage = (int) percentage;
                 downloadInfo.name = name;
                 publishProgress(downloadInfo);
@@ -155,7 +151,8 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
         }
         return true;
     }
-            @Override
+
+    @Override
     public void onClick(View v) {
         cancel(true);
         dialog.dismiss();

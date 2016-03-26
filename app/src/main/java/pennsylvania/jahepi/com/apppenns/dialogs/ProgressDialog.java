@@ -41,7 +41,7 @@ public class ProgressDialog extends DialogFragment {
         statusTextView.setText(status);
     }
 
-    public void setProgress(final int progress) {
+    public void setProgress(int progress) {
         progressBar.setProgress(progress);
     }
 
