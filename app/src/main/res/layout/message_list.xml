@@ -45,6 +45,19 @@
             android:layout_weight="1" />
     </LinearLayout>
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_square_button"
+        android:shadowRadius="2"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowColor="#000"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:id="@+id/dateBtn" />
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

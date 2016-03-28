@@ -179,8 +179,8 @@ public class CustomApplication extends Application {
         return dao.saveMessage(message);
     }
 
-    public ArrayList<Message> getMessages() {
-        return dao.getMessages(getUser().getId());
+    public ArrayList<Message> getMessages(String date) {
+        return dao.getMessages(getUser().getId(), date);
     }
 
     public ArrayList<Task> getNewTasks() {

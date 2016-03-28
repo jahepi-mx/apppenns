@@ -40,6 +40,14 @@ public class Entity implements Serializable {
         return null;
     }
 
+    public String getModifiedDateNoTimeString() {
+        if (modifiedDate != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return dateFormat.format(modifiedDate);
+        }
+        return null;
+    }
+
     public boolean isActive() {
         return active;
     }

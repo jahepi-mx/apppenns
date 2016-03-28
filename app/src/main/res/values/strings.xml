@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">AppPenns</string>
     <string name="txt_init">Initializing</string>
-    <string name="txt_new_message">%1$s (Nuevo)</string>
+    <string name="txt_new_message">De: %1$s (Nuevo)</string>
+    <string name="txt_new_message_from">De: %1$s</string>
+    <string name="txt_new_message_to">Para: %1$s</string>
+    <string name="txt_new_message_date">Fecha: %1$s</string>
     <string name="txt_sync_status">Completado %1$s</string>
     <string name="txt_sync_progress">Descargado %1$s kbs de %2$s kbs</string>
     <string name="txt_sync_start">Iniciando proceso ...</string>

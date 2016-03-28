@@ -30,7 +30,7 @@ public class MessageViewActivity extends AuthActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_view);
 
-        Message message = (Message) getIntent().getSerializableExtra(CustomApplication.GENERIC_INTENT);
+        final Message message = (Message) getIntent().getSerializableExtra(CustomApplication.GENERIC_INTENT);
 
         if (message != null) {
 
@@ -67,6 +67,7 @@ public class MessageViewActivity extends AuthActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MessageViewActivity.this, MessageListActivity.class);
+                intent.putExtra(CustomApplication.GENERIC_INTENT, message.getModifiedDateNoTimeString());
                 startActivity(intent);
                 finish();
             }

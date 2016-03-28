@@ -1,6 +1,8 @@
 package pennsylvania.jahepi.com.apppenns.activities;
 
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,29 +16,44 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
+import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.MessageAdapter;
 import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
+import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
  * Created by javier.hernandez on 26/02/2016.
  */
-public class MessageListActivity extends AuthActivity implements AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener {
+public class MessageListActivity extends AuthActivity implements DialogListener, AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener {
 
     private final static String TAG = "MessageListActivity";
 
     private ArrayList<Message> messages;
     private MessageAdapter adapter;
     private ListView listView;
+    private DateDialog dateDialog;
+    private Button dateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_list);
 
+        Intent intent = getIntent();
+        String date = intent.getStringExtra(CustomApplication.GENERIC_INTENT);
+        if (date == null) {
+            date = Util.getDate();
+        }
+
+        dateDialog = new DateDialog();
+        dateDialog.setDate(date);
+        dateDialog.setListener(this);
+
         listView = (ListView) findViewById(R.id.messageListView);
-        messages = application.getMessages();
+        messages = application.getMessages(date);
 
         adapter = new MessageAdapter(getApplicationContext(), R.layout.message_item);
         adapter.addAll(messages);
@@ -54,6 +71,7 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
                 }
                 MessageAdapter.ViewHolder holder = (MessageAdapter.ViewHolder) view.getTag();
                 holder.getTitle().setTypeface(null, Typeface.NORMAL);
+                holder.getTitle().setBackgroundColor(Color.TRANSPARENT);
                 Intent intent = new Intent(MessageListActivity.this, MessageViewActivity.class);
                 intent.putExtra(CustomApplication.GENERIC_INTENT, message);
                 startActivity(intent);
@@ -75,6 +93,19 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
             public void onClick(View v) {
                 Intent intent = new Intent(MessageListActivity.this, MainActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        dateBtn = (Button) findViewById(R.id.dateBtn);
+        dateBtn.setText(date);
+
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!dateDialog.isAdded()) {
+                    FragmentManager fm = getFragmentManager();
+                    dateDialog.show(fm, TAG);
+                }
             }
         });
     }
@@ -159,6 +190,19 @@ public class MessageListActivity extends AuthActivity implements AdapterView.OnI
 
     @Override
     public void onChangeLocation(double latitude, double longitude) {
+
+    }
+
+    @Override
+    public void accept(Object dialog) {
+        String date = dateDialog.getDate();
+        dateBtn.setText(date);
+        adapter.clear();
+        adapter.addAll(application.getMessages(date));
+    }
+
+    @Override
+    public void cancel(Object dialog) {
 
     }
 }

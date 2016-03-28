@@ -231,9 +231,9 @@ public class Dao {
         return attachments;
     }
 
-    public ArrayList<Message> getMessages(int userId) {
+    public ArrayList<Message> getMessages(int userId, String date) {
         ArrayList<Message> messages = new ArrayList<Message>();
-        Cursor cursor = db.getAllOrderBy(Database.MESSAGES_TABLE, String.format("from_user='%s' OR to_user='%s'", userId, userId), "id DESC");
+        Cursor cursor = db.getAllOrderBy(Database.MESSAGES_TABLE, String.format("((from_user='%s' OR to_user='%s') AND date LIKE '%%%s%%') OR ((from_user='%s' OR to_user='%s') AND read = 0)", userId, userId, date, userId, userId), "read, id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Message message = mapMessage(cursor);

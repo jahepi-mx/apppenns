@@ -1,6 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -45,6 +46,8 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
             convertView = inflater.inflate(mResource, parent, false);
             TextView title = (TextView) convertView.findViewById(R.id.messageTitle);
             TextView text = (TextView) convertView.findViewById(R.id.messageText);
+            TextView to = (TextView) convertView.findViewById(R.id.messageTextTo);
+            TextView date = (TextView) convertView.findViewById(R.id.messageDate);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.messageIcon);
             int imageResourceIn = getContext().getResources().getIdentifier(URI_IN, null, getContext().getPackageName());
             Drawable drawableIn = getContext().getResources().getDrawable(imageResourceIn);
@@ -54,6 +57,8 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
             ViewHolder holder = new ViewHolder();
             holder.text = text;
             holder.title = title;
+            holder.to = to;
+            holder.date = date;
             holder.imageView = imageView;
             holder.drawableIn = drawableIn;
             holder.drawableOut = drawableOut;
@@ -66,9 +71,10 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
 
         if (message.isRead()) {
             holder.title.setTypeface(null, Typeface.NORMAL);
-            holder.title.setText(message.getFrom().getName());
+            holder.title.setText(String.format(getContext().getString(R.string.txt_new_message_from), message.getFrom().getName()));
         } else {
             holder.title.setTypeface(null, Typeface.BOLD);
+            holder.title.setBackgroundColor(Color.LTGRAY);
             holder.title.setText(String.format(getContext().getString(R.string.txt_new_message), message.getFrom().getName()));
         }
         if (message.isSend()) {
@@ -84,6 +90,8 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
         }
 
         holder.text.setText(Util.abbreviate(message.getMessage(), MESSAGE_LENGTH));
+        holder.date.setText(message.getModifiedDateString());
+        holder.to.setText(String.format(getContext().getString(R.string.txt_new_message_to), message.getTo().getName()));
         return convertView;
     }
 
@@ -98,8 +106,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
     }
 
     public static class ViewHolder {
-        TextView title;
-        TextView text;
+        TextView title, text, date, to;
         ImageView imageView;
         Drawable drawableIn;
         Drawable drawableOut;
