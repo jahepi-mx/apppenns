@@ -71,6 +71,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
 
         if (message.isRead()) {
             holder.title.setTypeface(null, Typeface.NORMAL);
+            holder.title.setBackgroundColor(Color.TRANSPARENT);
             holder.title.setText(String.format(getContext().getString(R.string.txt_new_message_from), message.getFrom().getName()));
         } else {
             holder.title.setTypeface(null, Typeface.BOLD);
