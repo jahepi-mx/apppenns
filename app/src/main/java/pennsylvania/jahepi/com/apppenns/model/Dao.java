@@ -32,7 +32,7 @@ public class Dao {
 
     public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<User>();
-        Cursor cursor = db.getAllOrderBy(Database.USERS_TABLE, null, "group_name, name ASC");
+        Cursor cursor = db.getAllOrderBy(Database.USERS_TABLE, "active='1'", "group_name, name ASC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 User user = mapUser(cursor);
