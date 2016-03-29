@@ -32,7 +32,7 @@ public class Dao {
 
     public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<User>();
-        Cursor cursor = db.getAllOrderBy(Database.USERS_TABLE, null, "name ASC");
+        Cursor cursor = db.getAllOrderBy(Database.USERS_TABLE, null, "group_name, name ASC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 User user = mapUser(cursor);
@@ -71,6 +71,7 @@ public class Dao {
         user.setName(cursor.getString(3));
         user.setModifiedDate(cursor.getString(4));
         user.setActive(cursor.getInt(5) != 0);
+        user.setGroup(cursor.getString(6));
         return user;
     }
 
@@ -80,6 +81,7 @@ public class Dao {
             values.put("email", user.getEmail());
             values.put("password", user.getPassword());
             values.put("name", user.getName());
+            values.put("group_name", user.getGroup());
             values.put("active", user.isActive() ? 1 : 0);
             values.put("date", user.getModifiedDateString());
 

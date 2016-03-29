@@ -121,6 +121,7 @@ public class Sync extends Service {
                 user.setEmail(json.getString("email"));
                 user.setPassword(json.getString("password"));
                 user.setName(json.getString("username"));
+                user.setGroup(json.getString("group"));
                 user.setModifiedDate(json.getString("date"));
                 user.setActive(json.getInt("active") != 0);
 

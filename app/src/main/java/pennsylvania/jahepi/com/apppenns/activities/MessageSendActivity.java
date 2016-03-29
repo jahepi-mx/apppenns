@@ -15,7 +15,6 @@ import android.widget.TextView;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
@@ -38,11 +37,11 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     private static final int REQUEST_CODE = 1;
 
     private ToDialog dialog;
-    private ArrayList<User> users;
     private TextView toTextView;
     private EditText messageEditText;
     private ListView attachmentList;
     private FileAttachmentAdapter fileAttachmentAdapter;
+    private ArrayList<ToDialog.Option> options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
 
-        users = application.getUsers();
+        options = new ArrayList<ToDialog.Option>();
+
+        ArrayList<User> users = application.getUsers();
         users.remove(application.getUser());
 
         dialog = new ToDialog();
@@ -115,11 +116,10 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     @Override
     public void accept(Object dialogParam) {
         String toAll = "";
-        Iterator<User> iterator = users.iterator();
-        while (iterator.hasNext()) {
-            User user = iterator.next();
-            if (user.isSelected()) {
-                toAll += user.getName() + " ";
+        options = dialog.getOptions();
+        for (ToDialog.Option option : options) {
+            if (option.isSelectedOption()) {
+                toAll += option.getUser().getName() + " ";
             }
         }
         toTextView.setText(String.format(getString(R.string.txt_message_to_all), toAll));
@@ -129,11 +129,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     private void send() {
         ArrayList<User> tmpUsers = new ArrayList<User>();
         String messageStr = messageEditText.getText().toString();
-        Iterator<User> iterator = users.iterator();
-        while (iterator.hasNext()) {
-            User user = iterator.next();
-            if (user.isSelected()) {
-                tmpUsers.add(user);
+        for (ToDialog.Option option : options) {
+            if (option.isSelectedOption()) {
+                tmpUsers.add(option.getUser());
             }
         }
 
@@ -150,15 +148,14 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
             }
         }
 
-        Iterator<User> tmpIterator = tmpUsers.iterator();
-        while (tmpIterator.hasNext()) {
-            User user = tmpIterator.next();
+        for (User user : tmpUsers) {
             Message message = new Message();
             message.setFrom(application.getUser());
             message.setTo(user);
             message.setMessage(messageStr);
             message.setModifiedDate(Util.getDateTime());
             message.addAttachments(attachments);
+            message.setRead(true);
             application.saveMessage(message);
         }
 

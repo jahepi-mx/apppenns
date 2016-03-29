@@ -2,6 +2,8 @@ package pennsylvania.jahepi.com.apppenns.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,10 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.R;
-import pennsylvania.jahepi.com.apppenns.entities.Entity;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
@@ -26,13 +26,14 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
  */
 public class ToDialog extends DialogFragment implements View.OnClickListener {
 
-    private ArrayList<User> users;
     private DialogAdapter adapter;
     private Button acceptBtn;
     private DialogListener listener;
+    private ArrayList<Option> options;
 
     public ToDialog() {
         super();
+        options = new ArrayList<Option>();
     }
 
     @Nullable
@@ -43,7 +44,7 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
         acceptBtn = (Button) view.findViewById(R.id.okToBtn);
         ListView listView = (ListView) view.findViewById(R.id.toListView);
         adapter = new DialogAdapter(view.getContext(), R.layout.dialog_to_row);
-        adapter.addAll(users);
+        adapter.addAll(options);
 
         listView.setAdapter(adapter);
         acceptBtn.setOnClickListener(this);
@@ -52,9 +53,17 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ViewHolder holder = (ViewHolder) view.getTag();
-                User user = (User) adapter.getItem(position);
-                user.setSelected(!user.isSelected());
-                holder.checkbox.setChecked(user.isSelected());
+                Option option = (Option) adapter.getItem(position);
+                option.selected = !option.selected;
+                holder.checkbox.setChecked(option.selected);
+                if (option.isGroupOption()) {
+                    for (Option tempOption : options) {
+                        if (tempOption.getGroup().equals(option.getGroup())) {
+                            tempOption.selected = option.selected;
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -62,15 +71,36 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
     }
 
     public void reset() {
-        Iterator<User> iterator = users.iterator();
-        while (iterator.hasNext()) {
-            User user = iterator.next();
-            user.setSelected(false);
+        for (Option option : options) {
+            option.selected = false;
         }
     }
 
     public void setUsers(ArrayList<User> users) {
-        this.users = users;
+        buildOptions(users);
+    }
+
+    private void buildOptions(ArrayList<User> users) {
+        for (User user : users) {
+            if (!hasGroupOption(user.getGroup())) {
+                Option option = new Option();
+                option.group = user.getGroup();
+                options.add(option);
+            }
+            Option option = new Option();
+            option.group = user.getGroup();
+            option.user = user;
+            options.add(option);
+        }
+    }
+
+    private boolean hasGroupOption(String groupName) {
+        for (Option option : options) {
+            if (option.isGroupOptionName(groupName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setListener(DialogListener listener) {
@@ -82,11 +112,11 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
         listener.accept(this);
     }
 
-    public ArrayList<User> getUsers() {
-        return users;
+    public ArrayList<Option> getOptions() {
+        return options;
     }
 
-    private static class DialogAdapter extends ArrayAdapter<Entity> {
+    private static class DialogAdapter extends ArrayAdapter<Option> {
 
         public DialogAdapter(Context context, int resource) {
             super(context, resource);
@@ -109,14 +139,25 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
             }
 
             ViewHolder holder = (ViewHolder) convertView.getTag();
-            User user = (User) getItem(position);
+            Option option = (Option) getItem(position);
 
-            if (user.isSelected()) {
+            if (option.selected) {
                 holder.checkbox.setChecked(true);
             } else {
                 holder.checkbox.setChecked(false);
             }
-            holder.title.setText(user.getName());
+
+            if (!option.isGroupOption()) {
+                holder.title.setTypeface(null, Typeface.NORMAL);
+                holder.title.setTextColor(Color.BLACK);
+                holder.title.setBackgroundColor(Color.TRANSPARENT);
+                holder.title.setText(option.user.getName());
+            } else {
+                holder.title.setTypeface(null, Typeface.BOLD);
+                holder.title.setTextColor(Color.WHITE);
+                holder.title.setBackgroundColor(Color.BLACK);
+                holder.title.setText(option.group);
+            }
 
             return convertView;
         }
@@ -125,5 +166,47 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
     private static class ViewHolder {
         TextView title;
         CheckBox checkbox;
+    }
+
+    public static class Option {
+        private String group;
+        private boolean selected;
+        private User user;
+
+        public String getGroup() {
+            return group;
+        }
+
+        public void setGroup(String group) {
+            this.group = group;
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        public void setSelected(boolean selected) {
+            this.selected = selected;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+        public boolean isGroupOptionName(String group) {
+            return this.group.equals(group) && isGroupOption();
+        }
+
+        public boolean isGroupOption() {
+            return user == null;
+        }
+
+        public boolean isSelectedOption() {
+            return selected && !isGroupOptionName(group);
+        }
     }
 }

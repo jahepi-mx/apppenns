@@ -22,7 +22,7 @@ public class Database {
     public static final String TASK_ATTACHMENTS_TABLE = "task_attachments";
     public static final String FILES_TABLE = "files";
 
-    private static final int DB_VERSION = 26;
+    private static final int DB_VERSION = 27;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -150,7 +150,7 @@ public class Database {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT)");
+            db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT, group_name TEXT)");
             Log.d(TAG, "Users table created!");
             db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");

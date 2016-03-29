@@ -9,7 +9,7 @@ public class User extends Entity {
     private String name;
     private String email;
     private String password;
-    private boolean selected;
+    private String group;
 
     public String getName() {
         return name;
@@ -43,12 +43,12 @@ public class User extends Entity {
         this.id = id;
     }
 
-    public boolean isSelected() {
-        return selected;
+    public String getGroup() {
+        return group;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     @Override
