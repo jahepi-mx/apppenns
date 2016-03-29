@@ -72,10 +72,12 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
         if (message.isRead()) {
             holder.title.setTypeface(null, Typeface.NORMAL);
             holder.title.setBackgroundColor(Color.TRANSPARENT);
+            holder.title.setTextColor(Color.BLACK);
             holder.title.setText(String.format(getContext().getString(R.string.txt_new_message_from), message.getFrom().getName()));
         } else {
             holder.title.setTypeface(null, Typeface.BOLD);
-            holder.title.setBackgroundColor(Color.LTGRAY);
+            holder.title.setBackgroundColor(Color.BLACK);
+            holder.title.setTextColor(Color.WHITE);
             holder.title.setText(String.format(getContext().getString(R.string.txt_new_message), message.getFrom().getName()));
         }
         if (message.isSend()) {
