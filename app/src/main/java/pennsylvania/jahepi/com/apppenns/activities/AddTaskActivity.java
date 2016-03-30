@@ -135,6 +135,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 if (!dateDialog.isAdded()) {
                     FragmentManager fm = getFragmentManager();
                     dateDialog.show(fm, TAG);
+                    dateDialog.setDate(dateBtn.getText().toString());
                 }
             }
         });
