@@ -59,6 +59,17 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             }
         });
 
+        Button reprogrammedBtn = (Button) findViewById(R.id.reprogrammedBtn);
+        reprogrammedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TaskViewActivity.this, AddTaskActivity.class);
+                intent.putExtra(CustomApplication.ADDITIONAL_GENERIC_INTENT, task);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         Button filesBtn = (Button) findViewById(R.id.filesBtn);
         filesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
