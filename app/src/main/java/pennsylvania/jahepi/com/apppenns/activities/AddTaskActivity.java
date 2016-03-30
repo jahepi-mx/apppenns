@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
@@ -22,6 +21,7 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.components.TypeSpinner;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
@@ -43,29 +43,35 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     private static enum TIME_TYPE {START, END};
 
     private Button dateBtn, clientBtn, startTimeBtn, endTimeBtn;
+    private EditText descriptionEditText;
+    private TypeSpinner typeSpinner;
     private DateDialog dateDialog;
     private TimeDialog timeDialog;
     private Address address;
     private TIME_TYPE type;
     private FileAttachmentAdapter fileAttachmentAdapter;
     private ListView attachmentList;
+    private Task parentTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_add);
 
+        descriptionEditText = (EditText) findViewById(R.id.taskDescEditText);
+
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
         attachmentList = (ListView) findViewById(R.id.attachmentsListView);
         attachmentList.setAdapter(fileAttachmentAdapter);
 
         ArrayList<Type> types = application.getTypes();
-        final Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
+        typeSpinner = (TypeSpinner) findViewById(R.id.typeSpinner);
         ArrayAdapter<Type> adapter = new ArrayAdapter<Type>(this, R.layout.support_simple_spinner_dropdown_item, types);
         typeSpinner.setAdapter(adapter);
 
         Intent intent = getIntent();
         String date = intent.getStringExtra(CustomApplication.GENERIC_INTENT);
+        parentTask = (Task) intent.getSerializableExtra(CustomApplication.ADDITIONAL_GENERIC_INTENT);
         if (date == null) {
             date = Util.getDate();
         }
@@ -92,9 +98,15 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
-                intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
-                startActivity(intent);
+                if (parentTask == null) {
+                    Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(AddTaskActivity.this, TaskViewActivity.class);
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, parentTask);
+                    startActivity(intent);
+                }
                 AddTaskActivity.this.finish();
             }
         });
@@ -158,18 +170,18 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             }
         });
 
+        if (parentTask != null) {
+            setDefaultState();
+        }
+
         Button addButton = (Button) findViewById(R.id.addBtn);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                EditText descriptionEditText = (EditText) findViewById(R.id.taskDescEditText);
-
                 String description = descriptionEditText.getText().toString();
                 String date = dateBtn.getText().toString();
                 String startTime = startTimeBtn.getText().toString();
                 String endTime = endTimeBtn.getText().toString();
-
                 Type type = (Type) typeSpinner.getSelectedItem();
 
                 if (address == null || type == null) {
@@ -188,7 +200,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setType(type);
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);
-
+                task.setParentTask(parentTask);
                 // Add event to calendar provider
                 long calendarEventId  = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
                 task.setEventId((int) calendarEventId);
@@ -248,6 +260,18 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 }
             }
         }
+    }
+
+    private void setDefaultState() {
+        descriptionEditText.setText(parentTask.getDescription());
+        dateBtn.setText(parentTask.getDate());
+        startTimeBtn.setText(parentTask.getStartTime());
+        endTimeBtn.setText(parentTask.getEndTime());
+        typeSpinner.setSelectedItem(parentTask.getType());
+        address = parentTask.getAddress();
+        fileAttachmentAdapter.addAll(parentTask.getAttachments());
+        TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
+        textView.setText(address.getClient().getName() + " " + address.getAddress());
     }
 
     @Override

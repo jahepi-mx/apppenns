@@ -194,10 +194,10 @@
                     android:text="@string/txt_type"
                     android:textStyle="bold" />
 
-                <Spinner android:layout_width="match_parent"
+                <pennsylvania.jahepi.com.apppenns.components.TypeSpinner android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
-                    android:id="@+id/typeSpinner"></Spinner>
+                    android:id="@+id/typeSpinner"></pennsylvania.jahepi.com.apppenns.components.TypeSpinner>
 
             </TableRow>
 

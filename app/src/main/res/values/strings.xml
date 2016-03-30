@@ -19,7 +19,7 @@
     <string name="label_task">Actividades</string>
     <string name="label_new_sms">%1$s</string>
     <string name="txt_message_title">Información Mensaje</string>
-    <string name="txt_task_title">Información Actividad</string>
+    <string name="txt_task_title">Actividad</string>
     <string name="txt_calendar_title">Calendario</string>
     <string name="txt_message_send">Envío Mensaje</string>
     <string name="txt_error_send">Verifique que tenga los datos requeridos</string>
@@ -81,6 +81,7 @@
     <string name="btn_checkout">Salida</string>
     <string name="btn_yes">Si</string>
     <string name="btn_no">No</string>
+    <string name="btn_reprogrammed">Reprogramar</string>
     <string name="txt_file_size">Tamaño</string>
     <string name="txt_current_dir">Directorio Actual</string>
 </resources>

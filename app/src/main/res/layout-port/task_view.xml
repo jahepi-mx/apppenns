@@ -38,6 +38,20 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/btn_reprogrammed"
+                android:background="@drawable/custom_button"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textColor="#fff"
+                android:id="@+id/reprogrammedBtn"
+                android:layout_weight="1" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/btn_back"
                 android:background="@drawable/custom_button"
                 android:shadowRadius="2"

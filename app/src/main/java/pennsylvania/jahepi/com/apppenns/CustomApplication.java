@@ -39,6 +39,7 @@ public class CustomApplication extends Application {
     public final static String TAG = "CustomApplication";
     public final static String PREFS_NAME = "com.pennsylvania.jahepi.preferences";
     public final static String GENERIC_INTENT = "GENERIC_INTENT";
+    public final static String ADDITIONAL_GENERIC_INTENT = "ADDITIONAL_GENERIC_INTENT";
     public final static String PREF_USER_EMAIL = "PREF_USER_EMAIL";
     public final static String PREF_USER_ID = "PREF_USER_ID";
 

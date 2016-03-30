@@ -462,6 +462,11 @@ public class Dao {
         task.setEventId(cursor.getInt(33));
         task.setEmails(cursor.getString(34));
 
+        Task parentTask = new Task();
+        parentTask.setId(cursor.getInt(35));
+        parentTask.setUser(task.getUser());
+        task.setParentTask(getTask(parentTask));
+
         Type type = new Type();
         type.setId(cursor.getInt(27));
         type.setName(cursor.getString(28));
@@ -469,7 +474,6 @@ public class Dao {
         type.setActive(cursor.getInt(30) == 1);
         task.setType(type);
         task.addAttachments(getAttachments(task));
-
         return task;
     }
 
@@ -497,6 +501,7 @@ public class Dao {
             values.put("end_time", task.getEndTime());
             values.put("event_id", task.getEventId());
             values.put("emails", task.getEmails());
+            values.put("parent_task", task.getParentTaskId());
 
             Task taskDB = getTask(task);
             if (taskDB != null) {

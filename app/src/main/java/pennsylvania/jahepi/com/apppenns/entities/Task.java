@@ -30,6 +30,7 @@ public class Task extends Entity {
     private boolean cancelled;
     private int eventId;
     private String emails;
+    private Task parentTask;
     private ArrayList<Attachment> attachments;
 
     public Task() {
@@ -222,6 +223,21 @@ public class Task extends Entity {
 
     public String getEndDateTime() {
         return date + " " + endTime;
+    }
+
+    public int getParentTaskId() {
+        if (parentTask != null) {
+            return parentTask.getId();
+        }
+        return 0;
+    }
+
+    public Task getParentTask() {
+        return parentTask;
+    }
+
+    public void setParentTask(Task parentTask) {
+        this.parentTask = parentTask;
     }
 
     public String getEmails() {
