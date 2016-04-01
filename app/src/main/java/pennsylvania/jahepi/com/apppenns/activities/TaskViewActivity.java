@@ -1,6 +1,5 @@
 package pennsylvania.jahepi.com.apppenns.activities;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import java.util.Iterator;
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.adapters.CustomAlertDialog;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
@@ -39,7 +39,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     public final static int REQUEST_CODE_FILE = 2;
 
     private Button checkinBtn, checkoutBtn, backBtn;
-    private AlertDialog.Builder checkInAlert;
+    private CustomAlertDialog checkInAlert;
     private CheckOutDialog checkOutAlert;
     private Task task;
     private FileAttachmentAdapter fileAttachmentAdapter;
@@ -132,7 +132,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             }
         }
 
-        checkInAlert = new AlertDialog.Builder(this);
+        checkInAlert = new CustomAlertDialog(this);
         checkInAlert.setPositiveButton(R.string.btn_yes, this);
         checkInAlert.setNegativeButton(R.string.btn_no, this);
         checkInAlert.setTitle(getString(R.string.txt_confirm));

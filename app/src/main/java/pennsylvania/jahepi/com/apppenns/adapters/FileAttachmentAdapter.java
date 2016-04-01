@@ -31,15 +31,14 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
 
     private int mResource;
     private boolean hideDeleteOption;
-    private AlertDialog.Builder removeDialog;
+    private CustomAlertDialog removeDialog;
     private OnChangeListener changeListener;
     private int selectedPosition;
-    private boolean cancelDialogShowed;
 
     public FileAttachmentAdapter(Context context, int resource) {
         super(context, resource);
         mResource = resource;
-        removeDialog = new AlertDialog.Builder(context);
+        removeDialog = new CustomAlertDialog(context);
         removeDialog.setPositiveButton(R.string.btn_yes, this);
         removeDialog.setNegativeButton(R.string.btn_no, this);
         removeDialog.setTitle(R.string.txt_delete);
@@ -98,10 +97,7 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
                 @Override
                 public void onClick(View v) {
                     selectedPosition = position;
-                    if (!cancelDialogShowed) {
-                        cancelDialogShowed = true;
-                        removeDialog.show();
-                    }
+                    removeDialog.show();
                 }
             });
         } else {
@@ -142,7 +138,6 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        cancelDialogShowed = false;
         if (which == DialogInterface.BUTTON_POSITIVE) {
             remove(getItem(selectedPosition));
             notifyDataSetChanged();
