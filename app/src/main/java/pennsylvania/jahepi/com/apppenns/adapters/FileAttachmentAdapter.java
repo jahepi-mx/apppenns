@@ -1,7 +1,9 @@
 package pennsylvania.jahepi.com.apppenns.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -22,18 +24,27 @@ import pennsylvania.jahepi.com.apppenns.tasks.AttachmentTask;
 /**
  * Created by jahepi on 20/03/16.
  */
-public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements AttachmentTask.AttachmentTaskListener {
+public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements AttachmentTask.AttachmentTaskListener, DialogInterface.OnClickListener {
 
     private static final int REQUEST_CODE = 1;
     private static final int MAX_FILE_SIZE = 1024 * 1024 * 5;
 
     private int mResource;
     private boolean hideDeleteOption;
+    private AlertDialog.Builder removeDialog;
     private OnChangeListener changeListener;
+    private int selectedPosition;
+    private boolean cancelDialogShowed;
 
     public FileAttachmentAdapter(Context context, int resource) {
         super(context, resource);
         mResource = resource;
+        removeDialog = new AlertDialog.Builder(context);
+        removeDialog.setPositiveButton(R.string.btn_yes, this);
+        removeDialog.setNegativeButton(R.string.btn_no, this);
+        removeDialog.setTitle(R.string.txt_delete);
+        removeDialog.setMessage(R.string.txt_confirm_delete);
+        removeDialog.setIcon(R.drawable.view);
     }
 
     public boolean isHideDeleteOption() {
@@ -86,10 +97,10 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
             holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    remove(getItem(position));
-                    notifyDataSetChanged();
-                    if (changeListener != null) {
-                        changeListener.onChange(getItem(position));
+                    selectedPosition = position;
+                    if (!cancelDialogShowed) {
+                        cancelDialogShowed = true;
+                        removeDialog.show();
                     }
                 }
             });
@@ -126,6 +137,18 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
             ((Activity) getContext()).startActivityForResult(intent, REQUEST_CODE);
         } else {
             Toast.makeText(getContext(), R.string.txt_error_file, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        cancelDialogShowed = false;
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            remove(getItem(selectedPosition));
+            notifyDataSetChanged();
+            if (changeListener != null) {
+                changeListener.onChange(getItem(selectedPosition));
+            }
         }
     }
 

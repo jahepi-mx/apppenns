@@ -61,8 +61,10 @@
     <string name="txt_conclusion">Conclusión:</string>
     <string name="txt_users">Usuarios</string>
     <string name="txt_confirm">Confirmación</string>
+    <string name="txt_delete">Borrar</string>
     <string name="txt_error_file">No se puedo descargar el archivo</string>
     <string name="txt_confirm_checkin">Desea confirmar la entrada?</string>
+    <string name="txt_confirm_delete">Desea borrar el archivo?</string>
     <string name="txt_confirm_checkout">Desea confirmar la salida?</string>
     <string name="btn_to">Agregar Remitentes</string>
     <string name="btn_login">Acceder</string>

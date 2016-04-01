@@ -13,10 +13,12 @@
             android:id="@+id/welcomeTextView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#00578b"
-            android:gravity="center"
+            android:background="#003978"
+            android:gravity="center_vertical"
+
+            android:text="Usuario"
             android:padding="5dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:drawableLeft="@drawable/home"
             android:textColor="#fff">
         </TextView>
