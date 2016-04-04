@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.components.GoogleMapFragment;
 import pennsylvania.jahepi.com.apppenns.components.TypeSpinner;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
@@ -52,11 +55,14 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     private FileAttachmentAdapter fileAttachmentAdapter;
     private ListView attachmentList;
     private Task parentTask;
+    private GoogleMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_add);
+
+        mapFragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         descriptionEditText = (EditText) findViewById(R.id.taskDescEditText);
 
@@ -173,6 +179,9 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
         if (parentTask != null) {
             setDefaultState();
+        } else {
+            mapFragment.addLocation(getString(R.string.txt_map_me), BitmapDescriptorFactory.HUE_RED, application.getLatitude(), application.getLongitude());
+            mapFragment.center(application.getLatitude(), application.getLongitude());
         }
 
         Button addButton = (Button) findViewById(R.id.addBtn);
@@ -231,6 +240,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 address = (Address) data.getSerializableExtra(CustomApplication.GENERIC_INTENT);
                 TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
                 textView.setText(address.getClient().getName() + " " + address.getAddress());
+                setMapLocation(address);
             }
         } else if (requestCode == REQUEST_CODE_FILE) {
             if (data != null) {
@@ -273,6 +283,13 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         fileAttachmentAdapter.addAll(parentTask.getAttachments());
         TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
         textView.setText(address.getClient().getName() + " " + address.getAddress());
+        setMapLocation(address);
+    }
+
+    private void setMapLocation(Address address) {
+        mapFragment.clear();
+        mapFragment.addLocation(getString(R.string.txt_map_client), BitmapDescriptorFactory.HUE_AZURE,address.getCoord().getLatitude(), address.getCoord().getLongitude());
+        mapFragment.center(address.getCoord().getLatitude(), address.getCoord().getLongitude());
     }
 
     @Override

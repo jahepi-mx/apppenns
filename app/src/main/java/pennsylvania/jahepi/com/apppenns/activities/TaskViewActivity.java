@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.CustomAlertDialog;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.components.GoogleMapFragment;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.CheckOutDialog;
@@ -86,6 +89,11 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         backBtn = (Button) findViewById(R.id.backBtn);
 
         if (task != null) {
+
+            GoogleMapFragment fragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            fragment.addLocation(getString(R.string.txt_map_me), BitmapDescriptorFactory.HUE_RED, application.getLatitude(), application.getLongitude());
+            fragment.addLocation(getString(R.string.txt_map_client), BitmapDescriptorFactory.HUE_AZURE, task.getAddress().getCoord().getLatitude(), task.getAddress().getCoord().getLongitude());
+            fragment.center(task.getAddress().getCoord().getLatitude(), task.getAddress().getCoord().getLongitude());
 
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
             fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.OnChangeListener() {
