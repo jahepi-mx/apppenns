@@ -31,6 +31,7 @@ import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
+import pennsylvania.jahepi.com.apppenns.tasks.GpsTask;
 
 /**
  * Created by jahepi on 06/03/16.
@@ -196,27 +197,43 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 return;
             }
             if (!task.isCheckin() && !task.isCheckout() && !task.isCancelled()) {
-                task.setCheckInDate(Util.getDateTime());
-                task.setModifiedDate(Util.getDateTime());
-                Coord coord = new Coord();
-                coord.setLatitude(application.getLatitude());
-                coord.setLongitude(application.getLongitude());
-                task.setCheckInCoord(coord);
-                task.setCheckin(true);
-                task.setSend(false);
-                if (application.saveTask(task)) {
-                    Intent intent = new Intent(this, TaskListActivity.class);
-                    intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
-                    startActivity(intent);
-                    finish();
-                    return;
+                GpsTask gpsTask = GpsTask.getInstance(getApplicationContext());
+                if (!gpsTask.isRunning()) {
+                    gpsTask.setManager(getFragmentManager());
+                    gpsTask.setListener(new GpsTask.GpsTaskListener() {
+                        @Override
+                        public void success(double latitude, double longitude) {
+                            task.setCheckInDate(Util.getDateTime());
+                            task.setModifiedDate(Util.getDateTime());
+                            Coord coord = new Coord();
+                            coord.setLatitude(latitude);
+                            coord.setLongitude(longitude);
+                            task.setCheckInCoord(coord);
+                            task.setCheckin(true);
+                            task.setSend(false);
+                            if (application.saveTask(task)) {
+                                Intent intent = new Intent(TaskViewActivity.this, TaskListActivity.class);
+                                intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
+                                startActivity(intent);
+                                finish();
+                                return;
+                            }
+                        }
+
+                        @Override
+                        public void error() {
+                            toast(getString(R.string.txt_task_gps_error));
+                        }
+                    });
+                    gpsTask.execute();
                 }
             } else {
                 toast(getString(R.string.txt_error_checkin));
                 return;
             }
+        } else {
+            toast(getString(R.string.txt_error_task));
         }
-        toast(getString(R.string.txt_error_task));
     }
 
     private void checkout() {
@@ -226,29 +243,45 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 return;
             }
             if (task.isCheckin() && !task.isCheckout() && !task.isCancelled()) {
-                task.setCheckOutDate(Util.getDateTime());
-                task.setModifiedDate(Util.getDateTime());
-                Coord coord = new Coord();
-                coord.setLatitude(application.getLatitude());
-                coord.setLongitude(application.getLongitude());
-                task.setCheckOutCoord(coord);
-                task.setCheckout(true);
-                task.setSend(false);
-                task.setConclusion(checkOutAlert.getConclusion());
-                task.setEmails(checkOutAlert.getEmails());
-                if (application.saveTask(task)) {
-                    Intent intent = new Intent(this, TaskListActivity.class);
-                    intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
-                    startActivity(intent);
-                    finish();
-                    return;
+                GpsTask gpsTask = GpsTask.getInstance(getApplicationContext());
+                if (!gpsTask.isRunning()) {
+                    gpsTask.setManager(getFragmentManager());
+                    gpsTask.setListener(new GpsTask.GpsTaskListener() {
+                        @Override
+                        public void success(double latitude, double longitude) {
+                            task.setCheckOutDate(Util.getDateTime());
+                            task.setModifiedDate(Util.getDateTime());
+                            Coord coord = new Coord();
+                            coord.setLatitude(latitude);
+                            coord.setLongitude(longitude);
+                            task.setCheckOutCoord(coord);
+                            task.setCheckout(true);
+                            task.setSend(false);
+                            task.setConclusion(checkOutAlert.getConclusion());
+                            task.setEmails(checkOutAlert.getEmails());
+                            if (application.saveTask(task)) {
+                                Intent intent = new Intent(TaskViewActivity.this, TaskListActivity.class);
+                                intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
+                                startActivity(intent);
+                                finish();
+                                return;
+                            }
+                        }
+
+                        @Override
+                        public void error() {
+                            toast(getString(R.string.txt_task_gps_error));
+                        }
+                    });
+                    gpsTask.execute();
                 }
             } else {
                 toast(getString(R.string.txt_error_checkout));
                 return;
             }
+        } else {
+            toast(getString(R.string.txt_error_task));
         }
-        toast(getString(R.string.txt_error_task));
     }
 
     @Override

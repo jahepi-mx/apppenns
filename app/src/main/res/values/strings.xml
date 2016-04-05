@@ -59,6 +59,9 @@
     <string name="txt_add_task">Agregar Actividad</string>
     <string name="txt_date">Fecha:</string>
     <string name="txt_description">Descripción:</string>
+    <string name="txt_task_gps_title">Procesando Actividad</string>
+    <string name="txt_task_gps_error">No se pudo registrar la actividad, intentelo nuevamente.</string>
+    <string name="txt_task_gps_status">Por favor espere mientras se procesa la informacion ...</string>
     <string name="txt_error_attachment">El archivo no debe ser mayor a 5MB</string>
     <string name="txt_conclusion">Conclusión:</string>
     <string name="txt_users">Usuarios</string>

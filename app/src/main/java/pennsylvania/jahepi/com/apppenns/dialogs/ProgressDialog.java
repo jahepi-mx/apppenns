@@ -21,6 +21,7 @@ public class ProgressDialog extends DialogFragment {
     private Button cancelBtn;
     private TextView statusTextView;
     private View.OnClickListener listener;
+    private boolean hideProgressBar;
 
     public ProgressDialog() {
         super();
@@ -45,6 +46,11 @@ public class ProgressDialog extends DialogFragment {
         progressBar.setProgress(progress);
     }
 
+    public void hideProgressBar() {
+        hideProgressBar = true;
+    }
+
+
     public void setListener(View.OnClickListener listener) {
         this.listener = listener;
     }
@@ -57,6 +63,9 @@ public class ProgressDialog extends DialogFragment {
         cancelBtn = (Button) view.findViewById(R.id.cancelBtn);
         statusTextView = (TextView) view.findViewById(R.id.statusTextView);
         cancelBtn.setOnClickListener(listener);
+        if (hideProgressBar) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
         return view;
     }
 }

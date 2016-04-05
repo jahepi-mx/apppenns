@@ -16,8 +16,8 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 public class Gps implements LocationListener {
 
     private final static String TAG = "Gps";
-    private final static int INTERVAL = 2 * 60 * 1000;
-    private final static int MIN_TIME = 2 * 60 * 1000;
+    private final static int INTERVAL = 15 * 60 * 1000;
+    private final static int MIN_TIME = 1 * 10 * 1000;
     private final static int MIN_DISTANCE = 20;
 
     private CustomApplication application;
@@ -71,6 +71,10 @@ public class Gps implements LocationListener {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         application.onChangeLocation(latitude, longitude);
+        int res = application.getApplicationContext().checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION");
+        if (res == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
+        }
         GpsThread thread = new GpsThread();
         thread.start();
     }
