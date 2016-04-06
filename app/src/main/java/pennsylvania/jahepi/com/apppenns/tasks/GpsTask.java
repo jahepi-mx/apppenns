@@ -101,7 +101,9 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
                 locationManager.removeUpdates(this);
             }
         }
-        progressDialog.dismiss();
+        if (progressDialog.isResumed()) {
+            progressDialog.dismiss();
+        }
         cancel(true);
         context = null;
         manager = null;
