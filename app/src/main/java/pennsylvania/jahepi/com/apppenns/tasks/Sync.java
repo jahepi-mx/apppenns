@@ -386,7 +386,7 @@ public class Sync extends Service {
 
             }
         } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, e.getMessage() == null ? "Not defined" : e.getMessage());
         }
 
         if (notifyMessages.size() > 0) {
@@ -449,7 +449,7 @@ public class Sync extends Service {
                 }
             }
         } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, e.getMessage() == null ? "Not defined" : e.getMessage());
         }
         Log.d(TAG, "syncFiles finalized");
     }
@@ -534,7 +534,7 @@ public class Sync extends Service {
 
             }
         } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, e.getMessage() == null ? "Not defined" : e.getMessage());
         }
         if (notifyTasks.size() > 0) {
             application.notifySendTasks(tasks);
@@ -594,7 +594,7 @@ public class Sync extends Service {
 
             }
         } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, e.getMessage() == null ? "Not defined" : e.getMessage());
         }
         Log.d(TAG, "syncReadMessages finalized");
     }
