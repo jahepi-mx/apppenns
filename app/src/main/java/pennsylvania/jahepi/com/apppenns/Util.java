@@ -2,12 +2,20 @@ package pennsylvania.jahepi.com.apppenns;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
@@ -108,5 +116,39 @@ public class Util {
         location2.setLatitude(latitude2);
         location2.setLongitude(longitude2);
         return location1.distanceTo(location2) / 1000;
+    }
+
+    public static File createImageFile() {
+        File image = null;
+        try {
+            String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+            String imageFileName = timeStamp;
+            File storageDir = Environment.getExternalStorageDirectory();
+            image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        } catch (IOException exp) {
+            exp.printStackTrace();
+        }
+        return image;
+    }
+
+    public static Attachment buildAttachment(File file) {
+        Attachment.File attachmentFile = new Attachment.File();
+        attachmentFile.setPath(file.getAbsolutePath());
+        attachmentFile.setName(file.getName());
+        String extension = "";
+        String mime = "";
+        try {
+            extension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toURL().toString());
+        } catch (MalformedURLException exp) {
+            exp.printStackTrace();;
+        }
+        if (extension != null) {
+            mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        attachmentFile.setMime(mime);
+        attachmentFile.setModifiedDate(Util.getDateTime());
+        Attachment attachment = new Attachment();
+        attachment.setFile(attachmentFile);
+        return attachment;
     }
 }

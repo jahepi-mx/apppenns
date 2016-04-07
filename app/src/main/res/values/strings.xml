@@ -75,6 +75,7 @@
     <string name="btn_login">Acceder</string>
     <string name="btn_send">Enviar</string>
     <string name="btn_attachment">Agregar Archivo</string>
+    <string name="btn_photo">Fotografia</string>
     <string name="btn_cancel">Cancelar</string>
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>

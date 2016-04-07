@@ -2,10 +2,10 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -41,12 +40,15 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     private static final String TAG = "TaskViewActivity";
     private static final int ALPHA = 50;
     public final static int REQUEST_CODE_FILE = 2;
+    private final static int REQUEST_IMAGE_CAPTURE = 3;
+
 
     private Button checkinBtn, checkoutBtn, backBtn;
     private CustomAlertDialog checkInAlert;
     private CheckOutDialog checkOutAlert;
     private Task task;
     private FileAttachmentAdapter fileAttachmentAdapter;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +87,32 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         Intent intent = getIntent();
         task = (Task) intent.getSerializableExtra(CustomApplication.GENERIC_INTENT);
 
-        checkinBtn = (Button) findViewById(R.id.checkinBtn);
-        checkoutBtn = (Button) findViewById(R.id.checkoutBtn);
         backBtn = (Button) findViewById(R.id.backBtn);
 
         if (task != null) {
+
+            checkinBtn = (Button) findViewById(R.id.checkinBtn);
+            checkoutBtn = (Button) findViewById(R.id.checkoutBtn);
 
             GoogleMapFragment fragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             fragment.addLocation(getString(R.string.txt_map_me), BitmapDescriptorFactory.HUE_RED, application.getLatitude(), application.getLongitude());
             fragment.addLocation(getString(R.string.txt_map_client), BitmapDescriptorFactory.HUE_AZURE, task.getAddress().getCoord().getLatitude(), task.getAddress().getCoord().getLongitude());
             fragment.center(task.getAddress().getCoord().getLatitude(), task.getAddress().getCoord().getLongitude());
+
+            Button photoBtn = (Button) findViewById(R.id.photoBtn);
+            photoBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                        photoFile = Util.createImageFile();
+                        if (photoFile != null) {
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                        }
+                    }
+                }
+            });
 
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
             fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.OnChangeListener() {
@@ -139,30 +157,31 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             if (!task.isCheckin() && !task.isCheckout()) {
                 checkoutBtn.getBackground().setAlpha(ALPHA);
             }
+
+            checkInAlert = new CustomAlertDialog(this);
+            checkInAlert.setPositiveButton(R.string.btn_yes, this);
+            checkInAlert.setNegativeButton(R.string.btn_no, this);
+            checkInAlert.setTitle(getString(R.string.txt_confirm));
+            checkInAlert.setMessage(getString(R.string.txt_confirm_checkin));
+            checkInAlert.setIcon(R.drawable.task);
+
+            checkOutAlert = new CheckOutDialog(this, new DialogListener() {
+                @Override
+                public void accept(Object dialog) {
+                    checkout();
+                }
+
+                @Override
+                public void cancel(Object dialog) {
+
+                }
+            });
+
+            checkinBtn.setOnClickListener(this);
+            checkoutBtn.setOnClickListener(this);
         }
 
-        checkInAlert = new CustomAlertDialog(this);
-        checkInAlert.setPositiveButton(R.string.btn_yes, this);
-        checkInAlert.setNegativeButton(R.string.btn_no, this);
-        checkInAlert.setTitle(getString(R.string.txt_confirm));
-        checkInAlert.setMessage(getString(R.string.txt_confirm_checkin));
-        checkInAlert.setIcon(R.drawable.task);
-
-        checkOutAlert = new CheckOutDialog(this, new DialogListener() {
-            @Override
-            public void accept(Object dialog) {
-                checkout();
-            }
-
-            @Override
-            public void cancel(Object dialog) {
-
-            }
-        });
-
         backBtn.setOnClickListener(this);
-        checkinBtn.setOnClickListener(this);
-        checkoutBtn.setOnClickListener(this);
     }
 
     @Override
@@ -286,27 +305,18 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_FILE && data != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (photoFile != null) {
+                Attachment attachment = Util.buildAttachment(photoFile);
+                photoFile = null;
+                if (fileAttachmentAdapter.addAttachment(attachment)) {
+                    fileAttachmentAdapter.notifyDataSetChanged();
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_FILE && data != null) {
             File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
             if (file != null) {
-                Log.d(TAG, file.getAbsolutePath());
-                Attachment.File attachmentFile = new Attachment.File();
-                attachmentFile.setPath(file.getAbsolutePath());
-                attachmentFile.setName(file.getName());
-                String extension = "";
-                String mime = "";
-                try {
-                    extension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toURL().toString());
-                } catch (MalformedURLException exp) {
-                    exp.printStackTrace();;
-                }
-                if (extension != null) {
-                    mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                }
-                attachmentFile.setMime(mime);
-                attachmentFile.setModifiedDate(Util.getDateTime());
-                Attachment attachment = new Attachment();
-                attachment.setFile(attachmentFile);
+                Attachment attachment = Util.buildAttachment(file);
                 if (fileAttachmentAdapter.addAttachment(attachment)) {
                     fileAttachmentAdapter.notifyDataSetChanged();
                 }

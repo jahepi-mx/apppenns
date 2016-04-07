@@ -2,10 +2,10 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import pennsylvania.jahepi.com.apppenns.R;
@@ -32,9 +31,10 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
  */
 public class MessageSendActivity extends AuthActivity implements DialogListener {
 
-    private static final String TAG = "MessageSendActivity";
+    private final static String TAG = "MessageSendActivity";
 
-    private static final int REQUEST_CODE = 1;
+    private final static int REQUEST_CODE = 1;
+    private final static int REQUEST_IMAGE_CAPTURE = 2;
 
     private ToDialog dialog;
     private TextView toTextView;
@@ -42,6 +42,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     private ListView attachmentList;
     private FileAttachmentAdapter fileAttachmentAdapter;
     private ArrayList<ToDialog.Option> options;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,21 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
 
         attachmentList = (ListView) findViewById(R.id.attachmentsListView);
         attachmentList.setAdapter(fileAttachmentAdapter);
+
+        Button photoBtn = (Button) findViewById(R.id.photoBtn);
+        photoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    photoFile = Util.createImageFile();
+                    if (photoFile != null) {
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                    }
+                }
+            }
+        });
 
         Button filesBtn = (Button) findViewById(R.id.filesBtn);
         filesBtn.setOnClickListener(new View.OnClickListener() {
@@ -172,27 +188,18 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && data != null) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (photoFile != null) {
+                Attachment attachment = Util.buildAttachment(photoFile);
+                photoFile = null;
+                if (fileAttachmentAdapter.addAttachment(attachment)) {
+                    fileAttachmentAdapter.notifyDataSetChanged();
+                }
+            }
+        } else if (requestCode == REQUEST_CODE && data != null) {
             File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
             if (file != null) {
-                Log.d(TAG, file.getAbsolutePath());
-                Attachment.File attachmentFile = new Attachment.File();
-                attachmentFile.setPath(file.getAbsolutePath());
-                attachmentFile.setName(file.getName());
-                String extension = "";
-                String mime = "";
-                try {
-                    extension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toURL().toString());
-                } catch (MalformedURLException exp) {
-                    exp.printStackTrace();;
-                }
-                if (extension != null) {
-                    mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                }
-                attachmentFile.setMime(mime);
-                attachmentFile.setModifiedDate(Util.getDateTime());
-                Attachment attachment = new Attachment();
-                attachment.setFile(attachmentFile);
+                Attachment attachment = Util.buildAttachment(file);
                 if (fileAttachmentAdapter.addAttachment(attachment)) {
                     fileAttachmentAdapter.notifyDataSetChanged();
                 }

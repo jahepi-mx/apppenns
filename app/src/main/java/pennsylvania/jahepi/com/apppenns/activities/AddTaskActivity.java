@@ -2,10 +2,10 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
@@ -43,6 +42,8 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     private final static String TAG = "AddTaskActivity";
     public final static int REQUEST_CODE = 1;
     public final static int REQUEST_CODE_FILE = 2;
+    private final static int REQUEST_IMAGE_CAPTURE = 3;
+
     private static enum TIME_TYPE {START, END};
 
     private Button dateBtn, clientBtn, startTimeBtn, endTimeBtn;
@@ -56,6 +57,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     private ListView attachmentList;
     private Task parentTask;
     private GoogleMapFragment mapFragment;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
         ArrayList<Type> types = application.getTypes();
         typeSpinner = (TypeSpinner) findViewById(R.id.typeSpinner);
-        ArrayAdapter<Type> adapter = new ArrayAdapter<Type>(this, R.layout.support_simple_spinner_dropdown_item, types);
+        ArrayAdapter<Type> adapter = new ArrayAdapter<Type>(this, R.layout.type_item, types);
         typeSpinner.setAdapter(adapter);
 
         Intent intent = getIntent();
@@ -91,6 +93,21 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         timeDialog = new TimeDialog();
         timeDialog.setTime(time);
         timeDialog.setListener(this);
+
+        Button photoBtn = (Button) findViewById(R.id.photoBtn);
+        photoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    photoFile = Util.createImageFile();
+                    if (photoFile != null) {
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                    }
+                }
+            }
+        });
 
         Button filesBtn = (Button) findViewById(R.id.filesBtn);
         filesBtn.setOnClickListener(new View.OnClickListener() {
@@ -235,7 +252,15 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if (photoFile != null) {
+                Attachment attachment = Util.buildAttachment(photoFile);
+                photoFile = null;
+                if (fileAttachmentAdapter.addAttachment(attachment)) {
+                    fileAttachmentAdapter.notifyDataSetChanged();
+                }
+            }
+        } else if (requestCode == REQUEST_CODE) {
             if (data != null && data.hasExtra(CustomApplication.GENERIC_INTENT)) {
                 address = (Address) data.getSerializableExtra(CustomApplication.GENERIC_INTENT);
                 TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
@@ -246,25 +271,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             if (data != null) {
                 File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
                 if (file != null) {
-                    Log.d(TAG, file.getAbsolutePath());
-                    Attachment.File attachmentFile = new Attachment.File();
-                    attachmentFile.setPath(file.getAbsolutePath());
-                    attachmentFile.setName(file.getName());
-                    String extension = "";
-                    String mime = "";
-                    try {
-                        extension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toURL().toString());
-                    } catch (MalformedURLException exp) {
-                        exp.printStackTrace();
-                        ;
-                    }
-                    if (extension != null) {
-                        mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                    }
-                    attachmentFile.setMime(mime);
-                    attachmentFile.setModifiedDate(Util.getDateTime());
-                    Attachment attachment = new Attachment();
-                    attachment.setFile(attachmentFile);
+                    Attachment attachment = Util.buildAttachment(file);
                     if (fileAttachmentAdapter.addAttachment(attachment)) {
                         fileAttachmentAdapter.notifyDataSetChanged();
                     }
