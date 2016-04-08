@@ -29,12 +29,17 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 /**
  * Created by javier.hernandez on 29/02/2016.
  */
-public class MessageSendActivity extends AuthActivity implements DialogListener {
+public class MessageSendActivity extends AuthActivity implements DialogListener, View.OnClickListener {
 
     private final static String TAG = "MessageSendActivity";
 
     private final static int REQUEST_CODE = 1;
     private final static int REQUEST_IMAGE_CAPTURE = 2;
+
+    private static final String OPTIONS_STATE = "options_state";
+    private static final String ATTACHMENTS_STATE = "attachments_state";
+    private static final String PHOTO_STATE = "photo_state";
+    private static final String MESSAGE_STATE = "message_state";
 
     private ToDialog dialog;
     private TextView toTextView;
@@ -43,6 +48,8 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
     private FileAttachmentAdapter fileAttachmentAdapter;
     private ArrayList<ToDialog.Option> options;
     private File photoFile;
+    private Button photoBtn, filesBtn, backBtn, toBtn, sendBtn;
+    private ImageButton homeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,80 +73,40 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
         attachmentList = (ListView) findViewById(R.id.attachmentsListView);
         attachmentList.setAdapter(fileAttachmentAdapter);
 
-        Button photoBtn = (Button) findViewById(R.id.photoBtn);
-        photoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                    photoFile = Util.createImageFile();
-                    if (photoFile != null) {
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                        startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-                    }
-                }
-            }
-        });
+        photoBtn = (Button) findViewById(R.id.photoBtn);
+        filesBtn = (Button) findViewById(R.id.filesBtn);
+        backBtn = (Button) findViewById(R.id.backBtn);
+        homeBtn = (ImageButton) findViewById(R.id.homeBtn);
+        toBtn = (Button) findViewById(R.id.toBtn);
+        sendBtn = (Button) findViewById(R.id.sendBtn);
 
-        Button filesBtn = (Button) findViewById(R.id.filesBtn);
-        filesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(MessageSendActivity.this, FileChooserActivity.class), REQUEST_CODE);
-            }
-        });
+        photoBtn.setOnClickListener(this);
+        filesBtn.setOnClickListener(this);
+        backBtn.setOnClickListener(this);
+        toBtn.setOnClickListener(this);
+        sendBtn.setOnClickListener(this);
+        homeBtn.setOnClickListener(this);
 
-        Button backBtn = (Button) findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MessageSendActivity.this, MessageListActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        ImageButton homeBtn = (ImageButton) findViewById(R.id.homeBtn);
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MessageSendActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        Button toBtn = (Button) findViewById(R.id.toBtn);
-        toBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                if (!dialog.isAdded()) {
-                    dialog.show(fm, TAG);
-                }
-            }
-        });
-
-        Button sendBtn = (Button) findViewById(R.id.sendBtn);
-        sendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                send();
-            }
-        });
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState);
+        }
     }
 
     @Override
     public void accept(Object dialogParam) {
-        String toAll = "";
         options = dialog.getOptions();
+        displaySelectedUsers(options);
+        dialog.dismiss();
+    }
+
+    private void displaySelectedUsers(ArrayList<ToDialog.Option> options) {
+        String toAll = "";
         for (ToDialog.Option option : options) {
             if (option.isSelectedOption()) {
                 toAll += option.getUser().getName() + " ";
             }
         }
         toTextView.setText(String.format(getString(R.string.txt_message_to_all), toAll));
-        dialog.dismiss();
     }
 
     private void send() {
@@ -183,7 +150,6 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
 
     @Override
     public void cancel(Object dialogParam) {
-
     }
 
     @Override
@@ -205,5 +171,59 @@ public class MessageSendActivity extends AuthActivity implements DialogListener 
                 }
             }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == photoBtn) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                photoFile = Util.createImageFile();
+                if (photoFile != null) {
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        } else if (v == filesBtn) {
+            startActivityForResult(new Intent(MessageSendActivity.this, FileChooserActivity.class), REQUEST_CODE);
+        } else if (v == backBtn) {
+            Intent intent = new Intent(MessageSendActivity.this, MessageListActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (v == homeBtn) {
+            Intent intent = new Intent(MessageSendActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (v == toBtn) {
+            FragmentManager fm = getFragmentManager();
+            if (!dialog.isAdded()) {
+                dialog.show(fm, TAG);
+            }
+        } else if (v == sendBtn) {
+            send();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(OPTIONS_STATE, options);
+        outState.putSerializable(ATTACHMENTS_STATE, fileAttachmentAdapter.getAttachments());
+        outState.putSerializable(PHOTO_STATE, photoFile);
+        outState.putString(MESSAGE_STATE, messageEditText.getText().toString());
+        super.onSaveInstanceState(outState);
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
+        options = (ArrayList<ToDialog.Option>) savedInstanceState.get(OPTIONS_STATE);
+        displaySelectedUsers(options);
+        ArrayList<Attachment> attachments = (ArrayList<Attachment>)savedInstanceState.get(ATTACHMENTS_STATE);
+        File photoFile = (File) savedInstanceState.get(PHOTO_STATE);
+        if (photoFile != null) {
+            Attachment attachment = Util.buildAttachment(photoFile);
+            attachments.add(attachment);
+        }
+        fileAttachmentAdapter.addAll(attachments);
+        fileAttachmentAdapter.notifyDataSetChanged();
+        messageEditText.setText(savedInstanceState.getString(MESSAGE_STATE));
     }
 }

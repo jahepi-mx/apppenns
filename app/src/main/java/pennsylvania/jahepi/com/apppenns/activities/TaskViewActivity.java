@@ -42,6 +42,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     public final static int REQUEST_CODE_FILE = 2;
     private final static int REQUEST_IMAGE_CAPTURE = 3;
 
+    private final static String TASK_STATE = "task_state";
 
     private Button checkinBtn, checkoutBtn, backBtn;
     private CustomAlertDialog checkInAlert;
@@ -88,6 +89,10 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         task = (Task) intent.getSerializableExtra(CustomApplication.GENERIC_INTENT);
 
         backBtn = (Button) findViewById(R.id.backBtn);
+
+        if (savedInstanceState != null) {
+            task = (Task) savedInstanceState.get(TASK_STATE);
+        }
 
         if (task != null) {
 
@@ -322,5 +327,17 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 }
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        ArrayList<Attachment> attachments = fileAttachmentAdapter.getAttachments();
+        if (photoFile != null) {
+            Attachment attachment = Util.buildAttachment(photoFile);
+            attachments.add(attachment);
+        }
+        task.addAttachments(attachments);
+        outState.putSerializable(TASK_STATE, task);
+        super.onSaveInstanceState(outState);
     }
 }

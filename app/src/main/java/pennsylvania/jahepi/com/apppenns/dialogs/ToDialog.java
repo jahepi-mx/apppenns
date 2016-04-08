@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import pennsylvania.jahepi.com.apppenns.R;
@@ -168,7 +169,7 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
         CheckBox checkbox;
     }
 
-    public static class Option {
+    public static class Option implements Serializable {
         private String group;
         private boolean selected;
         private User user;

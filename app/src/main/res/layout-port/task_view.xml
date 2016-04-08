@@ -228,7 +228,7 @@
                 android:padding="5dp">
 
                 <Button
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:id="@+id/photoBtn"
                     android:text="@string/btn_photo"
                     android:layout_height="wrap_content"
@@ -236,7 +236,7 @@
                     android:textColor="#fff"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"
-                    android:layout_weight="3"
+                    android:layout_weight="1"
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowColor="#000"
@@ -244,7 +244,7 @@
 
 
                 <Button
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:id="@+id/filesBtn"
                     android:text="@string/btn_attachment"
                     android:layout_height="wrap_content"
@@ -252,7 +252,7 @@
                     android:textColor="#fff"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"
-                    android:layout_weight="3"
+                    android:layout_weight="1"
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowColor="#000"
@@ -266,7 +266,7 @@
 
                 <Button
                     style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_checkin"
                     android:background="@drawable/custom_button_green"
@@ -281,7 +281,7 @@
 
                 <Button
                     style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_checkout"
                     android:background="@drawable/custom_button_red"

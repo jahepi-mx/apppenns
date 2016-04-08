@@ -44,6 +44,8 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     public final static int REQUEST_CODE_FILE = 2;
     private final static int REQUEST_IMAGE_CAPTURE = 3;
 
+    private final static String TASK_STATE = "task_state";
+
     private static enum TIME_TYPE {START, END};
 
     private Button dateBtn, clientBtn, startTimeBtn, endTimeBtn;
@@ -195,7 +197,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         });
 
         if (parentTask != null) {
-            setDefaultState();
+            setTaskDefaultState(parentTask);
         } else {
             mapFragment.addLocation(getString(R.string.txt_map_me), BitmapDescriptorFactory.HUE_RED, application.getLatitude(), application.getLongitude());
             mapFragment.center(application.getLatitude(), application.getLongitude());
@@ -248,6 +250,10 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 }
             }
         });
+
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState);
+        }
     }
 
     @Override
@@ -280,22 +286,24 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         }
     }
 
-    private void setDefaultState() {
-        descriptionEditText.setText(parentTask.getDescription());
-        dateBtn.setText(parentTask.getDate());
-        startTimeBtn.setText(parentTask.getStartTime());
-        endTimeBtn.setText(parentTask.getEndTime());
-        typeSpinner.setSelectedItem(parentTask.getType());
-        address = parentTask.getAddress();
-        fileAttachmentAdapter.addAll(parentTask.getAttachments());
-        TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
-        textView.setText(address.getClient().getName() + " " + address.getAddress());
-        setMapLocation(address);
+    private void setTaskDefaultState(Task task) {
+        descriptionEditText.setText(task.getDescription());
+        dateBtn.setText(task.getDate());
+        startTimeBtn.setText(task.getStartTime());
+        endTimeBtn.setText(task.getEndTime());
+        typeSpinner.setSelectedItem(task.getType());
+        address = task.getAddress();
+        fileAttachmentAdapter.addAll(task.getAttachments());
+        if (address != null) {
+            TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
+            textView.setText(address.getClient().getName() + " " + address.getAddress());
+            setMapLocation(address);
+        }
     }
 
     private void setMapLocation(Address address) {
         mapFragment.clear();
-        mapFragment.addLocation(getString(R.string.txt_map_client), BitmapDescriptorFactory.HUE_AZURE,address.getCoord().getLatitude(), address.getCoord().getLongitude());
+        mapFragment.addLocation(getString(R.string.txt_map_client), BitmapDescriptorFactory.HUE_AZURE, address.getCoord().getLatitude(), address.getCoord().getLongitude());
         mapFragment.center(address.getCoord().getLatitude(), address.getCoord().getLongitude());
     }
 
@@ -316,6 +324,28 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
     @Override
     public void cancel(Object dialogParam) {
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Task task = new Task();
+        task.setDescription(descriptionEditText.getText().toString());
+        task.setDate(dateBtn.getText().toString());
+        task.setStartTime(startTimeBtn.getText().toString());
+        task.setEndTime(endTimeBtn.getText().toString());
+        task.setType((Type) typeSpinner.getSelectedItem());
+        task.setAddress(address);
+        ArrayList<Attachment> attachments = fileAttachmentAdapter.getAttachments();
+        if (photoFile != null) {
+            Attachment attachment = Util.buildAttachment(photoFile);
+            attachments.add(attachment);
+        }
+        task.addAttachments(attachments);
+        outState.putSerializable(TASK_STATE, task);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
+        setTaskDefaultState((Task) savedInstanceState.get(TASK_STATE));
     }
 }

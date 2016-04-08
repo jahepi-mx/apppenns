@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
@@ -44,6 +45,14 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
         removeDialog.setTitle(R.string.txt_delete);
         removeDialog.setMessage(R.string.txt_confirm_delete);
         removeDialog.setIcon(R.drawable.view);
+    }
+
+    public ArrayList<Attachment> getAttachments() {
+        ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+        for (int i = 0; i < getCount(); i++) {
+            attachments.add(getItem(i));
+        }
+        return attachments;
     }
 
     public boolean isHideDeleteOption() {
