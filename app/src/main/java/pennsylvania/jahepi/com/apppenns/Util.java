@@ -27,7 +27,9 @@ public class Util {
 
     public static String getAndroidId(Context context) {
         TelephonyManager manager= (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return manager.getDeviceId();
+        String id = manager.getDeviceId();
+        String filtered = id.substring(0, 5);
+        return filtered;
     }
 
     public static boolean isEmpty(String value) {
@@ -118,14 +120,14 @@ public class Util {
         return location1.distanceTo(location2) / 1000;
     }
 
-    public static File createImageFile() {
+    public static File createImageFile(String suffix) {
         File image = null;
         try {
-            String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-            String imageFileName = timeStamp;
-            File storageDir = Environment.getExternalStorageDirectory();
-            image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        } catch (IOException exp) {
+            String imageFileName = new SimpleDateFormat("yyMMdd_HHmmss_" + suffix).format(new Date());
+            // File storageDir = Environment.getExternalStorageDirectory();
+            // image = File.createTempFile(imageFileName, ".jpg", storageDir);
+            image = new File(Environment.getExternalStorageDirectory(), imageFileName + ".jpg");
+        } catch (Exception exp) {
             exp.printStackTrace();
         }
         return image;

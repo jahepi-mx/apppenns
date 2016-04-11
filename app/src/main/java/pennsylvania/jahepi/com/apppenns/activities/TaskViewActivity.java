@@ -110,7 +110,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 public void onClick(View v) {
                     Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                        photoFile = Util.createImageFile();
+                        photoFile = Util.createImageFile(application.getAndroidId());
                         if (photoFile != null) {
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
@@ -120,7 +120,8 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             });
 
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
-            fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.OnChangeListener() {
+            fileAttachmentAdapter.setHideDeleteOption(true);
+            fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {
                 @Override
                 public void onChange(Attachment attachment) {
                     task.setSend(false);
@@ -131,6 +132,11 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                     }
                     task.addAttachments(attachments);
                     application.saveTask(task);
+                }
+
+                @Override
+                public void onRemove(Attachment attachment) {
+
                 }
             });
             Iterator<Attachment> iterator = task.getAttachmentsIterator();

@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.components.AudioRecorder;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
@@ -48,8 +50,9 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
     private FileAttachmentAdapter fileAttachmentAdapter;
     private ArrayList<ToDialog.Option> options;
     private File photoFile;
-    private Button photoBtn, filesBtn, backBtn, toBtn, sendBtn;
+    private Button photoBtn, filesBtn, backBtn, toBtn, sendBtn, audioBtn;
     private ImageButton homeBtn;
+    private AudioRecorder audioRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,29 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
 
         options = new ArrayList<ToDialog.Option>();
+
+        audioRecorder = new AudioRecorder(application.getAndroidId(), new AudioRecorder.AudioRecorderListener() {
+            @Override
+            public void onStartRecording() {
+                audioBtn.setText(R.string.txt_recording);
+                audioBtn.setBackgroundColor(Color.RED);
+            }
+
+            @Override
+            public void onStopRecording(File audio) {
+                audioBtn.setText(R.string.btn_audio);
+                audioBtn.setBackgroundColor(Color.GREEN);
+                fileAttachmentAdapter.add(Util.buildAttachment(audio));
+                fileAttachmentAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onRecordingError() {
+                audioBtn.setText(R.string.btn_audio);
+                audioBtn.setBackgroundColor(Color.GREEN);
+                toast(getString(R.string.txt_audio_error));
+            }
+        });
 
         ArrayList<User> users = application.getUsers();
         users.remove(application.getUser());
@@ -79,6 +105,8 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         homeBtn = (ImageButton) findViewById(R.id.homeBtn);
         toBtn = (Button) findViewById(R.id.toBtn);
         sendBtn = (Button) findViewById(R.id.sendBtn);
+        audioBtn = (Button) findViewById(R.id.audioBtn);
+        audioBtn.setBackgroundColor(Color.GREEN);
 
         photoBtn.setOnClickListener(this);
         filesBtn.setOnClickListener(this);
@@ -86,6 +114,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         toBtn.setOnClickListener(this);
         sendBtn.setOnClickListener(this);
         homeBtn.setOnClickListener(this);
+        audioBtn.setOnClickListener(this);
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
@@ -178,7 +207,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         if (v == photoBtn) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                photoFile = Util.createImageFile();
+                photoFile = Util.createImageFile(application.getAndroidId());
                 if (photoFile != null) {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                     startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
@@ -201,6 +230,12 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
             }
         } else if (v == sendBtn) {
             send();
+        } else if (v == audioBtn) {
+            if (audioRecorder.isRecording()) {
+                audioRecorder.stop();
+            } else {
+                audioRecorder.start();
+            }
         }
     }
 

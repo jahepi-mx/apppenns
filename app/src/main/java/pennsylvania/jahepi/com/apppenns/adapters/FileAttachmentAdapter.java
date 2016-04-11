@@ -33,7 +33,7 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
     private int mResource;
     private boolean hideDeleteOption;
     private CustomAlertDialog removeDialog;
-    private OnChangeListener changeListener;
+    private FileAttachmentAdapterListener listener;
     private int selectedPosition;
 
     public FileAttachmentAdapter(Context context, int resource) {
@@ -63,8 +63,8 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
         this.hideDeleteOption = hideDeleteOption;
     }
 
-    public void setChangeListener(OnChangeListener changeListener) {
-        this.changeListener = changeListener;
+    public void setChangeListener(FileAttachmentAdapterListener listener) {
+        this.listener = listener;
     }
 
     public boolean addAttachment(Attachment attachment) {
@@ -75,8 +75,8 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
             return false;
         }
         super.add(attachment);
-        if (changeListener != null) {
-            changeListener.onChange(attachment);
+        if (listener != null) {
+            listener.onChange(attachment);
         }
         return true;
     }
@@ -148,10 +148,11 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            remove(getItem(selectedPosition));
+            Attachment attachment = getItem(selectedPosition);
+            remove(attachment);
             notifyDataSetChanged();
-            if (changeListener != null) {
-                changeListener.onChange(getItem(selectedPosition));
+            if (listener != null) {
+                listener.onRemove(attachment);
             }
         }
     }
@@ -161,7 +162,8 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
         ImageButton deleteBtn, viewBtn;
     }
 
-    public static interface OnChangeListener {
+    public static interface FileAttachmentAdapterListener {
         public void onChange(Attachment attachment);
+        public void onRemove(Attachment attachment);
     }
 }

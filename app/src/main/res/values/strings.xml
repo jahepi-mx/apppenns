@@ -10,6 +10,7 @@
     <string name="txt_sync_start">Iniciando proceso ...</string>
     <string name="txt_sync">Sincronizacion</string>
     <string name="txt_login_error">Usuario no valido</string>
+    <string name="txt_audio_error">Error al generar el audio</string>
     <string name="txt_session_error">Se ha perdido la sesion!, reingrese usuario y contraseña.</string>
     <string name="label_email">Email</string>
     <string name="label_password">Contraseña</string>
@@ -66,6 +67,7 @@
     <string name="txt_conclusion">Conclusión:</string>
     <string name="txt_users">Usuarios</string>
     <string name="txt_confirm">Confirmación</string>
+    <string name="txt_recording">Grabando ...</string>
     <string name="txt_delete">Borrar</string>
     <string name="txt_error_file">No se puedo descargar el archivo</string>
     <string name="txt_confirm_checkin">Desea confirmar la entrada?</string>
@@ -76,6 +78,7 @@
     <string name="btn_send">Enviar</string>
     <string name="btn_attachment">Agregar Archivo</string>
     <string name="btn_photo">Fotografia</string>
+    <string name="btn_audio">Grabar Audio</string>
     <string name="btn_cancel">Cancelar</string>
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>

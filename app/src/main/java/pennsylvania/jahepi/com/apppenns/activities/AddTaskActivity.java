@@ -102,7 +102,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             public void onClick(View v) {
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                    photoFile = Util.createImageFile();
+                    photoFile = Util.createImageFile(application.getAndroidId());
                     if (photoFile != null) {
                         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                         startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
