@@ -29,6 +29,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
+import pennsylvania.jahepi.com.apppenns.entities.Ubication;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
@@ -79,7 +80,6 @@ public class Sync extends Service {
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 if (application.isLogged()) {
-                    syncFiles();
                     getMessages();
                     getReadMessages();
                     syncNewMessages();
@@ -88,6 +88,8 @@ public class Sync extends Service {
                     syncTypes();
                 }
                 syncUsers();
+                syncFiles();
+                syncNewUbications();
                 active = false;
                 application.setSyncActive(active);
             }
@@ -393,6 +395,66 @@ public class Sync extends Service {
             application.notifySendMessages(messages);
         }
         Log.d(TAG, "syncNewMessages finalized");
+    }
+
+    private void syncNewUbications() {
+        ArrayList<Ubication> ubications = null;
+        try {
+            ubications = application.getNewUbications();
+            Iterator<Ubication> iterator = ubications.iterator();
+            String url = CustomApplication.SERVICE_URL + "intranet/android/newUbication";
+            while (iterator.hasNext()) {
+                Ubication ubication = (Ubication) iterator.next();
+                MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                post.addPart("id", new StringBody(Integer.toString(ubication.getId())));
+                post.addPart("user", new StringBody(Integer.toString(ubication.getUser().getId())));
+                post.addPart("latitude", new StringBody(Double.toString(ubication.getCoord().getLatitude())));
+                post.addPart("longitude", new StringBody(Double.toString(ubication.getCoord().getLongitude())));
+                post.addPart("date", new StringBody(ubication.getModifiedDateString()));
+
+                URL urlRef = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.addRequestProperty("Content-length", post.getContentLength() + "");
+                connection.addRequestProperty(post.getContentType().getName(), post.getContentType().getValue());
+
+                OutputStream os = connection.getOutputStream();
+                post.writeTo(connection.getOutputStream());
+                os.close();
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                StringBuilder jsonStr = new StringBuilder();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    jsonStr = jsonStr.append(line);
+                }
+
+                JSONObject jObject = new JSONObject(jsonStr.toString());
+                String messageStr = jObject.getString("message");
+                int code = jObject.getInt("code");
+
+                if (code == SUCCESS) {
+                    if (application.updateUbicationAsSend(ubication)) {
+                        Log.d(TAG, "syncNewUbications inserted: " + ubication.getId());
+                    } else {
+                        Log.d(TAG, "syncNewUbications not inserted: " + ubication.getId());
+                    }
+                } else {
+                    Log.d(TAG, "syncNewUbications code invalid");
+                }
+
+            }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage() == null ? "Not defined" : e.getMessage());
+        }
+
+        Log.d(TAG, "syncNewUbications finalized");
     }
 
     private void syncFiles() {

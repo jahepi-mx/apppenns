@@ -21,8 +21,9 @@ public class Database {
     public static final String ATTACHMENTS_TABLE = "attachments";
     public static final String TASK_ATTACHMENTS_TABLE = "task_attachments";
     public static final String FILES_TABLE = "files";
+    public static final String UBICATIONS_TABLE = "ubications";
 
-    private static final int DB_VERSION = 28;
+    private static final int DB_VERSION = 31;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -162,6 +163,8 @@ public class Database {
             Log.d(TAG, "Addresses table created!");
             db.execSQL("CREATE TABLE " + TYPES_TABLE + " (id INT PRIMARY KEY, name TEXT, date TEXT, active INT)");
             Log.d(TAG, "Types table created!");
+            db.execSQL("CREATE TABLE " + UBICATIONS_TABLE + " (id INTEGER PRIMARY KEY, user INT, latitude REAL, longitude REAL, date TEXT, send INT)");
+            Log.d(TAG, "Ubications table created!");
             db.execSQL("CREATE TABLE " + ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, message INT, file INT)");
             Log.d(TAG, "Attachments table created!");
             db.execSQL("CREATE TABLE " + TASK_ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, task INT, file INT)");
@@ -184,6 +187,8 @@ public class Database {
             Log.d(TAG, "Addresses table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + TYPES_TABLE);
             Log.d(TAG, "Types table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + UBICATIONS_TABLE);
+            Log.d(TAG, "Ubications table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + ATTACHMENTS_TABLE);
             Log.d(TAG, "Attachments table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + TASK_ATTACHMENTS_TABLE);

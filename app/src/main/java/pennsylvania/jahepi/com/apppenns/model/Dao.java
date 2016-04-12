@@ -11,9 +11,11 @@ import java.util.Iterator;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
+import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
+import pennsylvania.jahepi.com.apppenns.entities.Ubication;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 import pennsylvania.jahepi.com.apppenns.model.database.Database;
 
@@ -95,6 +97,53 @@ public class Dao {
                 db.insert(Database.USERS_TABLE, values);
             }
             return true;
+        }
+        return false;
+    }
+
+    public ArrayList<Ubication> getNewUbications() {
+        ArrayList<Ubication> ubications = new ArrayList<Ubication>();
+        Cursor cursor = db.getAll(Database.UBICATIONS_TABLE, "send=0");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Ubication ubication = new Ubication();
+                ubication.setId(cursor.getInt(0));
+                User user = new User();
+                user.setId(cursor.getInt(1));
+                ubication.setUser(user);
+                Coord coord = new Coord();
+                coord.setLatitude(cursor.getDouble(2));
+                coord.setLongitude(cursor.getDouble(3));
+                ubication.setCoord(coord);
+                ubication.setModifiedDate(cursor.getString(4));
+                ubication.setSend(cursor.getInt(5) == 1);
+                ubications.add(ubication);
+            }
+            cursor.close();
+        }
+        return ubications;
+    }
+
+    public boolean saveUbication(Ubication ubication) {
+        if (ubication != null) {
+            ContentValues values = new ContentValues();
+            values.put("user", ubication.getUser().getId());
+            values.put("latitude", ubication.getCoord().getLatitude());
+            values.put("longitude", ubication.getCoord().getLongitude());
+            values.put("date", ubication.getModifiedDateString());
+            values.put("send", ubication.isSend() ? 1 : 0);
+            long id = db.insert(Database.UBICATIONS_TABLE, values);
+            ubication.setId((int) id);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateUbicationAsSend(Ubication ubication) {
+        if (ubication != null) {
+            ContentValues values = new ContentValues();
+            values.put("send", "1");
+            return db.update(Database.UBICATIONS_TABLE, values, String.format("id='%s'", ubication.getId()));
         }
         return false;
     }

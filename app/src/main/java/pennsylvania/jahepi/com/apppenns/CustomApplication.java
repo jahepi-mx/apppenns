@@ -19,9 +19,11 @@ import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
+import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
+import pennsylvania.jahepi.com.apppenns.entities.Ubication;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 import pennsylvania.jahepi.com.apppenns.model.Dao;
 import pennsylvania.jahepi.com.apppenns.services.Gps;
@@ -42,6 +44,7 @@ public class CustomApplication extends Application {
     public final static String ADDITIONAL_GENERIC_INTENT = "ADDITIONAL_GENERIC_INTENT";
     public final static String PREF_USER_EMAIL = "PREF_USER_EMAIL";
     public final static String PREF_USER_ID = "PREF_USER_ID";
+    public final static String PREF_LAST_USER_ID = "PREF_LAST_USER_ID";
 
     private boolean logged;
     private boolean syncActive;
@@ -84,6 +87,11 @@ public class CustomApplication extends Application {
         return preferences.getInt(PREF_USER_ID, 0);
     }
 
+    public int getStoredLastUserId() {
+        SharedPreferences preferences = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return preferences.getInt(PREF_LAST_USER_ID, 0);
+    }
+
     public boolean login(String email, String password) {
         password = Util.SHA1(password);
         User user = dao.getUser(email, password);
@@ -94,6 +102,7 @@ public class CustomApplication extends Application {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(PREF_USER_EMAIL, user.getEmail());
             editor.putInt(PREF_USER_ID, user.getId());
+            editor.putInt(PREF_LAST_USER_ID, user.getId());
             editor.commit();
         }
         return logged;
@@ -261,6 +270,17 @@ public class CustomApplication extends Application {
     }
 
     public void onChangeLocation(double latitude, double longitude) {
+        int userId = getStoredLastUserId();
+        if (userId > 0) {
+            Ubication ubication = new Ubication();
+            User user = new User();
+            user.setId(userId);
+            ubication.setUser(user);
+            ubication.setSend(false);
+            ubication.setCoord(latitude, longitude);
+            ubication.setModifiedDate(Util.getDateTime());
+            dao.saveUbication(ubication);
+        }
         Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
         while (iterator.hasNext()) {
             ApplicationNotifierListener listener = iterator.next();
@@ -272,6 +292,14 @@ public class CustomApplication extends Application {
 
     public ArrayList<Message> getMessagesRead() {
         return dao.getMessagesRead(getUser().getId());
+    }
+
+    public ArrayList<Ubication> getNewUbications() {
+        return dao.getNewUbications();
+    }
+
+    public boolean updateUbicationAsSend(Ubication ubication) {
+        return dao.updateUbicationAsSend(ubication);
     }
 
     public ArrayList<Message> getNewMessages() {
