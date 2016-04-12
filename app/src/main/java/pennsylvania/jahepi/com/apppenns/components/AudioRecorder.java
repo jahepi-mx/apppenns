@@ -15,11 +15,15 @@ public class AudioRecorder {
 
     private static final String AUDIO_EXTENSION = ".3gp";
 
+    private static final int RECORDING_TIME = 70;
+
     private boolean recording;
     private MediaRecorder recorder;
     private AudioRecorderListener listener;
     private File currentAudio;
     private String suffix;
+    private Thread thread;
+    private int seconds;
 
     public AudioRecorder(String suffix, AudioRecorderListener listener) {
         recorder = new MediaRecorder();
@@ -40,6 +44,28 @@ public class AudioRecorder {
                 recorder.prepare();
                 recorder.start();
                 listener.onStartRecording();
+
+                thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (seconds < RECORDING_TIME) {
+                            try {
+                                Thread.sleep(1000);
+                                seconds++;
+                                String time = getTimeFormat(seconds);
+                                if (isRecording()) {
+                                    listener.onRecordingTime(time);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                return;
+                            }
+                        }
+                        stop();
+                    }
+                });
+                thread.start();
+
             } catch (IOException e) {
                 recording = false;
                 listener.onRecordingError();
@@ -51,9 +77,14 @@ public class AudioRecorder {
 
     public void stop() {
         if (recording) {
+            if (thread != null && thread.isAlive()) {
+                thread.interrupt();
+                thread = null;
+            }
             recording = false;
             recorder.stop();
             recorder.reset();
+            seconds = 0;
             listener.onStopRecording(currentAudio);
         }
     }
@@ -61,6 +92,22 @@ public class AudioRecorder {
     public void dispose() {
         recorder.release();
         recorder = null;
+    }
+
+    private String getTimeFormat(int seconds) {
+        int minutes = seconds / 60;
+        int secs = seconds % 60;
+        String minutesStr = "";
+        String secsStr = "";
+        minutesStr = "" + minutes;
+        if (minutes < 10) {
+            minutesStr = "0" + minutes;
+        }
+        secsStr = "" + secs;
+        if (secs < 10) {
+            secsStr = "0" + secs;
+        }
+        return minutesStr + ":" + secsStr;
     }
 
     public boolean isRecording() {
@@ -71,5 +118,6 @@ public class AudioRecorder {
         public void onStartRecording();
         public void onStopRecording(File audio);
         public void onRecordingError();
+        public void onRecordingTime(String time);
     }
 }

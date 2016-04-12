@@ -120,23 +120,15 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             });
 
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
-            fileAttachmentAdapter.setHideDeleteOption(true);
             fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {
                 @Override
                 public void onChange(Attachment attachment) {
-                    task.setSend(false);
-                    task.setModifiedDate(Util.getDateTime());
-                    ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-                    for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
-                        attachments.add(fileAttachmentAdapter.getItem(i));
-                    }
-                    task.addAttachments(attachments);
-                    application.saveTask(task);
+                    updateTask(task);
                 }
 
                 @Override
                 public void onRemove(Attachment attachment) {
-
+                    updateTask(task);
                 }
             });
             Iterator<Attachment> iterator = task.getAttachmentsIterator();
@@ -193,6 +185,17 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         }
 
         backBtn.setOnClickListener(this);
+    }
+
+    private void updateTask(Task task) {
+        task.setSend(false);
+        task.setModifiedDate(Util.getDateTime());
+        ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+        for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
+            attachments.add(fileAttachmentAdapter.getItem(i));
+        }
+        task.addAttachments(attachments);
+        application.saveTask(task);
     }
 
     @Override

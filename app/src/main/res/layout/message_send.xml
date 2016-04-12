@@ -162,7 +162,7 @@
                     android:id="@+id/audioBtn"
                     android:text="@string/btn_audio"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/custom_button"
+                    android:background="@drawable/custom_button_green"
                     android:textColor="#fff"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"

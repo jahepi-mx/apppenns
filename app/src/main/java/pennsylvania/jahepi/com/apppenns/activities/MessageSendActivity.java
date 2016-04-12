@@ -67,22 +67,37 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
             @Override
             public void onStartRecording() {
                 audioBtn.setText(R.string.txt_recording);
-                audioBtn.setBackgroundColor(Color.RED);
+                audioBtn.setBackgroundResource(R.drawable.custom_button_red);
             }
 
             @Override
-            public void onStopRecording(File audio) {
-                audioBtn.setText(R.string.btn_audio);
-                audioBtn.setBackgroundColor(Color.GREEN);
-                fileAttachmentAdapter.add(Util.buildAttachment(audio));
-                fileAttachmentAdapter.notifyDataSetChanged();
+            public void onStopRecording(final File audio) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        audioBtn.setText(R.string.btn_audio);
+                        audioBtn.setBackgroundResource(R.drawable.custom_button_green);
+                        fileAttachmentAdapter.add(Util.buildAttachment(audio));
+                        fileAttachmentAdapter.notifyDataSetChanged();
+                    }
+                });
             }
 
             @Override
             public void onRecordingError() {
                 audioBtn.setText(R.string.btn_audio);
-                audioBtn.setBackgroundColor(Color.GREEN);
+                audioBtn.setBackgroundResource(R.drawable.custom_button_green);
                 toast(getString(R.string.txt_audio_error));
+            }
+
+            @Override
+            public void onRecordingTime(final String time) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        audioBtn.setText(getString(R.string.txt_recording) + " " + time);
+                    }
+                });
             }
         });
 
@@ -106,7 +121,6 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         toBtn = (Button) findViewById(R.id.toBtn);
         sendBtn = (Button) findViewById(R.id.sendBtn);
         audioBtn = (Button) findViewById(R.id.audioBtn);
-        audioBtn.setBackgroundColor(Color.GREEN);
 
         photoBtn.setOnClickListener(this);
         filesBtn.setOnClickListener(this);
@@ -118,6 +132,14 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (audioRecorder.isRecording()) {
+            audioRecorder.stop();
         }
     }
 
