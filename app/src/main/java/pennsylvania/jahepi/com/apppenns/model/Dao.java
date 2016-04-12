@@ -458,7 +458,7 @@ public class Dao {
     }
 
     public Task getTask(Task taskParam) {
-        Cursor cursor = db.getTasks(String.format("WHERE tasks.id='%s' AND tasks.user='%s'", taskParam.getId(), taskParam.getUser().getId()), "");
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.fingerprint='%s' AND tasks.user='%s'", taskParam.getFingerprint(), taskParam.getUser().getId()), "");
         if (cursor != null) {
             Task task = null;
             if (cursor.moveToNext()) {
@@ -510,6 +510,7 @@ public class Dao {
         task.setEndTime(cursor.getString(32));
         task.setEventId(cursor.getInt(33));
         task.setEmails(cursor.getString(34));
+        task.setFingerprint(cursor.getString(36));
 
         Task parentTask = new Task();
         parentTask.setId(cursor.getInt(35));
@@ -551,11 +552,12 @@ public class Dao {
             values.put("event_id", task.getEventId());
             values.put("emails", task.getEmails());
             values.put("parent_task", task.getParentTaskId());
+            values.put("fingerprint", task.getFingerprint());
 
             Task taskDB = getTask(task);
             if (taskDB != null) {
                 if (taskDB.isGreaterDate(task)) {
-                    db.update(Database.TASKS_TABLE, values, String.format("id='%s' AND user='%s'", task.getId(), task.getUser().getId()));
+                    db.update(Database.TASKS_TABLE, values, String.format("user='%s' AND fingerprint='%s'", task.getUser().getId(), task.getFingerprint()));
                 }
             } else {
                 Log.d(TAG, task.toString());

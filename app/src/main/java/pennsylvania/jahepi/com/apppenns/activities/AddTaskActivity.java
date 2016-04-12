@@ -230,6 +230,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);
                 task.setParentTask(parentTask);
+                task.setFingerprint(Util.getDateTime());
                 // Add event to calendar provider
                 long calendarEventId  = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
                 task.setEventId((int) calendarEventId);

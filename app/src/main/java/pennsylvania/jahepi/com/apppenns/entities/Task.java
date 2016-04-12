@@ -32,6 +32,7 @@ public class Task extends Entity {
     private String emails;
     private Task parentTask;
     private ArrayList<Attachment> attachments;
+    private String fingerprint;
 
     public Task() {
         checkInCoord = new Coord();
@@ -246,6 +247,14 @@ public class Task extends Entity {
 
     public void setEmails(String emails) {
         this.emails = emails;
+    }
+
+    public String getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(String fingerprint) {
+        this.fingerprint = fingerprint;
     }
 
     public void addAttachment(Attachment attachment) {
