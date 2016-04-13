@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
@@ -208,9 +207,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Iterator<Task> iterator = tasks.iterator();
-                while (iterator.hasNext()) {
-                    Task task = iterator.next();
+                for (Task task : tasks) {
                     Task adapterTask = adapter.getTask(task);
                     if (adapterTask != null) {
                         adapterTask.setSend(true);
@@ -233,6 +230,25 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
                     }
                     adapter.notifyDataSetChanged();
                 }
+            }
+        });
+    }
+
+    @Override
+    public void onNewTasks(final ArrayList<Task> tasks) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TaskListActivity self = TaskListActivity.this;
+                for (Task task : tasks) {
+                    if (!self.tasks.contains(task)) {
+                        String selectedDate = dateBtn.getText().toString();
+                        if (task.getDate().equals(selectedDate)) {
+                            adapter.insert(task, 0);
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
             }
         });
     }

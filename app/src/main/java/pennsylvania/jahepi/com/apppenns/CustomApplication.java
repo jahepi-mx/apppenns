@@ -13,13 +13,11 @@ import com.nullwire.trace.ExceptionHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
-import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
@@ -217,6 +215,10 @@ public class CustomApplication extends Application {
         return dao.getTypes();
     }
 
+    public Type getType(int typeId) {
+        return dao.getType(typeId);
+    }
+
     public boolean saveFile(Attachment.File file) {
         return dao.saveFile(file);
     }
@@ -230,9 +232,7 @@ public class CustomApplication extends Application {
     }
 
     public void notifyNewMessages(ArrayList<Message> messages) {
-        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
-        while (iterator.hasNext()) {
-            ApplicationNotifierListener listener = iterator.next();
+        for (ApplicationNotifierListener listener : appNotifierListeners) {
             if (listener != null) {
                 listener.onNewMessages(messages);
             }
@@ -240,9 +240,7 @@ public class CustomApplication extends Application {
     }
 
     public void notifySendMessages(ArrayList<Message> messages) {
-        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
-        while (iterator.hasNext()) {
-            ApplicationNotifierListener listener = iterator.next();
+        for (ApplicationNotifierListener listener : appNotifierListeners) {
             if (listener != null) {
                 listener.onMessagesSend(messages);
             }
@@ -250,19 +248,23 @@ public class CustomApplication extends Application {
     }
 
     public void notifyReadMessages(ArrayList<Message> messages) {
-        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
-        while (iterator.hasNext()) {
-            ApplicationNotifierListener listener = iterator.next();
+        for (ApplicationNotifierListener listener : appNotifierListeners) {
             if (listener != null) {
                 listener.onMessagesRead(messages);
             }
         }
     }
 
+    public void notifyNewTasks(ArrayList<Task> tasks) {
+        for (ApplicationNotifierListener listener : appNotifierListeners) {
+            if (listener != null) {
+                listener.onNewTasks(tasks);
+            }
+        }
+    }
+
     public void notifySendTasks(ArrayList<Task> tasks) {
-        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
-        while (iterator.hasNext()) {
-            ApplicationNotifierListener listener = iterator.next();
+        for (ApplicationNotifierListener listener : appNotifierListeners) {
             if (listener != null) {
                 listener.onTasksSend(tasks);
             }
@@ -281,9 +283,7 @@ public class CustomApplication extends Application {
             ubication.setModifiedDate(Util.getDateTime());
             dao.saveUbication(ubication);
         }
-        Iterator<ApplicationNotifierListener> iterator = appNotifierListeners.iterator();
-        while (iterator.hasNext()) {
-            ApplicationNotifierListener listener = iterator.next();
+        for (ApplicationNotifierListener listener : appNotifierListeners) {
             if (listener != null) {
                 listener.onChangeLocation(latitude, longitude);
             }
@@ -326,6 +326,10 @@ public class CustomApplication extends Application {
         return dao.getUserEmails(keyword);
     }
 
+    public Address getAddress(int addressId, int userId) {
+        return dao.getAddress(addressId, userId);
+    }
+
     public ArrayList<Address> getAddresses(Client client) {
         return dao.getAddresses(client);
     }
@@ -345,6 +349,7 @@ public class CustomApplication extends Application {
         public void onMessagesSend(ArrayList<Message> messages);
         public void onMessagesRead(ArrayList<Message> messages);
         public void onTasksSend(ArrayList<Task> tasks);
+        public void onNewTasks(ArrayList<Task> tasks);
         public void onChangeLocation(double latitude, double longitude);
     }
 }

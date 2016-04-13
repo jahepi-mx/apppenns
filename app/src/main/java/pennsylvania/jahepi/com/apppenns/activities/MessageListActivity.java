@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.Util;
@@ -135,9 +134,7 @@ public class MessageListActivity extends AuthActivity implements DialogListener,
             @Override
             public void run() {
                 MessageListActivity self = MessageListActivity.this;
-                Iterator<Message> iterator = messages.iterator();
-                while (iterator.hasNext()) {
-                    Message message = iterator.next();
+                for (Message message : messages) {
                     if (!self.messages.contains(message)) {
                         adapter.insert(message, 0);
                     }
@@ -152,9 +149,7 @@ public class MessageListActivity extends AuthActivity implements DialogListener,
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Iterator<Message> iterator = messages.iterator();
-                while (iterator.hasNext()) {
-                    Message message = iterator.next();
+                for (Message message : messages) {
                     Message adapterMessage = adapter.getMessage(message);
                     if (adapterMessage != null) {
                         adapterMessage.setSend(true);
@@ -170,9 +165,7 @@ public class MessageListActivity extends AuthActivity implements DialogListener,
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Iterator<Message> iterator = messages.iterator();
-                while (iterator.hasNext()) {
-                    Message message = iterator.next();
+                for (Message message : messages) {
                     Message adapterMessage = adapter.getMessage(message);
                     if (adapterMessage != null) {
                         adapterMessage.setDelivered(true);
@@ -190,6 +183,11 @@ public class MessageListActivity extends AuthActivity implements DialogListener,
 
     @Override
     public void onChangeLocation(double latitude, double longitude) {
+
+    }
+
+    @Override
+    public void onNewTasks(ArrayList<Task> tasks) {
 
     }
 

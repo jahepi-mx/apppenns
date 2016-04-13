@@ -277,10 +277,17 @@ public class Task extends Entity {
         return attachments;
     }
 
+    public boolean isValid() {
+        if (type != null && address != null && address.getClient() != null && user != null) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         Task task = (Task) o;
-        if (task.getId() == id && task.getUser().getId() == user.getId() && task.getDate().equals(date)) {
+        if (task.getUser().getId() == user.getId() && task.getFingerprint().equals(fingerprint)) {
             return true;
         }
         return false;

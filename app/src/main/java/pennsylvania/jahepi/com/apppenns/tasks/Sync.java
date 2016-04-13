@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
+import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -84,6 +86,7 @@ public class Sync extends Service {
                     getReadMessages();
                     syncNewMessages();
                     syncReadMessages();
+                    getTaks();
                     syncNewTasks();
                     syncTypes();
                 }
@@ -227,13 +230,15 @@ public class Sync extends Service {
                     message.addAttachment(attachment);
                 }
 
-                if (application.saveMessage(message)) {
-                    Log.d(TAG, "getMessages inserted: " + message.getMessage());
-                } else {
-                    Log.d(TAG, "getMessages not inserted: " + message.getMessage());
-                }
-                if (updateSendMessage(message)) {
-                    messages.add(message);
+                if (message.isValid()) {
+                    if (application.saveMessage(message)) {
+                        Log.d(TAG, "getMessages inserted: " + message.getMessage());
+                    } else {
+                        Log.d(TAG, "getMessages not inserted: " + message.getMessage());
+                    }
+                    if (updateSendMessage(message)) {
+                        messages.add(message);
+                    }
                 }
             }
 
@@ -516,6 +521,96 @@ public class Sync extends Service {
         Log.d(TAG, "syncFiles finalized");
     }
 
+    private void getTaks() {
+        String url = null;
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        try {
+            url = CustomApplication.SERVICE_URL + "intranet/android/getTasks/" + application.getUser().getId();
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+
+            InputStream inputStream = connection.getInputStream();
+            StringBuilder jsonStr = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                jsonStr = jsonStr.append(line);
+            }
+
+            JSONObject jObject = new JSONObject(jsonStr.toString());
+            JSONArray jsonTasks = jObject.getJSONArray("tasks");
+
+            for (int i = 0; i < jsonTasks.length(); i++) {
+                JSONObject json = jsonTasks.getJSONObject(i);
+                Task task = new Task();
+                task.setUser(application.getUser(json.getInt("user")));
+                task.setAddress(application.getAddress(json.getInt("address"), json.getInt("user")));
+                task.setDescription(json.getString("description"));
+                task.setDate(json.getString("date"));
+                task.setModifiedDate(json.getString("mod_date"));
+                task.setConclusion("");
+                task.setEmails("");
+                task.setType(application.getType(json.getInt("type")));
+                task.setStartTime(json.getString("start_time"));
+                task.setEndTime(json.getString("end_time"));
+                task.setFingerprint(json.getString("fingerprint"));
+                task.setSend(true);
+
+                if (task.isValid()) {
+                    long calendarEventId = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
+                    task.setEventId((int) calendarEventId);
+                    JSONArray jsonAttachments = json.getJSONArray("attachments");
+                    for (int e = 0; e < jsonAttachments.length(); e++) {
+                        JSONObject jsonAttachment = jsonAttachments.getJSONObject(e);
+                        Attachment attachment = new Attachment();
+                        Attachment.File file = new Attachment.File();
+                        file.setName(jsonAttachment.getString("name"));
+                        file.setPath(jsonAttachment.getString("path"));
+                        file.setMime(jsonAttachment.getString("mime"));
+                        file.setModifiedDate(jsonAttachment.getString("date"));
+                        file.setSend(true);
+                        attachment.setFile(file);
+                        task.addAttachment(attachment);
+                    }
+
+                    if (application.saveTask(task)) {
+                        Log.d(TAG, "getTasks inserted: " + task.getFingerprint());
+                    } else {
+                        Log.d(TAG, "getTasks not inserted: " + task.getFingerprint());
+                    }
+                    if (updateSendTask(task)) {
+                        tasks.add(task);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "URL fail: " + url);
+        }
+        if (tasks.size() > 0) {
+            application.notifyNewTasks(tasks);
+        }
+        Log.d(TAG, "getTasks finalized");
+    }
+
+    private boolean updateSendTask(Task task) {
+        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncTask/" + task.getUser().getId() + "/" + task.getFingerprint();
+        try {
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            connection.getInputStream();
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, "URL fail: " + url);
+        }
+        Log.d(TAG, "updateSendTask finalized");
+        return false;
+    }
+
     private void syncNewTasks() {
         ArrayList<Task> notifyTasks = new ArrayList<Task>();
         ArrayList<Task> tasks = null;
@@ -530,6 +625,7 @@ public class Sync extends Service {
                 post.addPart("user", new StringBody(Integer.toString(task.getUser().getId())));
                 post.addPart("address", new StringBody(Integer.toString(task.getAddress().getId())));
                 post.addPart("type", new StringBody(Integer.toString(task.getType().getId())));
+                post.addPart("date", new StringBody(task.getModifiedDateString()));
                 post.addPart("description", new StringBody(task.getDescription()));
                 post.addPart("register_date", new StringBody(task.getDate()));
                 post.addPart("start_time", new StringBody(task.getStartTime()));
@@ -544,6 +640,7 @@ public class Sync extends Service {
                 post.addPart("checkout_date", new StringBody(task.getCheckOutDate()));
                 post.addPart("conclusion", new StringBody(task.getConclusion()));
                 post.addPart("emails", new StringBody(task.getEmails()));
+                post.addPart("fingerprint", new StringBody(task.getFingerprint()));
                 post.addPart("cancelled", new StringBody(task.isCancelled() ? "1" : "0"));
 
                 Iterator<Attachment> attachmentIterator = task.getAttachmentsIterator();

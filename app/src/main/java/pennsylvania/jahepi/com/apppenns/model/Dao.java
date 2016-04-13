@@ -589,8 +589,8 @@ public class Dao {
         return false;
     }
 
-    public Client getClient(Client clientParam) {
-        Cursor cursor = db.get(Database.CLIENTS_TABLE, String.format("id='%s' AND user='%s'", clientParam.getId(), clientParam.getUser().getId()));
+    public Client getClient(int clientId, int userId) {
+        Cursor cursor = db.get(Database.CLIENTS_TABLE, String.format("id='%s' AND user='%s'", clientId, userId));
         if (cursor != null) {
             Client client = mapClient(cursor);
             cursor.close();
@@ -633,7 +633,7 @@ public class Dao {
             values.put("date", client.getModifiedDateString());
             values.put("active", client.isActive() ? 1 : 0);
 
-            Client clientDB = getClient(client);
+            Client clientDB = getClient(client.getId(), client.getUser().getId());
             if (clientDB != null) {
                 if (clientDB.isGreaterDate(client)) {
                     db.update(Database.CLIENTS_TABLE, values, String.format("id='%s' AND user='%s'", client.getId(), client.getUser().getId()));
@@ -647,11 +647,11 @@ public class Dao {
         return false;
     }
 
-    public Address getAddress(Address addressParam) {
-        Cursor cursor = db.get(Database.ADDRESSES_TABLE, String.format("id='%s' AND client='%s'", addressParam.getId(), addressParam.getClient().getId()));
+    public Address getAddress(int addressId, int userId) {
+        Cursor cursor = db.get(Database.ADDRESSES_TABLE, String.format("id='%s'", addressId));
         if (cursor != null) {
             Address address = mapAddress(cursor);
-            address.setClient(address.getClient());
+            address.setClient(getClient(cursor.getInt(1), userId));
             cursor.close();
             return address;
         }
@@ -694,7 +694,7 @@ public class Dao {
             values.put("date", address.getModifiedDateString());
             values.put("active", address.isActive() ? 1 : 0);
 
-            Address addressDB = getAddress(address);
+            Address addressDB = getAddress(address.getId(), address.getUserClient().getId());
             if (addressDB != null) {
                 if (addressDB.isGreaterDate(address)) {
                     db.update(Database.ADDRESSES_TABLE, values, String.format("id='%s' AND client='%s'", address.getId(), address.getClient().getId()));

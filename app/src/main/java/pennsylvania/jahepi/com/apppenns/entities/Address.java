@@ -42,6 +42,13 @@ public class Address extends Entity {
         return client;
     }
 
+    public User getUserClient() {
+        if (client != null) {
+            return client.getUser();
+        }
+        return null;
+    }
+
     public void setClient(Client client) {
         this.client = client;
     }

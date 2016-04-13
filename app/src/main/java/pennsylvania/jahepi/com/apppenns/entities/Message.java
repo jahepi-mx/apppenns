@@ -109,6 +109,13 @@ public class Message extends Entity {
         this.readSync = readSync;
     }
 
+    public boolean isValid() {
+        if (from != null && to != null) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         Message msg = (Message) o;
