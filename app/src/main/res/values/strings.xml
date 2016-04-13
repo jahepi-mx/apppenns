@@ -65,6 +65,7 @@
     <string name="txt_task_gps_status">Por favor espere mientras se procesa la informacion ...</string>
     <string name="txt_error_attachment">El archivo no debe ser mayor a 5MB</string>
     <string name="txt_conclusion">Conclusión:</string>
+    <string name="txt_to_users">Destinatarios</string>
     <string name="txt_users">Usuarios</string>
     <string name="txt_confirm">Confirmación</string>
     <string name="txt_recording">Grabando ...</string>
@@ -73,12 +74,14 @@
     <string name="txt_confirm_checkin">Desea confirmar la entrada?</string>
     <string name="txt_confirm_delete">Desea borrar el archivo?</string>
     <string name="txt_confirm_checkout">Desea confirmar la salida?</string>
-    <string name="btn_to">Agregar Remitentes</string>
+    <string name="btn_to">Agregar Destinatarios</string>
     <string name="btn_login">Acceder</string>
     <string name="btn_send">Enviar</string>
     <string name="btn_attachment">Agregar Archivo</string>
     <string name="btn_photo">Fotografia</string>
     <string name="btn_audio">Grabar Audio</string>
+    <string name="btn_users">Usuarios</string>
+    <string name="btn_groups">Grupos</string>
     <string name="btn_cancel">Cancelar</string>
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>

@@ -145,7 +145,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
 
     @Override
     public void accept(Object dialogParam) {
-        options = dialog.getOptions();
+        options = dialog.getUserOptions();
         displaySelectedUsers(options);
         dialog.dismiss();
     }

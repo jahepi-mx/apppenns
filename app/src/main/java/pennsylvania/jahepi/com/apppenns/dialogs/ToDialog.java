@@ -27,44 +27,67 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
  */
 public class ToDialog extends DialogFragment implements View.OnClickListener {
 
-    private DialogAdapter adapter;
-    private Button acceptBtn;
+    private DialogAdapter userAdapter;
+    private DialogAdapter groupAdapter;
+    private Button acceptBtn, groupBtn, userBtn;
+    private ListView userListView, groupListView;
     private DialogListener listener;
-    private ArrayList<Option> options;
+    private ArrayList<Option> userOptions;
+    private ArrayList<Option> groupOptions;
 
     public ToDialog() {
         super();
-        options = new ArrayList<Option>();
+        userOptions = new ArrayList<Option>();
+        groupOptions = new ArrayList<Option>();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_to, container, false);
-        getDialog().setTitle(getString(R.string.txt_users));
+        getDialog().setTitle(getString(R.string.txt_to_users));
         acceptBtn = (Button) view.findViewById(R.id.okToBtn);
-        ListView listView = (ListView) view.findViewById(R.id.toListView);
-        adapter = new DialogAdapter(view.getContext(), R.layout.dialog_to_row);
-        adapter.addAll(options);
+        userBtn = (Button) view.findViewById(R.id.userBtn);
+        groupBtn = (Button) view.findViewById(R.id.groupBtn);
+        userListView = (ListView) view.findViewById(R.id.toUserListView);
+        userAdapter = new DialogAdapter(view.getContext(), R.layout.dialog_to_row);
+        userAdapter.addAll(userOptions);
+        groupListView = (ListView) view.findViewById(R.id.toGroupListView);
+        groupAdapter = new DialogAdapter(view.getContext(), R.layout.dialog_to_row);
+        groupAdapter.addAll(groupOptions);
 
-        listView.setAdapter(adapter);
+        userListView.setAdapter(userAdapter);
+        groupListView.setAdapter(groupAdapter);
+        userListView.setVisibility(View.GONE);
+        groupListView.setVisibility(View.VISIBLE);
+
         acceptBtn.setOnClickListener(this);
+        userBtn.setOnClickListener(this);
+        groupBtn.setOnClickListener(this);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ViewHolder holder = (ViewHolder) view.getTag();
-                Option option = (Option) adapter.getItem(position);
+                Option option = (Option) groupAdapter.getItem(position);
                 option.selected = !option.selected;
                 holder.checkbox.setChecked(option.selected);
-                if (option.isGroupOption()) {
-                    for (Option tempOption : options) {
-                        if (tempOption.getGroup().equals(option.getGroup())) {
-                            tempOption.selected = option.selected;
-                        }
+                for (Option tempOption : userOptions) {
+                    if (tempOption.getGroup().equals(option.getGroup())) {
+                        tempOption.selected = option.selected;
                     }
-                    adapter.notifyDataSetChanged();
                 }
+                userAdapter.notifyDataSetChanged();
+            }
+        });
+
+        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ViewHolder holder = (ViewHolder) view.getTag();
+                Option option = (Option) userAdapter.getItem(position);
+                option.selected = !option.selected;
+                holder.checkbox.setChecked(option.selected);
             }
         });
 
@@ -72,7 +95,10 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
     }
 
     public void reset() {
-        for (Option option : options) {
+        for (Option option : userOptions) {
+            option.selected = false;
+        }
+        for (Option option : groupOptions) {
             option.selected = false;
         }
     }
@@ -86,17 +112,17 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
             if (!hasGroupOption(user.getGroup())) {
                 Option option = new Option();
                 option.group = user.getGroup();
-                options.add(option);
+                groupOptions.add(option);
             }
             Option option = new Option();
             option.group = user.getGroup();
             option.user = user;
-            options.add(option);
+            userOptions.add(option);
         }
     }
 
     private boolean hasGroupOption(String groupName) {
-        for (Option option : options) {
+        for (Option option : groupOptions) {
             if (option.isGroupOptionName(groupName)) {
                 return true;
             }
@@ -110,11 +136,19 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        listener.accept(this);
+        if (v == acceptBtn) {
+            listener.accept(this);
+        } else if (v == userBtn) {
+            userListView.setVisibility(View.VISIBLE);
+            groupListView.setVisibility(View.GONE);
+        } else if (v == groupBtn) {
+            userListView.setVisibility(View.GONE);
+            groupListView.setVisibility(View.VISIBLE);
+        }
     }
 
-    public ArrayList<Option> getOptions() {
-        return options;
+    public ArrayList<Option> getUserOptions() {
+        return userOptions;
     }
 
     private static class DialogAdapter extends ArrayAdapter<Option> {
@@ -148,18 +182,10 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
                 holder.checkbox.setChecked(false);
             }
 
-            if (!option.isGroupOption()) {
-                holder.title.setTypeface(null, Typeface.NORMAL);
-                holder.title.setTextColor(Color.BLACK);
-                holder.title.setBackgroundColor(Color.TRANSPARENT);
-                holder.title.setText(option.user.getName());
-            } else {
-                holder.title.setTypeface(null, Typeface.BOLD);
-                holder.title.setTextColor(Color.WHITE);
-                holder.title.setBackgroundColor(Color.BLACK);
-                holder.title.setText(option.group);
-            }
-
+            holder.title.setTypeface(null, Typeface.NORMAL);
+            holder.title.setTextColor(Color.BLACK);
+            holder.title.setBackgroundColor(Color.TRANSPARENT);
+            holder.title.setText(option.getText());
             return convertView;
         }
     }
@@ -204,6 +230,10 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
 
         public boolean isGroupOption() {
             return user == null;
+        }
+
+        public String getText() {
+            return !isGroupOption() ? user.getName() : group;
         }
 
         public boolean isSelectedOption() {
