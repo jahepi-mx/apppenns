@@ -78,7 +78,12 @@ public class Attachment implements Serializable {
         }
 
         public String getPathNoName() {
-            return getPath().substring(0, getPath().lastIndexOf(java.io.File.separator));
+            try {
+                return getPath().substring(0, getPath().lastIndexOf(java.io.File.separator));
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+            return "";
         }
     }
 }
