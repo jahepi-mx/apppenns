@@ -191,6 +191,10 @@ public class CustomApplication extends Application {
         return dao.getMessages(getUser().getId(), date);
     }
 
+    public Task getTask(Task task) {
+        return dao.getTask(task);
+    }
+
     public ArrayList<Task> getNewTasks() {
         return dao.getNewTasks(getUser().getId());
     }

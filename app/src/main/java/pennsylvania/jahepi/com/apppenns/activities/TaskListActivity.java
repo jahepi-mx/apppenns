@@ -33,7 +33,6 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     private DateDialog dateDialog;
     private Button dateBtn;
     private TaskAdapter adapter;
-    private ArrayList<Task> tasks;
     private AlertDialog.Builder cancelledDialog;
     private Task selectedTask;
 
@@ -58,7 +57,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         cancelledDialog.setPositiveButton(R.string.btn_yes, this);
         cancelledDialog.setNegativeButton(R.string.btn_no, this);
 
-        tasks = application.getTasks(date);
+        ArrayList<Task> tasks = application.getTasks(date);
 
         Button addTask = (Button) findViewById(R.id.newTaskBtn);
         addTask.setOnClickListener(new View.OnClickListener() {
@@ -239,13 +238,15 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                TaskListActivity self = TaskListActivity.this;
                 for (Task task : tasks) {
-                    if (!self.tasks.contains(task)) {
+                    Task adapterTask = adapter.getTask(task);
+                    if (adapterTask == null) {
                         String selectedDate = dateBtn.getText().toString();
                         if (task.getDate().equals(selectedDate)) {
                             adapter.insert(task, 0);
                         }
+                    } else {
+                        adapterTask.copy(task);
                     }
                 }
                 adapter.notifyDataSetChanged();

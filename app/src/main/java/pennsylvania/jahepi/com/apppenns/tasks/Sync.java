@@ -550,15 +550,18 @@ public class Sync extends Service {
                 task.setDescription(json.getString("description"));
                 task.setDate(json.getString("date"));
                 task.setModifiedDate(json.getString("mod_date"));
-                task.setConclusion("");
-                task.setEmails("");
                 task.setType(application.getType(json.getInt("type")));
                 task.setStartTime(json.getString("start_time"));
                 task.setEndTime(json.getString("end_time"));
                 task.setFingerprint(json.getString("fingerprint"));
+                task.setUpdateAllState(false);
                 task.setSend(true);
 
                 if (task.isValid()) {
+                    Task dbTask = application.getTask(task);
+                    if (dbTask != null) {
+                        application.removeEvent(dbTask.getEventId());
+                    }
                     long calendarEventId = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
                     task.setEventId((int) calendarEventId);
                     JSONArray jsonAttachments = json.getJSONArray("attachments");

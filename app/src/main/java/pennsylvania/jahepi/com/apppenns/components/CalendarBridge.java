@@ -60,7 +60,7 @@ public class CalendarBridge {
     }
 
     public boolean removeEvent(int id) {
-        Uri deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, id);
+        Uri deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id);
         int rows = contentResolver.delete(deleteUri, null, null);
         return rows > 0;
     }

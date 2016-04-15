@@ -33,11 +33,13 @@ public class Task extends Entity {
     private Task parentTask;
     private ArrayList<Attachment> attachments;
     private String fingerprint;
+    private boolean updateAllState;
 
     public Task() {
         checkInCoord = new Coord();
         checkOutCoord = new Coord();
         attachments = new ArrayList<Attachment>();
+        updateAllState = true;
     }
 
     public void setCheckOutLatitude(double latitude) {
@@ -141,6 +143,9 @@ public class Task extends Entity {
     }
 
     public String getConclusion() {
+        if (conclusion == null) {
+            return "";
+        }
         return conclusion;
     }
 
@@ -242,6 +247,9 @@ public class Task extends Entity {
     }
 
     public String getEmails() {
+        if (emails == null) {
+            return "";
+        }
         return emails;
     }
 
@@ -282,6 +290,27 @@ public class Task extends Entity {
             return true;
         }
         return false;
+    }
+
+    public boolean updateAllState() {
+        return updateAllState;
+    }
+
+    public void setUpdateAllState(boolean updateRemainingState) {
+        this.updateAllState = updateRemainingState;
+    }
+
+    public void copy(Task task) {
+        setUser(task.getUser());
+        setAddress(task.getAddress());
+        setDescription(task.getDescription());
+        setDate(task.getDate());
+        setModifiedDate(task.getModifiedDateString());
+        setType(task.getType());
+        setStartTime(task.getStartTime());
+        setEndTime(task.getEndTime());
+        setSend(task.isSend());
+        addAttachments(task.getAttachments());
     }
 
     @Override

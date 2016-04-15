@@ -23,7 +23,7 @@ public class Database {
     public static final String FILES_TABLE = "files";
     public static final String UBICATIONS_TABLE = "ubications";
 
-    private static final int DB_VERSION = 32;
+    private static final int DB_VERSION = 33;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;

@@ -534,25 +534,27 @@ public class Dao {
             values.put("address", task.getAddress().getId());
             values.put("description", task.getDescription());
             values.put("date", task.getModifiedDateString());
-            values.put("in_lat", task.getCheckInCoord().getLatitude());
-            values.put("in_lon", task.getCheckInCoord().getLongitude());
-            values.put("out_lat", task.getCheckOutCoord().getLatitude());
-            values.put("out_lon", task.getCheckOutCoord().getLongitude());
             values.put("send", task.isSend() ? 1 : 0);
             values.put("register_date", task.getDate());
-            values.put("check_in", task.isCheckin() ? 1 : 0);
-            values.put("check_out", task.isCheckout() ? 1 : 0);
-            values.put("checkin_date", task.getCheckInDate());
-            values.put("checkout_date", task.getCheckOutDate());
-            values.put("conclusion", task.getConclusion());
-            values.put("cancelled", task.isCancelled() ? 1 : 0);
             values.put("type", task.getType().getId());
             values.put("start_time", task.getStartTime());
             values.put("end_time", task.getEndTime());
             values.put("event_id", task.getEventId());
-            values.put("emails", task.getEmails());
-            values.put("parent_task", task.getParentTaskId());
             values.put("fingerprint", task.getFingerprint());
+            if (task.updateAllState()) {
+                values.put("in_lat", task.getCheckInCoord().getLatitude());
+                values.put("in_lon", task.getCheckInCoord().getLongitude());
+                values.put("out_lat", task.getCheckOutCoord().getLatitude());
+                values.put("out_lon", task.getCheckOutCoord().getLongitude());
+                values.put("check_in", task.isCheckin() ? 1 : 0);
+                values.put("check_out", task.isCheckout() ? 1 : 0);
+                values.put("checkin_date", task.getCheckInDate());
+                values.put("checkout_date", task.getCheckOutDate());
+                values.put("conclusion", task.getConclusion());
+                values.put("cancelled", task.isCancelled() ? 1 : 0);
+                values.put("emails", task.getEmails());
+                values.put("parent_task", task.getParentTaskId());
+            }
 
             Task taskDB = getTask(task);
             if (taskDB != null) {
