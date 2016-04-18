@@ -20,7 +20,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/view"
+        android:background="@drawable/file_black"
         android:layout_gravity="center_vertical"
         android:layout_alignParentRight="true"
         android:layout_marginRight="45dp"
@@ -29,7 +29,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/trash"
+        android:background="@drawable/file_delete"
         android:layout_gravity="center_vertical"
         android:layout_alignParentRight="true"
         android:id="@+id/deleteFileBtn" />

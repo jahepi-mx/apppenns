@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/main_container">
+    android:id="@+id/main_container"
+    style="@style/CustomLayout">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,9 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="#0057B8"
-            android:padding="5dp"
-            android:gravity="right">
+            android:padding="5dp">
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -30,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/txt_message_send"
+                android:textStyle="bold"
                 android:id="@+id/textView"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_back"
-                android:background="@drawable/custom_button"
+                android:background="@drawable/custom_button_red"
                 android:shadowRadius="2"
                 android:shadowDx="1"
                 android:shadowDy="1"
@@ -64,22 +64,29 @@
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:id="@+id/messageDate"
                     android:layout_weight="2"
+                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/txt_message_to_send"
-                    android:textStyle="bold" />
+                    android:id="@+id/toAllTextView"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
 
                 <Button
                     android:layout_width="0dp"
                     android:id="@+id/toBtn"
-                    android:layout_weight="3"
                     android:text="@string/btn_to"
+                    android:layout_weight="3"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_button"
                     android:textColor="#fff"
@@ -88,19 +95,6 @@
                     android:shadowDy="1"
                     android:shadowColor="#000"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toAllTextView"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
             </TableRow>
 
             <TableRow
@@ -125,6 +119,7 @@
                     android:layout_width="0dp"
                     android:id="@+id/photoBtn"
                     android:text="@string/btn_photo"
+                    android:drawableLeft="@drawable/camera"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_button"
                     android:textColor="#fff"
@@ -142,6 +137,7 @@
                     android:text="@string/btn_attachment"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_button"
+                    android:drawableLeft="@drawable/file"
                     android:textColor="#fff"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"
@@ -159,10 +155,11 @@
 
                 <Button
                     android:layout_width="0dp"
+                    android:drawableLeft="@drawable/mic"
                     android:id="@+id/audioBtn"
                     android:text="@string/btn_audio"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/custom_button_green"
+                    android:background="@drawable/custom_button"
                     android:textColor="#fff"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"
@@ -171,21 +168,6 @@
                     android:shadowDy="1"
                     android:shadowColor="#000"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/txt_message"
-                    android:textStyle="bold" />
-
             </TableRow>
 
             <TableRow
@@ -199,6 +181,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="top"
+                    android:hint="@string/txt_message"
                     android:inputType="textMultiLine"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:background="@drawable/rounded_corner"
@@ -211,19 +194,13 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" />
-
                 <Button
                     android:layout_width="0dp"
                     android:id="@+id/sendBtn"
                     android:layout_weight="1"
                     android:text="@string/btn_send"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/custom_button"
+                    android:background="@drawable/custom_button_green"
                     android:textColor="#fff"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"

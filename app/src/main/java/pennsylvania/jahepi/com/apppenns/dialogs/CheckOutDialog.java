@@ -40,7 +40,7 @@ public class CheckOutDialog extends AlertDialog implements DialogInterface.OnCli
 
         setView(view);
         setTitle(R.string.txt_confirm);
-        setIcon(R.drawable.task);
+        setIcon(R.drawable.ubication_black);
         setMessage(context.getString(R.string.txt_confirm_checkout));
         setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.btn_no), this);
         setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.btn_yes), this);

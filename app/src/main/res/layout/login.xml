@@ -2,61 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:id="@+id/main_container"
-    android:background="#00578b">
+    style="@style/CustomLayout">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/custom_background">
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-        <TextView android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_height="wrap_content"
+        <TextView
             android:layout_width="wrap_content"
-            android:text="@string/label_email"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#000"
-            android:shadowRadius="1"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:layout_weight="1"
-            android:shadowColor="#000"></TextView>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:background="@drawable/penns_logo"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#000" />
 
         <EditText android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:id="@+id/userInput"
+            android:textColor="@color/background"
             android:inputType="text"
-            android:layout_weight="1"
-            android:textColor="#fff"
+            android:hint="@string/label_email"
             android:background="@drawable/custom_input"
             android:layout_margin="10dp">
-            <requestFocus></requestFocus>
         </EditText>
-
-        <TextView android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/label_password"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:textColor="#000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowColor="#000"
-            android:shadowRadius="1"
-            android:layout_weight="1"></TextView>
 
         <EditText android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:inputType="textPassword"
             android:id="@+id/passwordInput"
-            android:textColor="#fff"
+            android:textColor="@color/background"
+            android:hint="@string/label_password"
             android:background="@drawable/custom_input"
-            android:layout_weight="1"
             android:layout_margin="10dp"></EditText>
 
         <Button android:layout_height="wrap_content"
@@ -66,23 +47,21 @@
             android:text="@string/btn_login"
             android:background="@drawable/custom_button"
             android:textSize="30sp"
-            android:drawableLeft="@drawable/login"
-            android:layout_weight="2"
+            android:drawableLeft="@drawable/user_icon"
             android:shadowRadius="2"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowColor="#000"
             android:textColor="#fff"></Button>
 
-        <TextView
-            android:id="@+id/textViewVersion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_margin="2dp"
-            android:background="@drawable/pennsylvania"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#000" />
-
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="2dp"
+        android:background="@drawable/pie"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#000" />
 </LinearLayout>

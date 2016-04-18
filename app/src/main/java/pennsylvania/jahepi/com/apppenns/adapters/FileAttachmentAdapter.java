@@ -44,7 +44,7 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
         removeDialog.setNegativeButton(R.string.btn_no, this);
         removeDialog.setTitle(R.string.txt_delete);
         removeDialog.setMessage(R.string.txt_confirm_delete);
-        removeDialog.setIcon(R.drawable.view);
+        removeDialog.setIcon(R.drawable.file_black);
     }
 
     public ArrayList<Attachment> getAttachments() {

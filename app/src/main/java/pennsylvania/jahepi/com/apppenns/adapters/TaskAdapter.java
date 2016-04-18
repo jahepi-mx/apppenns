@@ -22,7 +22,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Task;
 public class TaskAdapter extends ArrayAdapter<Entity> {
 
     private final static int MESSAGE_LENGTH = 35;
-    private final static String URI_TASK =  "@drawable/task";
+    private final static String URI_TASK =  "@drawable/ubication_black";
     private final static String TICK = "✔";
 
     private int mResource;

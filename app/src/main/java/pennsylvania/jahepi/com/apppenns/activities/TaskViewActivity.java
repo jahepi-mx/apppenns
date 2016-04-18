@@ -166,7 +166,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             checkInAlert.setNegativeButton(R.string.btn_no, this);
             checkInAlert.setTitle(getString(R.string.txt_confirm));
             checkInAlert.setMessage(getString(R.string.txt_confirm_checkin));
-            checkInAlert.setIcon(R.drawable.task);
+            checkInAlert.setIcon(R.drawable.ubication_black);
 
             checkOutAlert = new CheckOutDialog(this, new DialogListener() {
                 @Override

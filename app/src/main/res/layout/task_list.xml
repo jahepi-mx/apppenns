@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    style="@style/CustomLayout">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="#0057B8"
         android:padding="5dp"
         android:gravity="right">
 
@@ -27,6 +27,7 @@
             android:id="@+id/textView"
             android:gravity="center_vertical"
             android:layout_marginLeft="10dp"
+            android:textStyle="bold"
             android:textColor="#fff"
             android:layout_weight="3"/>
 
@@ -35,12 +36,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_calendar"
-            android:background="@drawable/custom_button"
+            android:background="@drawable/custom_button_green"
             android:shadowRadius="2"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowColor="#000"
-            android:textColor="#fff"
+            android:textColor="@color/white"
+            android:layout_marginRight="5dp"
             android:id="@+id/calendarBtn"
             android:layout_weight="1" />
 
@@ -49,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_add"
-            android:background="@drawable/custom_button"
+            android:background="@drawable/custom_button_green"
             android:shadowRadius="2"
             android:shadowDx="1"
             android:shadowDy="1"
@@ -64,11 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_square_button"
-        android:shadowRadius="2"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowColor="#000"
-        android:textColor="#fff"
+        android:textColor="@color/background"
         android:textStyle="bold"
         android:id="@+id/dateBtn" />
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="#0057B8"
+            android:background="@color/background"
             android:padding="5dp"
             android:gravity="right">
 
@@ -28,10 +29,11 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/txt_task_title"
+                android:textStyle="bold"
                 android:id="@+id/textView"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:textColor="#fff"
+                android:textColor="@color/white"
                 android:layout_weight="3"/>
 
             <Button
@@ -39,12 +41,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_reprogrammed"
-                android:background="@drawable/custom_button"
+                android:background="@drawable/custom_button_green"
                 android:shadowRadius="2"
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:shadowColor="#000"
                 android:textColor="#fff"
+                android:layout_marginRight="5dp"
                 android:id="@+id/reprogrammedBtn"
                 android:layout_weight="1" />
 
@@ -53,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_back"
-                android:background="@drawable/custom_button"
+                android:background="@drawable/custom_button_red"
                 android:shadowRadius="2"
                 android:shadowDx="1"
                 android:shadowDy="1"
@@ -78,12 +81,14 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/txt_message_date"
+                    android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/taskDateValue"
                     android:layout_weight="3"
+                    android:textColor="#000"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
@@ -99,12 +104,14 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/txt_time"
+                    android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/taskTimeValue"
                     android:layout_weight="3"
+                    android:textColor="#000"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
@@ -120,12 +127,14 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/txt_type"
+                    android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/taskTypeValue"
                     android:layout_weight="3"
+                    android:textColor="#000"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
@@ -141,12 +150,14 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/txt_client"
+                    android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/taskClientValue"
                     android:layout_weight="3"
+                    android:textColor="#000"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </TableRow>
@@ -162,6 +173,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/txt_description"
+                    android:textColor="#000"
                     android:textStyle="bold" />
 
             </TableRow>
@@ -174,6 +186,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/taskDescValue"
+                    android:textColor="#000"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -204,6 +217,7 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#000"
                     android:text="@string/txt_attachments"
                     android:textStyle="bold" />
 
@@ -233,6 +247,7 @@
                     android:text="@string/btn_photo"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_button"
+                    android:drawableLeft="@drawable/camera"
                     android:textColor="#fff"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"
@@ -248,6 +263,7 @@
                     android:id="@+id/filesBtn"
                     android:text="@string/btn_attachment"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/file"
                     android:background="@drawable/custom_button"
                     android:textColor="#fff"
                     android:layout_margin="5dp"

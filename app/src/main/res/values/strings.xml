@@ -77,7 +77,7 @@
     <string name="btn_to">Agregar Destinatarios</string>
     <string name="btn_login">Acceder</string>
     <string name="btn_send">Enviar</string>
-    <string name="btn_attachment">Agregar Archivo</string>
+    <string name="btn_attachment">Archivo</string>
     <string name="btn_photo">Fotografia</string>
     <string name="btn_audio">Grabar Audio</string>
     <string name="btn_users">Usuarios</string>

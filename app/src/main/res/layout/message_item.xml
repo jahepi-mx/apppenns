@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="6dip">
+    android:padding="6dip"
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/messageIcon"
@@ -18,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/messageIcon"
         android:gravity="center_vertical"
-        android:textColor="#000"
+        android:textColor="@color/white"
         android:textSize="20sp" />
 
     <TextView
@@ -30,7 +31,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Text"
-        android:textColor="#555"
+        android:textColor="@color/background"
         android:textSize="15sp" />
 
     <TextView
@@ -42,7 +43,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Text"
-        android:textColor="#555"
+        android:textColor="@color/background"
         android:textSize="15sp" />
 
     <TextView
@@ -52,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/messageIcon"
         android:gravity="center_vertical"
-        android:textColor="#dd0e0e"
+        android:textColor="#009900"
         android:textSize="15sp" />
 
 </RelativeLayout>
