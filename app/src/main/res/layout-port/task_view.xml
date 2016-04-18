@@ -242,7 +242,7 @@
                 android:padding="5dp">
 
                 <Button
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:id="@+id/photoBtn"
                     android:text="@string/btn_photo"
                     android:layout_height="wrap_content"
@@ -259,7 +259,7 @@
 
 
                 <Button
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:id="@+id/filesBtn"
                     android:text="@string/btn_attachment"
                     android:layout_height="wrap_content"
@@ -282,7 +282,7 @@
 
                 <Button
                     style="?android:attr/buttonStyleSmall"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_checkin"
                     android:background="@drawable/custom_button_green"
@@ -297,7 +297,7 @@
 
                 <Button
                     style="?android:attr/buttonStyleSmall"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_checkout"
                     android:background="@drawable/custom_button_red"
