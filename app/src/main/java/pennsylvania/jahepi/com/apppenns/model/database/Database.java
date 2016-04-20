@@ -23,7 +23,7 @@ public class Database {
     public static final String FILES_TABLE = "files";
     public static final String UBICATIONS_TABLE = "ubications";
 
-    private static final int DB_VERSION = 33;
+    private static final int DB_VERSION = 34;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -153,7 +153,7 @@ public class Database {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT, group_name TEXT)");
             Log.d(TAG, "Users table created!");
-            db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, UNIQUE (to_user, from_user, date))");
+            db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, type INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
             db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT, cancelled INT, type INT, start_time TEXT, end_time TEXT, event_id INT, emails TEXT, parent_task INT, fingerprint TEXT)");
             Log.d(TAG, "Tasks table created!");
@@ -161,7 +161,7 @@ public class Database {
             Log.d(TAG, "Clients table created!");
             db.execSQL("CREATE TABLE " + ADDRESSES_TABLE + " (id INT, client INT, address TEXT, latitude REAL, longitude REAL, date TEXT, active INT, UNIQUE (id, client))");
             Log.d(TAG, "Addresses table created!");
-            db.execSQL("CREATE TABLE " + TYPES_TABLE + " (id INT PRIMARY KEY, name TEXT, date TEXT, active INT)");
+            db.execSQL("CREATE TABLE " + TYPES_TABLE + " (id INT PRIMARY KEY, category TEXT, name TEXT, color TEXT, date TEXT, active INT)");
             Log.d(TAG, "Types table created!");
             db.execSQL("CREATE TABLE " + UBICATIONS_TABLE + " (id INTEGER PRIMARY KEY, user INT, latitude REAL, longitude REAL, date TEXT, send INT)");
             Log.d(TAG, "Ubications table created!");

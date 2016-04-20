@@ -20,6 +20,9 @@ public class TypeSpinner extends Spinner {
     }
 
     public void setSelectedItem(Type type) {
+        if (type == null) {
+            return;
+        }
         for (int i = 0; i < getCount(); i++) {
             Type typeObj = (Type) getItemAtPosition(i);
             if (typeObj.getId() == type.getId()) {

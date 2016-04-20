@@ -17,6 +17,7 @@ public class Message extends Entity {
     private boolean readSync;
     private boolean send;
     private ArrayList<Attachment> attachments;
+    private Type type;
 
     public Message() {
         attachments = new ArrayList<Attachment>();
@@ -93,6 +94,14 @@ public class Message extends Entity {
         this.id = id;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public boolean isSend() {
         return send;
     }
@@ -110,7 +119,7 @@ public class Message extends Entity {
     }
 
     public boolean isValid() {
-        if (from != null && to != null) {
+        if (from != null && to != null && type != null) {
             return true;
         }
         return false;

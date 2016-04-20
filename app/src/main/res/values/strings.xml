@@ -31,6 +31,7 @@
     <string name="txt_error_checkout">La salida no puede ser realizada.</string>
     <string name="txt_error_database">No se pudo guardar el registro</string>
     <string name="txt_message_to">A:</string>
+    <string name="txt_message_type">Tipo:</string>
     <string name="txt_emails">Emails (Separados por comas):</string>
     <string name="txt_address">Sucursal:</string>
     <string name="txt_message_to_send">Para:</string>

@@ -144,7 +144,7 @@ public class Sync extends Service {
     }
 
     private void syncTypes() {
-        String url = CustomApplication.SERVICE_URL + "intranet/android/getActivityTypes";
+        String url = CustomApplication.SERVICE_URL + "intranet/android/getTypes";
         try {
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
@@ -160,13 +160,15 @@ public class Sync extends Service {
             }
 
             JSONObject jObject = new JSONObject(jsonStr.toString());
-            JSONArray types = jObject.getJSONArray("activity_types");
+            JSONArray types = jObject.getJSONArray("types");
 
             for (int i = 0; i < types.length(); i++) {
                 JSONObject json = types.getJSONObject(i);
                 Type type = new Type();
                 type.setId(json.getInt("id"));
                 type.setName(json.getString("name"));
+                type.setColor(json.getString("color"));
+                type.setCategory(json.getString("category"));
                 type.setModifiedDate(json.getString("date"));
                 type.setActive(json.getInt("active") != 0);
 
@@ -210,6 +212,7 @@ public class Sync extends Service {
                 message.setMessage(json.getString("message"));
                 message.setFrom(application.getUser(json.getInt("from")));
                 message.setTo(application.getUser(json.getInt("to")));
+                message.setType(application.getType(json.getInt("type")));
                 message.setModifiedDate(json.getString("date"));
                 message.setActive(true);
                 message.setRead(false);
@@ -294,6 +297,7 @@ public class Sync extends Service {
                 message.setMessage(json.getString("message"));
                 message.setFrom(application.getUser(json.getInt("from")));
                 message.setTo(application.getUser(json.getInt("to")));
+                message.setType(application.getType(json.getInt("type")));
                 message.setModifiedDate(json.getString("date"));
                 if (updateDeliveredMessage(message)) {
                     if (application.updateMessageField(message, "delivered", "1")) {
@@ -341,6 +345,7 @@ public class Sync extends Service {
                 post.addPart("message", new StringBody(message.getMessage()));
                 post.addPart("to", new StringBody(Integer.toString(message.getTo().getId())));
                 post.addPart("from", new StringBody(Integer.toString(message.getFrom().getId())));
+                post.addPart("type", new StringBody(Integer.toString(message.getType().getId())));
                 post.addPart("date", new StringBody(message.getModifiedDateString()));
 
                 Iterator<Attachment> attachmentIterator = message.getAttachmentsIterator();
@@ -715,6 +720,7 @@ public class Sync extends Service {
                 post.addPart("message", new StringBody(message.getMessage()));
                 post.addPart("to", new StringBody(Integer.toString(message.getTo().getId())));
                 post.addPart("from", new StringBody(Integer.toString(message.getFrom().getId())));
+                post.addPart("type", new StringBody(Integer.toString(message.getType().getId())));
                 post.addPart("date", new StringBody(message.getModifiedDateString()));
 
                 URL urlRef = new URL(url);

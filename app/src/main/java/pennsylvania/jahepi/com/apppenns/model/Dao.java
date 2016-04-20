@@ -158,9 +158,9 @@ public class Dao {
         return null;
     }
 
-    public ArrayList<Type> getTypes() {
+    public ArrayList<Type> getTypes(String category) {
         ArrayList<Type> types = new ArrayList<Type>();
-        Cursor cursor = db.getAllOrderBy(Database.TYPES_TABLE, "active='1'", "name ASC");
+        Cursor cursor = db.getAllOrderBy(Database.TYPES_TABLE, String.format("active='1' AND category='%s'", category), "name ASC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Type type = mapType(cursor);
@@ -174,9 +174,11 @@ public class Dao {
     private Type mapType(Cursor cursor) {
         Type type = new Type();
         type.setId(cursor.getInt(0));
-        type.setName(cursor.getString(1));
-        type.setModifiedDate(cursor.getString(2));
-        type.setActive(cursor.getInt(3) != 0);
+        type.setCategory(cursor.getString(1));
+        type.setName(cursor.getString(2));
+        type.setColor(cursor.getString(3));
+        type.setModifiedDate(cursor.getString(4));
+        type.setActive(cursor.getInt(5) != 0);
         return type;
     }
 
@@ -184,6 +186,8 @@ public class Dao {
         if (type != null) {
             ContentValues values = new ContentValues();
             values.put("name", type.getName());
+            values.put("category", type.getCategory());
+            values.put("color", type.getColor());
             values.put("active", type.isActive() ? 1 : 0);
             values.put("date", type.getModifiedDateString());
 
@@ -341,6 +345,7 @@ public class Dao {
         message.setDelivered(cursor.getInt(5) == 1);
         message.setRead(cursor.getInt(6) == 1);
         message.setSend(cursor.getInt(7) == 1);
+        message.setType(getType(cursor.getInt(9)));
         ArrayList<Attachment> attachments = getAttachments(message);
         message.addAttachments(attachments);
         return message;
@@ -352,6 +357,7 @@ public class Dao {
             values.put("from_user", message.getFrom().getId());
             values.put("to_user", message.getTo().getId());
             values.put("message", message.getMessage());
+            values.put("type", message.getType().getId());
             values.put("date", message.getModifiedDateString());
             values.put("delivered", message.isDelivered() ? 1 : 0);
             values.put("read", message.isRead() ? 1 : 0);

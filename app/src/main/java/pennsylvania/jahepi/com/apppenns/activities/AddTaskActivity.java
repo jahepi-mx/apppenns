@@ -74,7 +74,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         attachmentList = (ListView) findViewById(R.id.attachmentsListView);
         attachmentList.setAdapter(fileAttachmentAdapter);
 
-        ArrayList<Type> types = application.getTypes();
+        ArrayList<Type> types = application.getTypes(Type.ACTIVITY_CATEGORY);
         typeSpinner = (TypeSpinner) findViewById(R.id.typeSpinner);
         ArrayAdapter<Type> adapter = new ArrayAdapter<Type>(this, R.layout.type_item, types);
         typeSpinner.setAdapter(adapter);

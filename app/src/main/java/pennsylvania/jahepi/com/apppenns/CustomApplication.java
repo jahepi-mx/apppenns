@@ -215,8 +215,8 @@ public class CustomApplication extends Application {
         return dao.saveType(type);
     }
 
-    public ArrayList<Type> getTypes() {
-        return dao.getTypes();
+    public ArrayList<Type> getTypes(String category) {
+        return dao.getTypes(category);
     }
 
     public Type getType(int typeId) {

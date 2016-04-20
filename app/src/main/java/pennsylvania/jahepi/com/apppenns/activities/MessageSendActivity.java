@@ -2,11 +2,11 @@ package pennsylvania.jahepi.com.apppenns.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,12 +20,14 @@ import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
 import pennsylvania.jahepi.com.apppenns.components.AudioRecorder;
+import pennsylvania.jahepi.com.apppenns.components.TypeSpinner;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.dialogs.ToDialog;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
@@ -42,6 +44,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
     private static final String ATTACHMENTS_STATE = "attachments_state";
     private static final String PHOTO_STATE = "photo_state";
     private static final String MESSAGE_STATE = "message_state";
+    private static final String TYPE_STATE = "type_state";
 
     private ToDialog dialog;
     private TextView toTextView;
@@ -53,11 +56,17 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
     private Button photoBtn, filesBtn, backBtn, toBtn, sendBtn, audioBtn;
     private ImageButton homeBtn;
     private AudioRecorder audioRecorder;
+    private TypeSpinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_send);
+
+        spinner = (TypeSpinner) findViewById(R.id.typeSpinner);
+        ArrayList<Type> types = application.getTypes(Type.MESSAGE_CATEGORY);
+        ArrayAdapter<Type> typeAdapter = new ArrayAdapter<Type>(this, R.layout.type_item, types);
+        spinner.setAdapter(typeAdapter);
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
 
@@ -169,7 +178,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
             }
         }
 
-        if (Util.isEmpty(messageStr) || tmpUsers.size() == 0) {
+        if (Util.isEmpty(messageStr) || tmpUsers.size() == 0 || spinner.getSelectedItem() == null) {
             toast(this.getString(R.string.txt_error_send));
             return;
         }
@@ -186,6 +195,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
             Message message = new Message();
             message.setFrom(application.getUser());
             message.setTo(user);
+            message.setType((Type) spinner.getSelectedItem());
             message.setMessage(messageStr);
             message.setModifiedDate(Util.getDateTime());
             message.addAttachments(attachments);
@@ -267,6 +277,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         outState.putSerializable(ATTACHMENTS_STATE, fileAttachmentAdapter.getAttachments());
         outState.putSerializable(PHOTO_STATE, photoFile);
         outState.putString(MESSAGE_STATE, messageEditText.getText().toString());
+        outState.putSerializable(TYPE_STATE, (Type) spinner.getSelectedItem());
         super.onSaveInstanceState(outState);
     }
 
@@ -282,5 +293,6 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         fileAttachmentAdapter.addAll(attachments);
         fileAttachmentAdapter.notifyDataSetChanged();
         messageEditText.setText(savedInstanceState.getString(MESSAGE_STATE));
+        spinner.setSelectedItem((Type) savedInstanceState.get(TYPE_STATE));
     }
 }

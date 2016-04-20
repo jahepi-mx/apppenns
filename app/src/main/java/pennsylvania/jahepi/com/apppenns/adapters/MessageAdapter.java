@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
@@ -16,6 +17,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.entities.Entity;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
@@ -53,6 +55,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
             Drawable drawableIn = getContext().getResources().getDrawable(imageResourceIn);
             int imageResourceOut = getContext().getResources().getIdentifier(URI_OUT, null, getContext().getPackageName());
             Drawable drawableOut = getContext().getResources().getDrawable(imageResourceOut);
+            RelativeLayout layout = (RelativeLayout) convertView.findViewById(R.id.messageContainer);
 
             ViewHolder holder = new ViewHolder();
             holder.text = text;
@@ -62,12 +65,18 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
             holder.imageView = imageView;
             holder.drawableIn = drawableIn;
             holder.drawableOut = drawableOut;
+            holder.layout = layout;
 
             convertView.setTag(holder);
         }
 
         ViewHolder holder = (ViewHolder) convertView.getTag();
         Message message = (Message) getItem(position);
+
+        Type type = message.getType();
+        if (type != null) {
+            holder.layout.setBackgroundColor(Color.parseColor(type.getColor()));
+        }
 
         if (message.isRead()) {
             holder.title.setTypeface(null, Typeface.NORMAL);
@@ -113,6 +122,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
         ImageView imageView;
         Drawable drawableIn;
         Drawable drawableOut;
+        RelativeLayout layout;
         public TextView getTitle() {
             return title;
         }

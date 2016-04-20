@@ -44,11 +44,13 @@ public class MessageViewActivity extends AuthActivity {
             TextView date = (TextView) findViewById(R.id.messageDateValue);
             TextView from = (TextView) findViewById(R.id.messageFromValue);
             TextView to = (TextView) findViewById(R.id.messageToValue);
+            TextView type = (TextView) findViewById(R.id.messageTypeValue);
             TextView msg = (TextView) findViewById(R.id.messageValue);
 
             date.setText(message.getModifiedDateString());
             from.setText(message.getFrom().getName());
             to.setText(message.getTo().getName());
+            type.setText(message.getType().getName());
             msg.setText(message.getMessage());
         }
 
