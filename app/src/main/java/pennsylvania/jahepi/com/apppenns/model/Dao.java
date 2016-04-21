@@ -777,7 +777,7 @@ public class Dao {
                 }
             } else {
                 Log.d(TAG, notification.toString());
-                db.insert(Database.ADDRESSES_TABLE, values);
+                db.insert(Database.NOTIFICATIONS_TABLE, values);
             }
             return true;
         }

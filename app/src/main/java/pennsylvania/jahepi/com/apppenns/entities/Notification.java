@@ -15,7 +15,7 @@ public class Notification extends Entity {
     private String fingerprint;
 
     public Notification() {
-
+        eventId = 0;
     }
 
     public int getId() {

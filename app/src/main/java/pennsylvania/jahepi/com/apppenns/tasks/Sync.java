@@ -226,8 +226,10 @@ public class Sync extends Service {
                     if (dbNotification != null) {
                         application.removeEvent(dbNotification.getEventId());
                     }
-                    long calendarEventId = application.addEvent(notification.getEventDate(), notification.getEventDate(), notification.getFrom().getName(), notification.getNotification());
-                    notification.setEventId((int) calendarEventId);
+                    if (notification.isActive()) {
+                        long calendarEventId = application.addEvent(notification.getEventDate(), notification.getEventDate(), notification.getFrom().getName(), notification.getNotification());
+                        notification.setEventId((int) calendarEventId);
+                    }
                     if (application.saveNotification(notification)) {
                         Log.d(TAG, "getNotifications inserted: " + notification.getNotification());
                     } else {
