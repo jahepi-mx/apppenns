@@ -20,6 +20,7 @@ public class CalendarBridge {
 
     public static final String TIMEZONE = "America/Mexico_City";
     public static final int REMIDER_TIME = 15;
+    public static final String START_TIME = "08:00";
     public static final int ID = 1;
 
     private ContentResolver contentResolver;
@@ -30,7 +31,7 @@ public class CalendarBridge {
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     }
 
-    public long addEvent(String startDateTime, String endDateTime, String title, String description) {
+    public long addEvent(String startDateTime, String endDateTime, String title, String description, int firstNotification, int secondNotification) {
         long eventID = 0;
         try {
             Calendar beginTime = Calendar.getInstance();
@@ -46,11 +47,20 @@ public class CalendarBridge {
             values.put(Events.EVENT_TIMEZONE, CalendarBridge.TIMEZONE);
             Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
             eventID = Long.parseLong(uri.getLastPathSegment());
-            ContentValues valuesReminder = new ContentValues();
-            valuesReminder.put(CalendarContract.Reminders.MINUTES, REMIDER_TIME);
-            valuesReminder.put(Reminders.EVENT_ID, eventID);
-            valuesReminder.put(Reminders.METHOD, Reminders.METHOD_ALERT);
-            contentResolver.insert(Reminders.CONTENT_URI, valuesReminder);
+            if (firstNotification > 0) {
+                ContentValues valuesReminder = new ContentValues();
+                valuesReminder.put(CalendarContract.Reminders.MINUTES, firstNotification);
+                valuesReminder.put(Reminders.EVENT_ID, eventID);
+                valuesReminder.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+                contentResolver.insert(Reminders.CONTENT_URI, valuesReminder);
+            }
+            if (secondNotification > 0) {
+                ContentValues valuesReminder2 = new ContentValues();
+                valuesReminder2.put(CalendarContract.Reminders.MINUTES, secondNotification);
+                valuesReminder2.put(Reminders.EVENT_ID, eventID);
+                valuesReminder2.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+                contentResolver.insert(Reminders.CONTENT_URI, valuesReminder2);
+            }
         } catch (SecurityException exp) {
             exp.printStackTrace();
         } catch (Exception exp) {

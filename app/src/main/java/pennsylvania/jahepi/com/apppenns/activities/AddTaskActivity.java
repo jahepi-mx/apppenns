@@ -22,6 +22,7 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.components.GoogleMapFragment;
 import pennsylvania.jahepi.com.apppenns.components.TypeSpinner;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.Config;
@@ -231,7 +232,8 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setEndTime(endTime);
                 task.setParentTask(parentTask);
                 task.setFingerprint(Util.getDateTime() + "-" + application.getAndroidId());
-                long calendarEventId  = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
+                int secondNotification = Util.getMinutesDiff(CalendarBridge.START_TIME, task.getStartTime());
+                long calendarEventId  = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription(), CalendarBridge.REMIDER_TIME, secondNotification);
                 task.setEventId((int) calendarEventId);
 
                 ArrayList<Attachment> attachments = new ArrayList<Attachment>();

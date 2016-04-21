@@ -29,6 +29,7 @@ import pennsylvania.jahepi.com.apppenns.dialogs.CheckOutDialog;
 import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
+import pennsylvania.jahepi.com.apppenns.entities.Notification;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.tasks.GpsTask;
 
@@ -142,12 +143,18 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             TextView descTextView = (TextView) findViewById(R.id.taskDescValue);
             TextView timeTextView = (TextView) findViewById(R.id.taskTimeValue);
             TextView typeTextView = (TextView) findViewById(R.id.taskTypeValue);
+            TextView notificationsTextView = (TextView) findViewById(R.id.notificationsValues);
 
             clientTextView.setText(task.getClient().getName() + " " + task.getAddress().getAddress());
             descTextView.setText(task.getDescription());
             dateTextView.setText(task.getDate());
             timeTextView.setText(String.format(getString(R.string.txt_time_value), task.getStartTime(), task.getEndTime()));
             typeTextView.setText(task.getType().getName());
+
+            ArrayList<Notification> notifications = task.getNotifications();
+            for (Notification notification : notifications) {
+                notificationsTextView.setText(notificationsTextView.getText() + String.format(getString(R.string.txt_notification), notification.getFrom().getName(), notification.getNotification(), notification.getEventDate()));
+            }
 
             if (task.isCheckin()) {
                 checkinBtn.getBackground().setAlpha(ALPHA);

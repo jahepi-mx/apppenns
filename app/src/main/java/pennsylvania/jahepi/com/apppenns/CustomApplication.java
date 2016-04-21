@@ -116,8 +116,8 @@ public class CustomApplication extends Application {
         editor.apply();
     }
 
-    public long addEvent(String startDateTime, String endDateTime, String title, String description) {
-        return calendarBridge.addEvent(startDateTime, endDateTime, title, description);
+    public long addEvent(String startDateTime, String endDateTime, String title, String description, int firstNotification, int secondNotification) {
+        return calendarBridge.addEvent(startDateTime, endDateTime, title, description, firstNotification, secondNotification);
     }
 
     public boolean removeEvent(int id) {

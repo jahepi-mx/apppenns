@@ -74,6 +74,16 @@ public class Notification extends Entity {
         this.eventDate = eventDate;
     }
 
+    public String getEventTime() {
+        try {
+            String[] parts = eventDate.split(" ");
+            return parts[1];
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+        return "";
+    }
+
     public String getFingerprint() {
         return fingerprint;
     }

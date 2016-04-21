@@ -153,4 +153,18 @@ public class Util {
         attachment.setFile(attachmentFile);
         return attachment;
     }
+
+    public static int getMinutesDiff(String start, String end) {
+        int minutes = 0;
+        try {
+            String[] startArray = start.split(":");
+            String[] endArray = end.split(":");
+            int startMinutes = Integer.parseInt(startArray[0]) * 60 + Integer.parseInt(startArray[1]);
+            int endMinutes = Integer.parseInt(endArray[0]) * 60 + Integer.parseInt(endArray[1]);
+            minutes = endMinutes - startMinutes;
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+        return minutes;
+    }
 }

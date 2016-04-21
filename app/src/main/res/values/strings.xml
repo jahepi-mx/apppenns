@@ -44,11 +44,13 @@
     <string name="txt_map_me">Mi Posicion</string>
     <string name="txt_map_client">Cliente</string>
     <string name="txt_attachments">Adjuntos:</string>
+    <string name="txt_notifications">Notificaciones:</string>
     <string name="txt_client">Cliente:</string>
     <string name="txt_type">Tipo:</string>
     <string name="txt_start_time">Hora Inicio:</string>
     <string name="txt_time">Hora:</string>
     <string name="txt_time_value">%1$s - %2$s hrs</string>
+    <string name="txt_notification">El usuario %1$s comenta lo siguiente:\n\n%2$s\n%3$s\n\n</string>
     <string name="txt_end_time">Hora Fin:</string>
     <string name="txt_add_client">Cliente/Sucursal</string>
     <string name="txt_pending">Pendiente</string>

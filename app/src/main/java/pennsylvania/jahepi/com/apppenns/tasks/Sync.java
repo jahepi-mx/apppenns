@@ -26,6 +26,7 @@ import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
@@ -227,7 +228,8 @@ public class Sync extends Service {
                         application.removeEvent(dbNotification.getEventId());
                     }
                     if (notification.isActive()) {
-                        long calendarEventId = application.addEvent(notification.getEventDate(), notification.getEventDate(), notification.getFrom().getName(), notification.getNotification());
+                        int secondNotification = Util.getMinutesDiff(CalendarBridge.START_TIME, notification.getEventTime());
+                        long calendarEventId = application.addEvent(notification.getEventDate(), notification.getEventDate(), notification.getFrom().getName(), notification.getNotification(), notification.getMinutes(), secondNotification);
                         notification.setEventId((int) calendarEventId);
                     }
                     if (application.saveNotification(notification)) {
@@ -648,7 +650,8 @@ public class Sync extends Service {
                     if (dbTask != null) {
                         application.removeEvent(dbTask.getEventId());
                     }
-                    long calendarEventId = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription());
+                    int secondNotification = Util.getMinutesDiff(CalendarBridge.START_TIME, task.getStartTime());
+                    long calendarEventId = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription(), CalendarBridge.REMIDER_TIME, secondNotification);
                     task.setEventId((int) calendarEventId);
                     JSONArray jsonAttachments = json.getJSONArray("attachments");
                     for (int e = 0; e < jsonAttachments.length(); e++) {
