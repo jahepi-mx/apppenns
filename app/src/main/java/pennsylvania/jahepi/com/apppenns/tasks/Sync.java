@@ -29,6 +29,7 @@ import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Notification;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.Ubication;
@@ -82,6 +83,7 @@ public class Sync extends Service {
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 if (application.isLogged()) {
+                    getNotifications();
                     getMessages();
                     getReadMessages();
                     syncNewMessages();
@@ -183,6 +185,83 @@ public class Sync extends Service {
             Log.e(TAG, "URL fail: " + url);
         }
         Log.d(TAG, "syncTypes finalized");
+    }
+
+    private void getNotifications() {
+        String url = null;
+        ArrayList<Notification> notifications = new ArrayList<Notification>();
+        try {
+            url = CustomApplication.SERVICE_URL + "intranet/android/getNotifications/" + application.getUser().getId();
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+
+            InputStream inputStream = connection.getInputStream();
+            StringBuilder jsonStr = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                jsonStr = jsonStr.append(line);
+            }
+
+            JSONObject jObject = new JSONObject(jsonStr.toString());
+            JSONArray jsonMessages = jObject.getJSONArray("notifications");
+
+            for (int i = 0; i < jsonMessages.length(); i++) {
+                JSONObject json = jsonMessages.getJSONObject(i);
+                Notification notification = new Notification();
+                notification.setId(json.getInt("id"));
+                notification.setFrom(application.getUser(json.getInt("from_user")));
+                notification.setTo(application.getUser(json.getInt("to_user")));
+                notification.setEventDate(json.getString("date"));
+                notification.setNotification(json.getString("text"));
+                notification.setFingerprint(json.getString("fingerprint"));
+                notification.setMinutes(json.getInt("minutes"));
+                notification.setModifiedDate(json.getString("mod_date"));
+                notification.setActive(json.getInt("active") == 1);
+
+                if (notification.isValid()) {
+                    Notification dbNotification = application.getNotification(notification.getId());
+                    if (dbNotification != null) {
+                        application.removeEvent(dbNotification.getEventId());
+                    }
+                    long calendarEventId = application.addEvent(notification.getEventDate(), notification.getEventDate(), notification.getFrom().getName(), notification.getNotification());
+                    notification.setEventId((int) calendarEventId);
+                    if (application.saveNotification(notification)) {
+                        Log.d(TAG, "getNotifications inserted: " + notification.getNotification());
+                    } else {
+                        Log.d(TAG, "getNotifications not inserted: " + notification.getNotification());
+                    }
+                    if (updateSendNotification(notification)) {
+                        notifications.add(notification);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "URL fail: " + url);
+        }
+        if (notifications.size() > 0) {
+            // application.notifyNewMessages(messages);
+        }
+        Log.d(TAG, "getNotifications finalized");
+    }
+
+    private boolean updateSendNotification(Notification notification) {
+        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncNotification/" + notification.getId();
+        try {
+            URL urlRef = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            connection.getInputStream();
+            return true;
+        } catch (Exception e) {
+            Log.e(TAG, "URL fail: " + url);
+        }
+        Log.d(TAG, "updateSyncNotification finalized");
+        return false;
     }
 
     private void getMessages() {

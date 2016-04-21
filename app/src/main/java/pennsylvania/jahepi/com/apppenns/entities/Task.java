@@ -32,6 +32,7 @@ public class Task extends Entity {
     private String emails;
     private Task parentTask;
     private ArrayList<Attachment> attachments;
+    private ArrayList<Notification> notifications;
     private String fingerprint;
     private boolean updateAllState;
 
@@ -39,6 +40,7 @@ public class Task extends Entity {
         checkInCoord = new Coord();
         checkOutCoord = new Coord();
         attachments = new ArrayList<Attachment>();
+        notifications = new ArrayList<Notification>();
         updateAllState = true;
     }
 
@@ -265,6 +267,18 @@ public class Task extends Entity {
         this.fingerprint = fingerprint;
     }
 
+    public void addNotifications(ArrayList<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public Iterator<Notification> getNotificationsIterator() {
+        return notifications.iterator();
+    }
+
+    public ArrayList<Notification> getNotifications() {
+        return notifications;
+    }
+
     public void addAttachment(Attachment attachment) {
         attachments.add(attachment);
     }
@@ -311,6 +325,7 @@ public class Task extends Entity {
         setEndTime(task.getEndTime());
         setSend(task.isSend());
         addAttachments(task.getAttachments());
+        // addNotifications(task.getNotifications());
     }
 
     @Override

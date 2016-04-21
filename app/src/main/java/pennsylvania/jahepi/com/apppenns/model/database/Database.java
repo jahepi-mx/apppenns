@@ -22,8 +22,9 @@ public class Database {
     public static final String TASK_ATTACHMENTS_TABLE = "task_attachments";
     public static final String FILES_TABLE = "files";
     public static final String UBICATIONS_TABLE = "ubications";
+    public static final String NOTIFICATIONS_TABLE = "notifications";
 
-    private static final int DB_VERSION = 34;
+    private static final int DB_VERSION = 35;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -171,6 +172,8 @@ public class Database {
             Log.d(TAG, "Task attachments table created!");
             db.execSQL("CREATE TABLE " + FILES_TABLE + " (id INTEGER PRIMARY KEY, path TEXT, name TEXT, mime TEXT, date TEXT, active INT, send INT)");
             Log.d(TAG, "Files table created!");
+            db.execSQL("CREATE TABLE " + NOTIFICATIONS_TABLE + " (id INT PRIMARY KEY, from_user INT, to_user INT, notification TEXT, event_date TEXT, minutes INT, event_id INT, fingerprint TEXT, date TEXT, active INT)");
+            Log.d(TAG, "Notifications table created!");
         }
 
         @Override
@@ -195,6 +198,8 @@ public class Database {
             Log.d(TAG, "Task attachments table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + FILES_TABLE);
             Log.d(TAG, "Files table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATIONS_TABLE);
+            Log.d(TAG, "Notifications table removed!");
             onCreate(db);
         }
     }

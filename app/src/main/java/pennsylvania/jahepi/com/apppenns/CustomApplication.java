@@ -19,6 +19,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Notification;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.Ubication;
@@ -181,6 +182,14 @@ public class CustomApplication extends Application {
 
     public ArrayList<User> getUsers() {
         return dao.getUsers();
+    }
+
+    public Notification getNotification(int id) {
+        return dao.getNotification(id);
+    }
+
+    public boolean saveNotification(Notification notification) {
+        return dao.saveNotification(notification);
     }
 
     public boolean saveMessage(Message message) {

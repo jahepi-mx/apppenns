@@ -13,6 +13,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
+import pennsylvania.jahepi.com.apppenns.entities.Notification;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.Ubication;
@@ -530,6 +531,7 @@ public class Dao {
         type.setActive(cursor.getInt(30) == 1);
         task.setType(type);
         task.addAttachments(getAttachments(task));
+        task.addNotifications(getNotifications(task.getFingerprint()));
         return task;
     }
 
@@ -709,6 +711,72 @@ public class Dao {
                 }
             } else {
                 Log.d(TAG, address.toString());
+                db.insert(Database.ADDRESSES_TABLE, values);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public Notification getNotification(int id) {
+        Cursor cursor = db.get(Database.NOTIFICATIONS_TABLE, String.format("id='%s'", id));
+        if (cursor != null) {
+            Notification notification = mapNotification(cursor);
+            cursor.close();
+            return notification;
+        }
+        return null;
+    }
+
+    public ArrayList<Notification> getNotifications(String fingerprint) {
+        Cursor cursor = db.getAllOrderBy(Database.NOTIFICATIONS_TABLE, String.format("fingerprint='%s'", fingerprint), "id ASC");
+        ArrayList<Notification> notifications = new ArrayList<Notification>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Notification notification = mapNotification(cursor);
+                notifications.add(notification);
+            }
+            cursor.close();
+        }
+        return notifications;
+    }
+
+    private Notification mapNotification(Cursor cursor) {
+        Notification notification = new Notification();
+        notification.setId(cursor.getInt(0));
+        notification.setFrom(getUser(cursor.getInt(1)));
+        notification.setTo(getUser(cursor.getInt(2)));
+        notification.setNotification(cursor.getString(3));
+        notification.setEventDate(cursor.getString(4));
+        notification.setMinutes(cursor.getInt(5));
+        notification.setEventId(cursor.getInt(6));
+        notification.setFingerprint(cursor.getString(7));
+        notification.setModifiedDate(cursor.getString(8));
+        notification.setActive(cursor.getInt(9) == 1);
+        return notification;
+    }
+
+    public boolean saveNotification(Notification notification) {
+        if (notification != null) {
+            ContentValues values = new ContentValues();
+            values.put("id", notification.getId());
+            values.put("from_user", notification.getFrom().getId());
+            values.put("to_user", notification.getTo().getId());
+            values.put("notification", notification.getNotification());
+            values.put("event_date", notification.getEventDate());
+            values.put("minutes", notification.getMinutes());
+            values.put("event_id", notification.getEventId());
+            values.put("fingerprint", notification.getFingerprint());
+            values.put("date", notification.getModifiedDateString());
+            values.put("active", notification.isActive() ? 1 : 0);
+
+            Notification notificationDB = getNotification(notification.getId());
+            if (notificationDB != null) {
+                if (notificationDB.isGreaterDate(notification)) {
+                    db.update(Database.NOTIFICATIONS_TABLE, values, String.format("id='%s'", notification.getId()));
+                }
+            } else {
+                Log.d(TAG, notification.toString());
                 db.insert(Database.ADDRESSES_TABLE, values);
             }
             return true;
