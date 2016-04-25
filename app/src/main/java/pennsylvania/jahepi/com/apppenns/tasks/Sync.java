@@ -27,7 +27,6 @@ import java.util.Iterator;
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
-import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Notification;
@@ -83,7 +82,7 @@ public class Sync extends Service {
     private void run() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                if (application.isLogged()) {
+                if (application.getLastUser() != null) {
                     getNotifications();
                     getMessages();
                     getReadMessages();
@@ -192,7 +191,7 @@ public class Sync extends Service {
         String url = null;
         ArrayList<Notification> notifications = new ArrayList<Notification>();
         try {
-            url = CustomApplication.SERVICE_URL + "intranet/android/getNotifications/" + application.getUser().getId();
+            url = CustomApplication.SERVICE_URL + "intranet/android/getNotifications/" + application.getLastUser().getId();
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
             connection.setDoInput(true);
@@ -272,7 +271,7 @@ public class Sync extends Service {
         String url = null;
         ArrayList<Message> messages = new ArrayList<Message>();
         try {
-            url = CustomApplication.SERVICE_URL + "intranet/android/getMessages/" + application.getUser().getId();
+            url = CustomApplication.SERVICE_URL + "intranet/android/getMessages/" + application.getLastUser().getId();
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
             connection.setDoInput(true);
@@ -357,7 +356,7 @@ public class Sync extends Service {
         String url = null;
         ArrayList<Message> messages = new ArrayList<Message>();
         try {
-            url = CustomApplication.SERVICE_URL + "intranet/android/getReadMessages/" + application.getUser().getId();
+            url = CustomApplication.SERVICE_URL + "intranet/android/getReadMessages/" + application.getLastUser().getId();
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
             connection.setDoInput(true);
@@ -613,7 +612,7 @@ public class Sync extends Service {
         String url = null;
         ArrayList<Task> tasks = new ArrayList<Task>();
         try {
-            url = CustomApplication.SERVICE_URL + "intranet/android/getTasks/" + application.getUser().getId();
+            url = CustomApplication.SERVICE_URL + "intranet/android/getTasks/" + application.getLastUser().getId();
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
             connection.setDoInput(true);

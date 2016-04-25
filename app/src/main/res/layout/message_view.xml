@@ -176,6 +176,8 @@
                     android:layout_width="0dp"
                     android:id="@+id/messageValue"
                     android:textColor="#000"
+                    android:linksClickable="true"
+                    android:autoLink="all"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"

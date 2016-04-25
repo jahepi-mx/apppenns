@@ -128,6 +128,13 @@ public class CustomApplication extends Application {
         calendarBridge.startCalendar(context, date);
     }
 
+    public User getLastUser() {
+        if (user == null) {
+            user = dao.getUser(getStoredLastUserId());
+        }
+        return user;
+    }
+
     public User getUser() {
         if (user == null) {
             user = dao.getUser(getStoredUserId());
