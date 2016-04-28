@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="#0057B8"
+        android:background="@color/background"
         android:padding="5dp"
         android:gravity="center">
 
@@ -36,12 +36,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_back"
-            android:background="@drawable/custom_button"
+            android:background="@drawable/custom_button_green"
             android:shadowRadius="2"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowColor="#000"
-            android:textColor="#fff"
+            android:textColor="@color/background"
             android:id="@+id/backBtn"
             android:layout_weight="1" />
 

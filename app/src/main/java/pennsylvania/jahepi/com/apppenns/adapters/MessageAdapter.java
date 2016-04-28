@@ -47,6 +47,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(mResource, parent, false);
             TextView title = (TextView) convertView.findViewById(R.id.messageTitle);
+            TextView type = (TextView) convertView.findViewById(R.id.messageType);
             TextView text = (TextView) convertView.findViewById(R.id.messageText);
             TextView to = (TextView) convertView.findViewById(R.id.messageTextTo);
             TextView date = (TextView) convertView.findViewById(R.id.messageDate);
@@ -59,6 +60,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
 
             ViewHolder holder = new ViewHolder();
             holder.text = text;
+            holder.type = type;
             holder.title = title;
             holder.to = to;
             holder.date = date;
@@ -83,11 +85,19 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
             holder.title.setBackgroundColor(Color.TRANSPARENT);
             holder.title.setTextColor(Color.BLACK);
             holder.title.setText(String.format(getContext().getString(R.string.txt_new_message_from), message.getFrom().getName()));
+            holder.type.setTypeface(null, Typeface.NORMAL);
+            holder.type.setBackgroundColor(Color.TRANSPARENT);
+            holder.type.setTextColor(Color.BLACK);
+            holder.type.setText(message.getType().getName());
         } else {
             holder.title.setTypeface(null, Typeface.BOLD);
             holder.title.setBackgroundColor(Color.TRANSPARENT);
             holder.title.setTextColor(Color.BLACK);
             holder.title.setText(String.format(getContext().getString(R.string.txt_new_message), message.getFrom().getName()));
+            holder.type.setTypeface(null, Typeface.BOLD);
+            holder.type.setBackgroundColor(Color.TRANSPARENT);
+            holder.type.setTextColor(Color.BLACK);
+            holder.type.setText(message.getType().getName());
         }
         if (message.isSend()) {
             holder.title.setText(holder.title.getText() + TICK);
@@ -118,7 +128,7 @@ public class MessageAdapter extends ArrayAdapter<Entity> {
     }
 
     public static class ViewHolder {
-        TextView title, text, date, to;
+        TextView type, title, text, date, to;
         ImageView imageView;
         Drawable drawableIn;
         Drawable drawableOut;

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:padding="6dip"
     android:id="@+id/messageContainer"
-    android:background="@color/white">
+    android:background="#fff">
 
     <ImageView
         android:id="@+id/messageIcon"
@@ -15,13 +15,23 @@
         android:src="@drawable/anonymus_out" />
 
     <TextView
-        android:id="@+id/messageTitle"
+        android:id="@+id/messageType"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/messageIcon"
         android:gravity="center_vertical"
-        android:textColor="@color/white"
+        android:textColor="@color/background"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/messageTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/messageIcon"
+        android:layout_below="@+id/messageType"
+        android:gravity="center_vertical"
+        android:textColor="@color/background"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/messageTextTo"
@@ -32,7 +42,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Text"
-        android:textColor="@color/background"
+        android:textColor="#3785dc"
         android:textSize="15sp" />
 
     <TextView
@@ -44,7 +54,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Text"
-        android:textColor="@color/background"
+        android:textColor="#3785dc"
         android:textSize="15sp" />
 
     <TextView
@@ -54,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/messageIcon"
         android:gravity="center_vertical"
-        android:textColor="#009900"
+        android:textColor="#8b0000"
         android:textSize="15sp" />
 
 </RelativeLayout>

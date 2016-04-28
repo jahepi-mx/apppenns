@@ -23,7 +23,7 @@
         android:layout_below="@+id/taskTitle"
         android:singleLine="true"
         android:text="Text"
-        android:textColor="#555"
+        android:textColor="#3785dc"
         android:textSize="15sp" />
 
     <TextView
@@ -35,6 +35,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="status"
+        android:textColor="#3785dc"
         android:textSize="15sp" />
 
     <TextView
@@ -42,14 +43,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/taskIcon"
-        android:textColor="#000"
+        android:textColor="@color/background"
         android:text="Text 3"
         android:textSize="16sp" />
 
     <TextView
         android:id="@+id/taskDistance"
         android:layout_width="fill_parent"
-        android:textColor="#009900"
+        android:textColor="#8b0000"
         android:layout_height="26dip"
         android:layout_toRightOf="@id/taskIcon"
         android:layout_below="@+id/taskStatus"

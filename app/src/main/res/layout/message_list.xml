@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    style="@style/CustomLayout">
+    android:orientation="vertical">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -11,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="5dp"
+        style="@style/CustomLayout"
         android:gravity="right">
 
         <ImageButton
@@ -41,7 +41,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowColor="#000"
-            android:textColor="@color/white"
+            android:textColor="@color/background"
             android:id="@+id/newMessageBtn"
             android:layout_weight="1" />
     </LinearLayout>

@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/main_container"
-    style="@style/CustomLayout">
+    android:id="@+id/main_container">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            style="@style/CustomLayout"
             android:padding="5dp">
 
             <ImageButton
@@ -70,7 +70,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:textColor="@color/white"
+                    android:textColor="#000"
                     android:layout_height="wrap_content"
                     android:id="@+id/toAllTextView"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -214,7 +214,7 @@
                     android:text="@string/btn_send"
                     android:layout_height="wrap_content"
                     android:background="@drawable/custom_button_green"
-                    android:textColor="#fff"
+                    android:textColor="@color/background"
                     android:layout_margin="5dp"
                     android:shadowRadius="1"
                     android:shadowDx="1"

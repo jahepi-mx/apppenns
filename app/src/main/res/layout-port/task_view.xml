@@ -46,7 +46,7 @@
                 android:shadowDx="1"
                 android:shadowDy="1"
                 android:shadowColor="#000"
-                android:textColor="#fff"
+                android:textColor="@color/background"
                 android:layout_marginRight="5dp"
                 android:id="@+id/reprogrammedBtn"
                 android:layout_weight="1" />
@@ -327,7 +327,7 @@
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowColor="#000"
-                    android:textColor="#fff"
+                    android:textColor="@color/background"
                     android:id="@+id/checkinBtn"
                     android:layout_weight="1"
                     android:layout_margin="10dp" />
@@ -337,12 +337,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_checkout"
-                    android:background="@drawable/custom_button_red"
+                    android:background="@drawable/custom_button_green"
                     android:shadowRadius="2"
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowColor="#000"
-                    android:textColor="#fff"
+                    android:textColor="#8b0000"
                     android:id="@+id/checkoutBtn"
                     android:layout_weight="1"
                     android:layout_margin="10dp" />

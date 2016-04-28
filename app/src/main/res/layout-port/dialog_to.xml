@@ -13,13 +13,15 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_groups"
             android:textColor="#fff"
-            android:background="@drawable/custom_green_square_button"
+            android:padding="2dp"
+            android:background="@drawable/main_button"
             android:id="@+id/groupBtn" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_users"
-            android:background="@drawable/custom_green_square_button"
+            android:padding="2dp"
+            android:background="@drawable/main_button"
             android:id="@+id/userBtn"
             android:textColor="#fff"
             android:layout_gravity="center_horizontal" />
