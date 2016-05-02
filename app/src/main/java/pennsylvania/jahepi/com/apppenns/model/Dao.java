@@ -440,7 +440,7 @@ public class Dao {
 
     public ArrayList<Task> getNewTasks(int userId) {
         ArrayList<Task> tasks = new ArrayList<Task>();
-        Cursor cursor = db.getTasks(String.format("WHERE tasks.user='%s' AND tasks.send=0", userId), "ORDER BY tasks.id DESC");
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.user='%s' AND tasks.send=0 AND clients.user='%s'", userId, userId), "ORDER BY tasks.id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Task task = mapTask(cursor);
@@ -453,7 +453,7 @@ public class Dao {
 
     public ArrayList<Task> getTasks(int userId, String date) {
         ArrayList<Task> tasks = new ArrayList<Task>();
-        Cursor cursor = db.getTasks(String.format("WHERE tasks.user='%s' AND tasks.register_date='%s'", userId, date), "ORDER BY tasks.id DESC");
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.user='%s' AND tasks.register_date='%s' AND clients.user='%s'", userId, date, userId), "ORDER BY tasks.id DESC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Task task = mapTask(cursor);

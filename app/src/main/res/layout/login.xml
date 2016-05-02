@@ -54,6 +54,16 @@
             android:shadowColor="#000"
             android:textColor="#fff"></Button>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_margin="15dp"
+            android:id="@+id/versionTxt"
+            android:text="Versión"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white" />
+
     </LinearLayout>
 
     <TextView

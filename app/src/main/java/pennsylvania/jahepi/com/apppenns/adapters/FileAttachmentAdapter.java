@@ -139,7 +139,11 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(new File(file.getPath())), file.getMime());
-            ((Activity) getContext()).startActivityForResult(intent, REQUEST_CODE);
+            try {
+                ((Activity) getContext()).startActivityForResult(intent, REQUEST_CODE);
+            } catch (Exception exp) {
+                Toast.makeText(getContext(), R.string.txt_error_open_file, Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(getContext(), R.string.txt_error_file, Toast.LENGTH_LONG).show();
         }

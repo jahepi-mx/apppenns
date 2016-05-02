@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
@@ -41,6 +42,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         userInput = (EditText) findViewById(R.id.userInput);
         passInput = (EditText) findViewById(R.id.passwordInput);
         loginBtn = (Button) findViewById(R.id.loginBtn);
+        TextView versionTextView = (TextView) findViewById(R.id.versionTxt);
+        versionTextView.setText(String.format(getString(R.string.txt_version), CustomApplication.VERSION));
 
         userInput.setText(application.getStoredUserEmail());
 
