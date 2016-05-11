@@ -33,7 +33,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.Sync;
  */
 public class CustomApplication extends Application {
 
-    public final static double VERSION = 1.1;
+    public final static double VERSION = 1.2;
     public final static String SERVICE_URL = "http://portal.pennsylvania.com.mx/";
     public final static String EXCEPTION_HANDLER_URL = "http://portal.pennsylvania.com.mx/log/exception.php";
     public final static File SDCARD_PATH = Environment.getExternalStorageDirectory();

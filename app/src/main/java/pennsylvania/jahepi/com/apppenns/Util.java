@@ -1,14 +1,14 @@
 package pennsylvania.jahepi.com.apppenns;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,10 +26,13 @@ public class Util {
     private static Location location2 = new Location("");
 
     public static String getAndroidId(Context context) {
-        TelephonyManager manager= (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String id = manager.getDeviceId();
-        String filtered = id.substring(0, 5);
-        return filtered;
+        if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String id = manager.getDeviceId();
+            String filtered = id.substring(0, 5);
+            return filtered;
+        }
+        return "";
     }
 
     public static boolean isEmpty(String value) {

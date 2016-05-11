@@ -82,7 +82,9 @@ public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean
             Toast.makeText(context, context.getString(R.string.txt_error_client_sync), Toast.LENGTH_LONG).show();
         }
         cancel(true);
-        dialog.dismiss();
+        if (dialog.isResumed()) {
+            dialog.dismiss();
+        }
         context = null;
         manager = null;
     }
