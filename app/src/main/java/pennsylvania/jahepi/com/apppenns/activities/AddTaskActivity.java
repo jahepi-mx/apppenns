@@ -153,7 +153,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         endTimeBtn = (Button) findViewById(R.id.endTimeBtn);
         dateBtn.setText(date);
         startTimeBtn.setText(time);
-        endTimeBtn.setText(time);
+        endTimeBtn.setText(Util.addHourTime(time));
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,6 +216,11 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
                 if (address == null || type == null) {
                     toast(getString(R.string.txt_error_send));
+                    return;
+                }
+
+                if (Util.isGreaterHour(startTimeBtn.getText().toString(), endTimeBtn.getText().toString())) {
+                    toast(getString(R.string.txt_error_hour));
                     return;
                 }
 
@@ -317,6 +322,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         if (dialogParam == timeDialog) {
             if (type == TIME_TYPE.START) {
                 startTimeBtn.setText(timeDialog.getTime());
+                endTimeBtn.setText(Util.addHourTime(timeDialog.getTime()));
             }
             if (type == TIME_TYPE.END) {
                 endTimeBtn.setText(timeDialog.getTime());

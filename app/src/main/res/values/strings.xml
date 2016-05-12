@@ -24,6 +24,7 @@
     <string name="txt_calendar_title">Calendario</string>
     <string name="txt_message_send">Envío Mensaje</string>
     <string name="txt_error_send">Verifique que tenga los datos requeridos</string>
+    <string name="txt_error_hour">Verifique que la hora inicial sea menor a la final</string>
     <string name="txt_error_client_sync">Error de conexión a la base de datos de clientes.</string>
     <string name="txt_error_gps">Habilite el GPS para realizar la acción</string>
     <string name="txt_error_task">No hay una actividad definida.</string>

@@ -313,6 +313,41 @@
             </TableRow>
 
             <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#000"
+                    android:text="@string/txt_conclusion"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#000"
+                    android:background="@drawable/rounded_corner"
+                    android:linksClickable="true"
+                    android:autoLink="all"
+                    android:id="@+id/taskConclusionValue"
+                    android:textStyle="normal" />
+
+            </TableRow>
+
+            <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">

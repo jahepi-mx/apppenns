@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -424,7 +425,7 @@ public class Sync extends Service {
             while (iterator.hasNext()) {
                 Message message = (Message) iterator.next();
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                post.addPart("message", new StringBody(message.getMessage()));
+                post.addPart("message", new StringBody(URLEncoder.encode(message.getMessage(), "UTF-8")));
                 post.addPart("to", new StringBody(Integer.toString(message.getTo().getId())));
                 post.addPart("from", new StringBody(Integer.toString(message.getFrom().getId())));
                 post.addPart("type", new StringBody(Integer.toString(message.getType().getId())));
@@ -717,7 +718,7 @@ public class Sync extends Service {
                 post.addPart("address", new StringBody(Integer.toString(task.getAddress().getId())));
                 post.addPart("type", new StringBody(Integer.toString(task.getType().getId())));
                 post.addPart("date", new StringBody(task.getModifiedDateString()));
-                post.addPart("description", new StringBody(task.getDescription()));
+                post.addPart("description", new StringBody(URLEncoder.encode(task.getDescription(), "UTF-8")));
                 post.addPart("register_date", new StringBody(task.getDate()));
                 post.addPart("start_time", new StringBody(task.getStartTime()));
                 post.addPart("end_time", new StringBody(task.getEndTime()));
@@ -729,7 +730,7 @@ public class Sync extends Service {
                 post.addPart("check_out", new StringBody(Boolean.toString(task.isCheckout())));
                 post.addPart("checkin_date", new StringBody(task.getCheckInDate()));
                 post.addPart("checkout_date", new StringBody(task.getCheckOutDate()));
-                post.addPart("conclusion", new StringBody(task.getConclusion()));
+                post.addPart("conclusion", new StringBody(URLEncoder.encode(task.getConclusion(), "UTF-8")));
                 post.addPart("emails", new StringBody(task.getEmails()));
                 post.addPart("fingerprint", new StringBody(task.getFingerprint()));
                 post.addPart("cancelled", new StringBody(task.isCancelled() ? "1" : "0"));

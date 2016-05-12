@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
@@ -91,6 +92,34 @@ public class Util {
             return "..." + abbreviate(str.substring(offset), maxWidth - 3);
         }
         return "..." + str.substring(str.length() - (maxWidth - 3));
+    }
+
+    public static boolean isGreaterHour(String hour1, String hour2) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        try {
+            Date firstHour = dateFormat.parse(hour1);
+            Date secondHour = dateFormat.parse(hour2);
+            return firstHour.after(secondHour);
+        } catch (Exception exp) {
+
+        }
+        return false;
+    }
+
+    public static String addHourTime(String hour) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        try {
+            calendar.setTime(dateFormat.parse(hour));
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            Date time = calendar.getTime();
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("HH:mm");
+            return dateFormat2.format(time);
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
+        return hour;
     }
 
     public static String abbreviate(String str, int maxWidth) {
