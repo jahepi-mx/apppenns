@@ -180,7 +180,10 @@ public class CustomApplication extends Application {
     }
 
     public int getNoReadMessagesTotal() {
-        return dao.getNoReadMessagesTotal(getUser().getId());
+        if (getUser() != null) {
+            return dao.getNoReadMessagesTotal(getUser().getId());
+        }
+        return 0;
     }
 
     public User getUser(int userId) {
