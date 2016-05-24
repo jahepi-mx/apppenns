@@ -76,6 +76,14 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
                     if (userOption.getGroups().contains(groupOption.getText())) {
                         userOption.selected = groupOption.selected;
                     }
+                    for (Option group : groupOptions) {
+                        if (group.isSelected()) {
+                            if (userOption.getGroups().contains(group.getText())) {
+                                userOption.selected = true;
+                                break;
+                            }
+                        }
+                    }
                 }
                 userAdapter.notifyDataSetChanged();
             }
