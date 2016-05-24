@@ -129,7 +129,18 @@ public class Sync extends Service {
                 user.setEmail(json.getString("email"));
                 user.setPassword(json.getString("password"));
                 user.setName(json.getString("username"));
-                user.setGroup(json.getString("group"));
+
+                String groups = json.getString("group");
+                if (groups != null) {
+                    String[] groupsArray = groups.split(",");
+                    for (int u = 0; u < groupsArray.length; u++) {
+                        String groupName = groupsArray[u];
+                        if (!groupName.equals("")) {
+                            user.addGroup(groupName);
+                        }
+                    }
+                }
+
                 user.setModifiedDate(json.getString("date"));
                 user.setActive(json.getInt("active") != 0);
 

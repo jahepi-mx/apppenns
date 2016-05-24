@@ -69,12 +69,12 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ViewHolder holder = (ViewHolder) view.getTag();
-                Option option = (Option) groupAdapter.getItem(position);
-                option.selected = !option.selected;
-                holder.checkbox.setChecked(option.selected);
-                for (Option tempOption : userOptions) {
-                    if (tempOption.getGroup().equals(option.getGroup())) {
-                        tempOption.selected = option.selected;
+                Option groupOption = (Option) groupAdapter.getItem(position);
+                groupOption.selected = !groupOption.selected;
+                holder.checkbox.setChecked(groupOption.selected);
+                for (Option userOption : userOptions) {
+                    if (userOption.getGroups().contains(groupOption.getText())) {
+                        userOption.selected = groupOption.selected;
                     }
                 }
                 userAdapter.notifyDataSetChanged();
@@ -109,13 +109,16 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
 
     private void buildOptions(ArrayList<User> users) {
         for (User user : users) {
-            if (!hasGroupOption(user.getGroup())) {
-                Option option = new Option();
-                option.group = user.getGroup();
-                groupOptions.add(option);
+            ArrayList<String> groups = user.getGroups();
+            for (String group : groups) {
+                if (!hasGroupOption(group)) {
+                    Option option = new Option();
+                    option.addGroup(group);
+                    groupOptions.add(option);
+                }
             }
             Option option = new Option();
-            option.group = user.getGroup();
+            option.groups = groups;
             option.user = user;
             userOptions.add(option);
         }
@@ -196,16 +199,16 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
     }
 
     public static class Option implements Serializable {
-        private String group;
+        private ArrayList<String> groups = new ArrayList<String>();
         private boolean selected;
         private User user;
 
-        public String getGroup() {
-            return group;
+        public ArrayList<String> getGroups() {
+            return groups;
         }
 
-        public void setGroup(String group) {
-            this.group = group;
+        public void addGroup(String group) {
+            this.groups.add(group);
         }
 
         public boolean isSelected() {
@@ -225,7 +228,15 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
         }
 
         public boolean isGroupOptionName(String group) {
-            return this.group.equals(group) && isGroupOption();
+            if (isGroupOption()) {
+                if (groups.size() >= 1) {
+                    String name = groups.get(0);
+                    if (name.equals(group)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public boolean isGroupOption() {
@@ -233,11 +244,18 @@ public class ToDialog extends DialogFragment implements View.OnClickListener {
         }
 
         public String getText() {
-            return !isGroupOption() ? user.getName() : group;
+            if (!isGroupOption()) {
+                return user.getName();
+            } else {
+                if (groups.size() >= 1) {
+                    return groups.get(0);
+                }
+            }
+            return "";
         }
 
         public boolean isSelectedOption() {
-            return selected && !isGroupOptionName(group);
+            return selected && !isGroupOption();
         }
     }
 }

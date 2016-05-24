@@ -3,6 +3,7 @@ package pennsylvania.jahepi.com.apppenns.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -74,7 +75,13 @@ public class Dao {
         user.setName(cursor.getString(3));
         user.setModifiedDate(cursor.getString(4));
         user.setActive(cursor.getInt(5) != 0);
-        user.setGroup(cursor.getString(6));
+        String groups = cursor.getString(6);
+        if (groups != null) {
+            String[] groupsArray = groups.split(",");
+            for (int u = 0; u < groupsArray.length; u++) {
+                user.addGroup(groupsArray[u]);
+            }
+        }
         return user;
     }
 
@@ -84,7 +91,7 @@ public class Dao {
             values.put("email", user.getEmail());
             values.put("password", user.getPassword());
             values.put("name", user.getName());
-            values.put("group_name", user.getGroup());
+            values.put("group_name", TextUtils.join(",", user.getGroups()));
             values.put("active", user.isActive() ? 1 : 0);
             values.put("date", user.getModifiedDateString());
 

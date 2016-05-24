@@ -1,5 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.entities;
 
+import java.util.ArrayList;
+
 /**
  * Created by javier.hernandez on 24/02/2016.
  */
@@ -9,7 +11,7 @@ public class User extends Entity {
     private String name;
     private String email;
     private String password;
-    private String group;
+    private ArrayList<String> groups = new ArrayList<String>();
 
     public String getName() {
         return name;
@@ -43,12 +45,12 @@ public class User extends Entity {
         this.id = id;
     }
 
-    public String getGroup() {
-        return group;
+    public ArrayList<String> getGroups() {
+        return groups;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void addGroup(String group) {
+        this.groups.add(group);
     }
 
     @Override
