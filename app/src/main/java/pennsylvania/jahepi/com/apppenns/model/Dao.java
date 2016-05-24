@@ -79,7 +79,9 @@ public class Dao {
         if (groups != null) {
             String[] groupsArray = groups.split(",");
             for (int u = 0; u < groupsArray.length; u++) {
-                user.addGroup(groupsArray[u]);
+                if (!groupsArray[u].equals("")) {
+                    user.addGroup(groupsArray[u]);
+                }
             }
         }
         return user;
