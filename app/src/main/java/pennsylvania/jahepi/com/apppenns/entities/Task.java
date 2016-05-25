@@ -10,6 +10,10 @@ import pennsylvania.jahepi.com.apppenns.Util;
  */
 public class Task extends Entity {
 
+    public static final String STATUS_RESCHEDULED = "rescheduled";
+    public static final String STATUS_TRACKING = "tracking";
+    public static final String STATUS_NONE = "none";
+
     private int id;
     private Address address;
     private String description;
@@ -35,6 +39,7 @@ public class Task extends Entity {
     private ArrayList<Notification> notifications;
     private String fingerprint;
     private boolean updateAllState;
+    private String status;
 
     public Task() {
         checkInCoord = new Coord();
@@ -42,6 +47,7 @@ public class Task extends Entity {
         attachments = new ArrayList<Attachment>();
         notifications = new ArrayList<Notification>();
         updateAllState = true;
+        status = STATUS_NONE;
     }
 
     public void setCheckOutLatitude(double latitude) {
@@ -312,6 +318,14 @@ public class Task extends Entity {
 
     public void setUpdateAllState(boolean updateRemainingState) {
         this.updateAllState = updateRemainingState;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void copy(Task task) {

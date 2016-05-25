@@ -72,6 +72,19 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TaskViewActivity.this, AddTaskActivity.class);
+                task.setStatus(Task.STATUS_RESCHEDULED);
+                intent.putExtra(CustomApplication.ADDITIONAL_GENERIC_INTENT, task);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        Button trackingBtn = (Button) findViewById(R.id.trackingBtn);
+        trackingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TaskViewActivity.this, AddTaskActivity.class);
+                task.setStatus(Task.STATUS_TRACKING);
                 intent.putExtra(CustomApplication.ADDITIONAL_GENERIC_INTENT, task);
                 startActivity(intent);
                 finish();

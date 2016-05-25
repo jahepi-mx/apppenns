@@ -745,6 +745,15 @@ public class Sync extends Service {
                 post.addPart("emails", new StringBody(task.getEmails()));
                 post.addPart("fingerprint", new StringBody(task.getFingerprint()));
                 post.addPart("cancelled", new StringBody(task.isCancelled() ? "1" : "0"));
+                post.addPart("status", new StringBody(task.getStatus()));
+                Task parentTask = task.getParentTask();
+                if (parentTask != null) {
+                    if (parentTask.getFingerprint() != null) {
+                        post.addPart("parent_fingerprint", new StringBody(parentTask.getFingerprint()));
+                    } else {
+                        post.addPart("parent_fingerprint", new StringBody(""));
+                    }
+                }
 
                 Iterator<Attachment> attachmentIterator = task.getAttachmentsIterator();
                 while (attachmentIterator.hasNext()) {

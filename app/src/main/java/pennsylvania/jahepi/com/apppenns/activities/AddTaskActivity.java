@@ -54,6 +54,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     private TypeSpinner typeSpinner;
     private DateDialog dateDialog;
     private TimeDialog timeDialog;
+    private TextView statusTextView;
     private Address address;
     private TIME_TYPE type;
     private FileAttachmentAdapter fileAttachmentAdapter;
@@ -69,6 +70,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
 
         mapFragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
+        statusTextView = (TextView) findViewById(R.id.statusTextView);
         descriptionEditText = (EditText) findViewById(R.id.taskDescEditText);
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
@@ -198,7 +200,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         });
 
         if (parentTask != null) {
-            setTaskDefaultState(parentTask);
+            setTaskDefaultState(parentTask, true);
         } else {
             mapFragment.addLocation(getString(R.string.txt_map_me), BitmapDescriptorFactory.HUE_RED, application.getLatitude(), application.getLongitude());
             mapFragment.center(application.getLatitude(), application.getLongitude());
@@ -236,6 +238,9 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);
                 task.setParentTask(parentTask);
+                if (parentTask != null) {
+                    task.setStatus(parentTask.getStatus());
+                }
                 task.setFingerprint(Util.getDateTime() + "-" + application.getAndroidId());
                 int secondNotification = Util.getMinutesDiff(CalendarBridge.START_TIME, task.getStartTime());
                 long calendarEventId  = application.addEvent(task.getStartDateTime(), task.getEndDateTime(), task.getClient().getName(), task.getDescription(), CalendarBridge.REMIDER_TIME, secondNotification);
@@ -293,14 +298,28 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         }
     }
 
-    private void setTaskDefaultState(Task task) {
+    private void setTaskDefaultState(Task task, boolean isParent) {
         descriptionEditText.setText(task.getDescription());
         dateBtn.setText(task.getDate());
         startTimeBtn.setText(task.getStartTime());
         endTimeBtn.setText(task.getEndTime());
         typeSpinner.setSelectedItem(task.getType());
         address = task.getAddress();
+        if (isParent) {
+            parentTask = task;
+        } else {
+            parentTask = task.getParentTask();
+        }
         fileAttachmentAdapter.addAll(task.getAttachments());
+        if (parentTask == null) {
+            statusTextView.setVisibility(View.GONE);
+        } else  {
+            if (parentTask.getStatus().equals(Task.STATUS_RESCHEDULED)) {
+                statusTextView.setText(getString(R.string.txt_reprogrammed));
+            } else {
+                statusTextView.setText(getString(R.string.txt_tracking));
+            }
+        }
         if (address != null) {
             TextView textView = (TextView) findViewById(R.id.clientAddressTextView);
             textView.setText(address.getClient().getName() + " " + address.getAddress());
@@ -343,6 +362,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         task.setEndTime(endTimeBtn.getText().toString());
         task.setType((Type) typeSpinner.getSelectedItem());
         task.setAddress(address);
+        task.setParentTask(parentTask);
         ArrayList<Attachment> attachments = fileAttachmentAdapter.getAttachments();
         if (photoFile != null) {
             Attachment attachment = Util.buildAttachment(photoFile);
@@ -354,6 +374,6 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        setTaskDefaultState((Task) savedInstanceState.get(TASK_STATE));
+        setTaskDefaultState((Task) savedInstanceState.get(TASK_STATE), false);
     }
 }

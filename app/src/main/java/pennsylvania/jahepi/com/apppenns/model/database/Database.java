@@ -3,6 +3,7 @@ package pennsylvania.jahepi.com.apppenns.model.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -24,7 +25,7 @@ public class Database {
     public static final String UBICATIONS_TABLE = "ubications";
     public static final String NOTIFICATIONS_TABLE = "notifications";
 
-    private static final int DB_VERSION = 35;
+    private static final int DB_VERSION = 37;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -78,7 +79,7 @@ public class Database {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "SELECT tasks.id AS task_id, tasks.user, tasks.address AS address_id, tasks.description, tasks.date AS task_date, tasks.in_lat, tasks.in_lon, tasks.out_lat, tasks.out_lon, tasks.send, tasks.register_date, tasks.check_in, tasks.check_out, tasks.checkin_date, tasks.checkout_date, tasks.conclusion, " +
             "addresses.client AS client_id, addresses.address, addresses.latitude, addresses.longitude, addresses.date AS address_date, addresses.active AS address_active, " +
-            "clients.name, clients.kepler, clients.date AS client_date, clients.active AS client_active, tasks.cancelled, types.id AS type_id, types.name AS type_name, types.date AS type_date, types.active AS type_active, tasks.start_time, tasks.end_time, tasks.event_id, tasks.emails, tasks.parent_task, tasks.fingerprint " +
+            "clients.name, clients.kepler, clients.date AS client_date, clients.active AS client_active, tasks.cancelled, types.id AS type_id, types.name AS type_name, types.date AS type_date, types.active AS type_active, tasks.start_time, tasks.end_time, tasks.event_id, tasks.emails, tasks.parent_task, tasks.fingerprint, tasks.status " +
             "FROM tasks INNER JOIN addresses ON tasks.address = addresses.id " +
             "INNER JOIN clients ON clients.id = addresses.client " +
             "INNER JOIN types ON tasks.type = types.id " +
@@ -178,6 +179,13 @@ public class Database {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            try {
+                db.execSQL("ALTER TABLE " + TASKS_TABLE + " ADD COLUMN status TEXT");
+            } catch (SQLException exp) {
+                exp.printStackTrace();
+            }
+            db.execSQL("CREATE INDEX fingerprint_index ON " + TASKS_TABLE + " (fingerprint)");
+            /*
             db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE);
             Log.d(TAG, "Users table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + MESSAGES_TABLE);
@@ -200,7 +208,8 @@ public class Database {
             Log.d(TAG, "Files table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATIONS_TABLE);
             Log.d(TAG, "Notifications table removed!");
-            onCreate(db);
+            */
+            //onCreate(db);
         }
     }
 }

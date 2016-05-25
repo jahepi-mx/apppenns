@@ -486,6 +486,19 @@ public class Dao {
         return null;
     }
 
+    public Task getTaskById(Task taskParam) {
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.id='%s' AND tasks.user='%s'", taskParam.getId(), taskParam.getUser().getId()), "");
+        if (cursor != null) {
+            Task task = null;
+            if (cursor.moveToNext()) {
+                task = mapTask(cursor);
+            }
+            cursor.close();
+            return task;
+        }
+        return null;
+    }
+
     private Task mapTask(Cursor cursor) {
         Task task = new Task();
         task.setId(cursor.getInt(0));
@@ -527,11 +540,12 @@ public class Dao {
         task.setEventId(cursor.getInt(33));
         task.setEmails(cursor.getString(34));
         task.setFingerprint(cursor.getString(36));
+        task.setStatus(cursor.getString(37));
 
         Task parentTask = new Task();
         parentTask.setId(cursor.getInt(35));
         parentTask.setUser(task.getUser());
-        task.setParentTask(getTask(parentTask));
+        task.setParentTask(getTaskById(parentTask));
 
         Type type = new Type();
         type.setId(cursor.getInt(27));
@@ -557,6 +571,7 @@ public class Dao {
             values.put("start_time", task.getStartTime());
             values.put("end_time", task.getEndTime());
             values.put("event_id", task.getEventId());
+            values.put("status", task.getStatus());
             values.put("fingerprint", task.getFingerprint());
             if (task.updateAllState()) {
                 values.put("in_lat", task.getCheckInCoord().getLatitude());

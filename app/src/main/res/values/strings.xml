@@ -102,6 +102,9 @@
     <string name="btn_yes">Si</string>
     <string name="btn_no">No</string>
     <string name="btn_reprogrammed">Reprogramar</string>
+    <string name="btn_tracking">Seguimiento</string>
+    <string name="txt_reprogrammed">Actividad Reprogramada</string>
+    <string name="txt_tracking">Actividad de Seguimiento</string>
     <string name="txt_file_size">Tamaño</string>
     <string name="txt_current_dir">Directorio Actual</string>
     <string name="google_api_key">AIzaSyDQhzesDUJXQVyKou5K385t-I4FNPuLkkM</string>
