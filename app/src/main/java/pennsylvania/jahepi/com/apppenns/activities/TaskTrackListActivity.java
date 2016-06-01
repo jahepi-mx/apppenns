@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,41 +17,40 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.adapters.TaskAdapter;
-import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
-import pennsylvania.jahepi.com.apppenns.dialogs.DateDialog;
-import pennsylvania.jahepi.com.apppenns.dialogs.DialogListener;
 import pennsylvania.jahepi.com.apppenns.dialogs.TaskOptionsDialog;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
- * Created by jahepi on 05/03/16.
+ * Created by javier.hernandez on 01/06/2016.
  */
-public class TaskListActivity extends AuthActivity implements DialogListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener, DialogInterface.OnClickListener, TaskOptionsDialog.TaskOptionDialogListener {
+public class TaskTrackListActivity extends AuthActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener, DialogInterface.OnClickListener, TaskOptionsDialog.TaskOptionDialogListener {
 
-    private final static String TAG = "TaskListActivity";
+    private final static String TAG = "TaskTrackListActivity";
+    private final static String TASK_STATE = "task_state";
 
-    private DateDialog dateDialog;
-    private Button dateBtn;
     private TaskAdapter adapter;
     private AlertDialog.Builder cancelledDialog;
     private TaskOptionsDialog optionsDialog;
     private Task selectedTask;
+    private Task parentTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.task_list);
+        setContentView(R.layout.task_track_list);
 
         Intent intent = getIntent();
-        String date = intent.getStringExtra(CustomApplication.GENERIC_INTENT);
-        if (date == null) {
-            date = Util.getDate();
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        parentTask = (Task) intent.getSerializableExtra(CustomApplication.GENERIC_INTENT);
+
+        if (savedInstanceState != null) {
+            parentTask = (Task) savedInstanceState.get(TASK_STATE);
         }
 
-        dateDialog = new DateDialog();
-        dateDialog.setDate(date);
-        dateDialog.setListener(this);
+        if (parentTask != null) {
+            tasks = application.getChildTasks(parentTask);
+        }
 
         cancelledDialog = new AlertDialog.Builder(this);
         cancelledDialog.setTitle(R.string.txt_cancelled_title);
@@ -63,47 +61,13 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         optionsDialog = new TaskOptionsDialog();
         optionsDialog.setListener(this);
 
-        ArrayList<Task> tasks = application.getTasks(date);
-
-        Button addTask = (Button) findViewById(R.id.newTaskBtn);
-        addTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TaskListActivity.this, AddTaskActivity.class);
-                intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
-                startActivity(intent);
-                TaskListActivity.this.finish();
-            }
-        });
-
-        Button calendarBtn = (Button) findViewById(R.id.calendarBtn);
-        calendarBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CalendarBridge.startCalendar(TaskListActivity.this, dateBtn.getText().toString());
-            }
-        });
-
         ImageButton homeBtn = (ImageButton) findViewById(R.id.homeBtn);
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TaskListActivity.this, MainActivity.class);
+                Intent intent = new Intent(TaskTrackListActivity.this, MainActivity.class);
                 startActivity(intent);
-                TaskListActivity.this.finish();
-            }
-        });
-
-        dateBtn = (Button) findViewById(R.id.dateBtn);
-        dateBtn.setText(date);
-
-        dateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!dateDialog.isAdded()) {
-                    FragmentManager fm = getFragmentManager();
-                    dateDialog.show(fm, TAG);
-                }
+                TaskTrackListActivity.this.finish();
             }
         });
 
@@ -116,6 +80,24 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         listView.setOnItemLongClickListener(this);
 
         onChangeLocation(application.getLatitude(), application.getLongitude());
+
+        Button backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Task parent = parentTask.getParentTask();
+                if (parent != null) {
+                    Intent intent = new Intent(TaskTrackListActivity.this, TaskTrackListActivity.class);
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, parent);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(TaskTrackListActivity.this, TaskListActivity.class);
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, parentTask.getDate());
+                    startActivity(intent);
+                }
+                finish();
+            }
+        });
     }
 
     @Override
@@ -129,7 +111,9 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         super.onRestart();
         try {
             adapter.clear();
-            adapter.addAll(application.getTasks(dateBtn.getText().toString()));
+            if (parentTask != null) {
+                adapter.addAll(application.getChildTasks(parentTask));
+            }
             onChangeLocation(application.getLatitude(), application.getLongitude());
         } catch (Exception exp) {
             exp.printStackTrace();
@@ -182,20 +166,6 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     }
 
     @Override
-    public void accept(Object dialogParam) {
-        String date = dateDialog.getDate();
-        dateBtn.setText(date);
-        adapter.clear();
-        adapter.addAll(application.getTasks(date));
-        onChangeLocation(application.getLatitude(), application.getLongitude());
-    }
-
-    @Override
-    public void cancel(Object dialogParam) {
-
-    }
-
-    @Override
     public void onNewMessages(ArrayList<Message> messages) {
 
     }
@@ -244,23 +214,6 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
 
     @Override
     public void onNewTasks(final ArrayList<Task> tasks) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                for (Task task : tasks) {
-                    Task adapterTask = adapter.getTask(task);
-                    if (adapterTask == null) {
-                        String selectedDate = dateBtn.getText().toString();
-                        if (task.getDate().equals(selectedDate)) {
-                            adapter.insert(task, 0);
-                        }
-                    } else {
-                        adapterTask.copy(task);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
-        });
     }
 
     @Override
@@ -273,5 +226,11 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     @Override
     public void onCancelTask() {
         cancelledDialog.show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(TASK_STATE, parentTask);
+        super.onSaveInstanceState(outState);
     }
 }

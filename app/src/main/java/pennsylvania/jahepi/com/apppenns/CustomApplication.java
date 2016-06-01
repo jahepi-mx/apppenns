@@ -214,6 +214,10 @@ public class CustomApplication extends Application {
         return dao.getTask(task);
     }
 
+    public ArrayList<Task> getChildTasks(Task taskParam) {
+        return dao.getChildTasksById(taskParam);
+    }
+
     public ArrayList<Task> getNewTasks() {
         return dao.getNewTasks(getUser().getId());
     }

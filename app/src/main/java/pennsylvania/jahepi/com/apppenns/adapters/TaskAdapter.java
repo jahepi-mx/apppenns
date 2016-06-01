@@ -41,6 +41,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             TextView taskText = (TextView) convertView.findViewById(R.id.taskText);
             TextView taskTitle = (TextView) convertView.findViewById(R.id.taskTitle);
             TextView taskStatus = (TextView) convertView.findViewById(R.id.taskStatus);
+            TextView taskType = (TextView) convertView.findViewById(R.id.taskType);
             TextView taskDistance = (TextView) convertView.findViewById(R.id.taskDistance);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.taskIcon);
             int imageResourceTask = getContext().getResources().getIdentifier(URI_TASK, null, getContext().getPackageName());
@@ -53,6 +54,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             viewHolder.imageView = imageView;
             viewHolder.taskStatus = taskStatus;
             viewHolder.taskDistance = taskDistance;
+            viewHolder.taskType = taskType;
 
             viewHolder.imageView.setImageDrawable(viewHolder.drawableTask);
 
@@ -94,6 +96,14 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             holder.taskStatus.setTextColor(Color.GRAY);
         }
 
+        if (task.getStatus().equals(Task.STATUS_TRACKING)) {
+            holder.taskType.setText(getContext().getString(R.string.txt_tracking_item));
+        } else if (task.getStatus().equals(Task.STATUS_RESCHEDULED)) {
+            holder.taskType.setText(getContext().getString(R.string.txt_reprogrammed_item));
+        } else {
+            holder.taskType.setText("");
+        }
+
         holder.taskText.setText(Util.abbreviate(task.getAddress().getAddress(), MESSAGE_LENGTH));
 
         return convertView;
@@ -113,6 +123,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
         TextView taskText;
         TextView taskTitle;
         TextView taskStatus;
+        TextView taskType;
         TextView taskDistance;
         Drawable drawableTask;
         ImageView imageView;

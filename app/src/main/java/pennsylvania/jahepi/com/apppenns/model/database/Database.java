@@ -83,7 +83,7 @@ public class Database {
             "FROM tasks INNER JOIN addresses ON tasks.address = addresses.id " +
             "INNER JOIN clients ON clients.id = addresses.client " +
             "INNER JOIN types ON tasks.type = types.id " +
-            where + " " + orderBy;
+            where + " GROUP BY tasks.id " + orderBy;
         return db.rawQuery(sql, null);
     }
 

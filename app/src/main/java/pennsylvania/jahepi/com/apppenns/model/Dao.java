@@ -499,6 +499,19 @@ public class Dao {
         return null;
     }
 
+    public ArrayList<Task> getChildTasksById(Task taskParam) {
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.parent_task='%s' AND tasks.user='%s'", taskParam.getId(), taskParam.getUser().getId()), "");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Task task = mapTask(cursor);
+                tasks.add(task);
+            }
+            cursor.close();
+        }
+        return tasks;
+    }
+
     private Task mapTask(Cursor cursor) {
         Task task = new Task();
         task.setId(cursor.getInt(0));

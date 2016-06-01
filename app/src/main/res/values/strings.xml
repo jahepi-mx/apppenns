@@ -59,6 +59,8 @@
     <string name="txt_checkin">Marcar Entrada</string>
     <string name="txt_checkout">Marcar Salida</string>
     <string name="txt_cancelled">Cancelado</string>
+    <string name="txt_reprogrammed_item">Reprogramada</string>
+    <string name="txt_tracking_item">Seguimiento</string>
     <string name="txt_cancelled_title">Cancelacion</string>
     <string name="txt_cancelled_message">Deseas cancelar la actividad?</string>
     <string name="txt_done">Finalizado</string>
@@ -89,6 +91,8 @@
     <string name="btn_users">Usuarios</string>
     <string name="btn_groups">Grupos</string>
     <string name="btn_cancel">Cancelar</string>
+    <string name="btn_cancel_task">Cancelar Actividad</string>
+    <string name="btn_tracking_task">Ver Seguimiento</string>
     <string name="btn_back">Regresar</string>
     <string name="btn_accept">Aceptar</string>
     <string name="btn_activity">Actividades</string>

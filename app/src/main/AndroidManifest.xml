@@ -41,6 +41,7 @@
         <activity android:name=".activities.AddTaskActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TaskViewActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.TaskListActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.TaskTrackListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activities.ClientActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".components.filechooser.activities.FileChooserActivity" android:screenOrientation="portrait" android:noHistory="true"></activity>
         <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait" android:noHistory="true">

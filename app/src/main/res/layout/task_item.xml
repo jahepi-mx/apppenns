@@ -59,4 +59,17 @@
         android:text="Metros"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/taskType"
+        android:layout_width="fill_parent"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_height="26dip"
+        android:layout_toRightOf="@id/taskIcon"
+        android:layout_below="@+id/taskDistance"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="Reprogramada"
+        android:textSize="15sp" />
+
 </RelativeLayout>
