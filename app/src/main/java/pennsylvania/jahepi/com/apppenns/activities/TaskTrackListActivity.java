@@ -92,7 +92,7 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(TaskTrackListActivity.this, TaskListActivity.class);
-                    intent.putExtra(CustomApplication.GENERIC_INTENT, parentTask.getDate());
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, parentTask != null ? parentTask.getDate() : Util.getDate());
                     startActivity(intent);
                 }
                 finish();
