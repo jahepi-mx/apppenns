@@ -83,27 +83,35 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
         onChangeLocation(application.getLatitude(), application.getLongitude());
 
         backBtn = (Button) findViewById(R.id.backBtn);
-        if (parentTask != null) {
-            String backText = parentTask.getParentTask() != null ? getString(R.string.btn_levelup) : getString(R.string.btn_root);
-            backBtn.setText(backText);
-        }
+        changeBacklabel();
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Task parent = parentTask.getParentTask();
                 if (parent != null) {
-                    Intent intent = new Intent(TaskTrackListActivity.this, TaskTrackListActivity.class);
-                    intent.putExtra(CustomApplication.GENERIC_INTENT, parent);
-                    startActivity(intent);
+                    parentTask = parent;
+                    selectedTask = null;
+                    ArrayList<Task> tasks = application.getChildTasks(parentTask);
+                    adapter.clear();
+                    adapter.addAll(tasks);
+                    adapter.notifyDataSetChanged();
+                    changeBacklabel();
                 } else {
                     Intent intent = new Intent(TaskTrackListActivity.this, TaskListActivity.class);
                     intent.putExtra(CustomApplication.GENERIC_INTENT, parentTask != null ? parentTask.getDate() : Util.getDate());
                     startActivity(intent);
+                    finish();
                 }
-                finish();
             }
         });
+    }
+
+    private void changeBacklabel() {
+        if (parentTask != null) {
+            String backText = parentTask.getParentTask() != null ? getString(R.string.btn_levelup) : getString(R.string.btn_root);
+            backBtn.setText(backText);
+        }
     }
 
     @Override
@@ -230,10 +238,7 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
         adapter.clear();
         adapter.addAll(tasks);
         adapter.notifyDataSetChanged();
-        if (parentTask != null) {
-            String backText = parentTask.getParentTask() != null ? getString(R.string.btn_levelup) : getString(R.string.btn_root);
-            backBtn.setText(backText);
-        }
+        changeBacklabel();
     }
 
     @Override
