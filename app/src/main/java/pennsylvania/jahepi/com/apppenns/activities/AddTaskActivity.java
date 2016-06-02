@@ -202,6 +202,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         if (parentTask != null) {
             setTaskDefaultState(parentTask, true);
         } else {
+            statusTextView.setVisibility(View.GONE);
             mapFragment.addLocation(getString(R.string.txt_map_me), BitmapDescriptorFactory.HUE_RED, application.getLatitude(), application.getLongitude());
             mapFragment.center(application.getLatitude(), application.getLongitude());
         }

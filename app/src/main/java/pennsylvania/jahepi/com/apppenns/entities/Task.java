@@ -40,6 +40,7 @@ public class Task extends Entity {
     private String fingerprint;
     private boolean updateAllState;
     private String status;
+    private boolean hasChildren;
 
     public Task() {
         checkInCoord = new Coord();
@@ -326,6 +327,14 @@ public class Task extends Entity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean hasChildren() {
+        return hasChildren;
+    }
+
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
     }
 
     public void copy(Task task) {

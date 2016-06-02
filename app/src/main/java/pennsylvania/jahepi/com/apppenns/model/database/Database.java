@@ -25,7 +25,7 @@ public class Database {
     public static final String UBICATIONS_TABLE = "ubications";
     public static final String NOTIFICATIONS_TABLE = "notifications";
 
-    private static final int DB_VERSION = 37;
+    private static final int DB_VERSION = 40;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -73,6 +73,11 @@ public class Database {
     public Cursor getNoReadMessagesTotal(int userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         return db.rawQuery("SELECT COUNT(*) AS total FROM " + MESSAGES_TABLE + " WHERE (from_user='" + userId + "' OR to_user='" + userId + "') AND read='0'", null);
+    }
+
+    public Cursor getTaskChildrenTotal(int taskId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        return db.rawQuery("SELECT COUNT(*) AS total FROM " + TASKS_TABLE + " WHERE tasks.parent_task='" + taskId + "'", null);
     }
 
     public Cursor getTasks(String where, String orderBy) {
@@ -157,7 +162,7 @@ public class Database {
             Log.d(TAG, "Users table created!");
             db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, type INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
-            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT, cancelled INT, type INT, start_time TEXT, end_time TEXT, event_id INT, emails TEXT, parent_task INT, fingerprint TEXT)");
+            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT, cancelled INT, type INT, start_time TEXT, end_time TEXT, event_id INT, emails TEXT, parent_task INT, fingerprint TEXT, status TEXT)");
             Log.d(TAG, "Tasks table created!");
             db.execSQL("CREATE TABLE " + CLIENTS_TABLE + " (id INT, user INT, name TEXT, kepler TEXT, date TEXT, active INT, UNIQUE (id, user))");
             Log.d(TAG, "Clients table created!");
@@ -175,17 +180,11 @@ public class Database {
             Log.d(TAG, "Files table created!");
             db.execSQL("CREATE TABLE " + NOTIFICATIONS_TABLE + " (id INT PRIMARY KEY, from_user INT, to_user INT, notification TEXT, event_date TEXT, minutes INT, event_id INT, fingerprint TEXT, date TEXT, active INT)");
             Log.d(TAG, "Notifications table created!");
+            db.execSQL("CREATE INDEX fingerprint_index ON " + TASKS_TABLE + " (fingerprint)");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            try {
-                db.execSQL("ALTER TABLE " + TASKS_TABLE + " ADD COLUMN status TEXT");
-            } catch (SQLException exp) {
-                exp.printStackTrace();
-            }
-            db.execSQL("CREATE INDEX fingerprint_index ON " + TASKS_TABLE + " (fingerprint)");
-            /*
             db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE);
             Log.d(TAG, "Users table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + MESSAGES_TABLE);
@@ -208,8 +207,7 @@ public class Database {
             Log.d(TAG, "Files table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATIONS_TABLE);
             Log.d(TAG, "Notifications table removed!");
-            */
-            //onCreate(db);
+            onCreate(db);
         }
     }
 }

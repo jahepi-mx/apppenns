@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.MultiAutoCompleteTextView;
@@ -20,12 +21,13 @@ import pennsylvania.jahepi.com.apppenns.R;
 /**
  * Created by javier.hernandez on 08/03/2016.
  */
-public class CheckOutDialog extends AlertDialog implements DialogInterface.OnClickListener {
+public class CheckOutDialog extends AlertDialog implements View.OnClickListener {
 
     private EditText editText;
     private MultiAutoCompleteTextView emailTextiew;
     private DialogListener listener;
     private AutoCompleteEmailAdapter adapter;
+    private Button yesBtn, noBtn;
 
     public CheckOutDialog(Context context, DialogListener listener) {
         super(context);
@@ -42,9 +44,12 @@ public class CheckOutDialog extends AlertDialog implements DialogInterface.OnCli
         setTitle(R.string.txt_confirm);
         setIcon(R.drawable.ubication_black);
         setMessage(context.getString(R.string.txt_confirm_checkout));
-        setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.btn_no), this);
-        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.btn_yes), this);
+        noBtn = (Button) view.findViewById(R.id.noBtn);
+        yesBtn = (Button) view.findViewById(R.id.yesBtn);
         this.listener = listener;
+
+        noBtn.setOnClickListener(this);
+        yesBtn.setOnClickListener(this);
     }
 
     public String getConclusion() {
@@ -56,9 +61,9 @@ public class CheckOutDialog extends AlertDialog implements DialogInterface.OnCli
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(View v) {
         dismiss();
-        if (which == DialogInterface.BUTTON_POSITIVE) {
+        if (v == yesBtn) {
             listener.accept(this);
         }
     }

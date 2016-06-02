@@ -34,6 +34,7 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
     private TaskOptionsDialog optionsDialog;
     private Task selectedTask;
     private Task parentTask;
+    private Button backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,12 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
 
         onChangeLocation(application.getLatitude(), application.getLongitude());
 
-        Button backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn = (Button) findViewById(R.id.backBtn);
+        if (parentTask != null) {
+            String backText = parentTask.getParentTask() != null ? getString(R.string.btn_levelup) : getString(R.string.btn_root);
+            backBtn.setText(backText);
+        }
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,9 +224,16 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
 
     @Override
     public void onTrackingTask() {
-        Intent intent = new Intent(this, TaskTrackListActivity.class);
-        intent.putExtra(CustomApplication.GENERIC_INTENT, selectedTask);
-        startActivity(intent);
+        parentTask = selectedTask;
+        selectedTask = null;
+        ArrayList<Task> tasks = application.getChildTasks(parentTask);
+        adapter.clear();
+        adapter.addAll(tasks);
+        adapter.notifyDataSetChanged();
+        if (parentTask != null) {
+            String backText = parentTask.getParentTask() != null ? getString(R.string.btn_levelup) : getString(R.string.btn_root);
+            backBtn.setText(backText);
+        }
     }
 
     @Override

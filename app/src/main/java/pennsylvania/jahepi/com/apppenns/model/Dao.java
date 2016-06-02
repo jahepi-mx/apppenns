@@ -512,6 +512,17 @@ public class Dao {
         return tasks;
     }
 
+    public int getTaskChildrenTotal(Task task) {
+        Cursor cursor = db.getTaskChildrenTotal(task.getId());
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int n = cursor.getInt(0);
+            cursor.close();
+            return n;
+        }
+        return 0;
+    }
+
     private Task mapTask(Cursor cursor) {
         Task task = new Task();
         task.setId(cursor.getInt(0));
@@ -559,6 +570,7 @@ public class Dao {
         parentTask.setId(cursor.getInt(35));
         parentTask.setUser(task.getUser());
         task.setParentTask(getTaskById(parentTask));
+        task.setHasChildren(getTaskChildrenTotal(task) > 0);
 
         Type type = new Type();
         type.setId(cursor.getInt(27));

@@ -94,6 +94,8 @@
     <string name="btn_cancel_task">Cancelar Actividad</string>
     <string name="btn_tracking_task">Ver Seguimiento</string>
     <string name="btn_back">Regresar</string>
+    <string name="btn_levelup">Subir Nivel</string>
+    <string name="btn_root">Raíz</string>
     <string name="btn_accept">Aceptar</string>
     <string name="btn_activity">Actividades</string>
     <string name="btn_calendar">Calendario</string>
@@ -107,6 +109,7 @@
     <string name="btn_no">No</string>
     <string name="btn_reprogrammed">Reprogramar</string>
     <string name="btn_tracking">Seguimiento</string>
+    <string name="txt_has_children">Actividad con Hijos</string>
     <string name="txt_reprogrammed">Actividad Reprogramada</string>
     <string name="txt_tracking">Actividad de Seguimiento</string>
     <string name="txt_file_size">Tamaño</string>

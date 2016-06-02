@@ -40,6 +40,8 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
 
             TextView taskText = (TextView) convertView.findViewById(R.id.taskText);
             TextView taskTitle = (TextView) convertView.findViewById(R.id.taskTitle);
+            TextView hasChildrenTxt = (TextView) convertView.findViewById(R.id.hasChildrenTxt);
+            TextView taskDate = (TextView) convertView.findViewById(R.id.taskDate);
             TextView taskStatus = (TextView) convertView.findViewById(R.id.taskStatus);
             TextView taskType = (TextView) convertView.findViewById(R.id.taskType);
             TextView taskDistance = (TextView) convertView.findViewById(R.id.taskDistance);
@@ -55,6 +57,8 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
             viewHolder.taskStatus = taskStatus;
             viewHolder.taskDistance = taskDistance;
             viewHolder.taskType = taskType;
+            viewHolder.taskDate = taskDate;
+            viewHolder.hasChildrenTxt = hasChildrenTxt;
 
             viewHolder.imageView.setImageDrawable(viewHolder.drawableTask);
 
@@ -65,6 +69,12 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
 
         holder.taskTitle.setTypeface(null, Typeface.BOLD);
         holder.taskTitle.setText(task.getClient().getName());
+
+        if (task.hasChildren()) {
+            holder.hasChildrenTxt.setVisibility(View.VISIBLE);
+        } else {
+            holder.hasChildrenTxt.setVisibility(View.GONE);
+        }
 
         if (task.getDistance() != 0) {
             holder.taskDistance.setText(String.format(getContext().getString(R.string.txt_distance), task.getDistance()));
@@ -103,7 +113,7 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
         } else {
             holder.taskType.setText("");
         }
-
+        holder.taskDate.setText(task.getDate());
         holder.taskText.setText(Util.abbreviate(task.getAddress().getAddress(), MESSAGE_LENGTH));
 
         return convertView;
@@ -122,8 +132,10 @@ public class TaskAdapter extends ArrayAdapter<Entity> {
     private static class ViewHolder {
         TextView taskText;
         TextView taskTitle;
+        TextView hasChildrenTxt;
         TextView taskStatus;
         TextView taskType;
+        TextView taskDate;
         TextView taskDistance;
         Drawable drawableTask;
         ImageView imageView;
