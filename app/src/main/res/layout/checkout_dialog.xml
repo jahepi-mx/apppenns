@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:id="@+id/main_container">
 
     <TableLayout
@@ -36,7 +36,7 @@
                 android:inputType="textMultiLine"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:background="@drawable/rounded_corner"
-                android:lines="6"
+                android:lines="3"
                 android:padding="5dp"/>
         </TableRow>
 
@@ -72,7 +72,6 @@
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:padding="10dp">
 
             <Button
@@ -88,7 +87,8 @@
                 android:textColor="@color/background"
                 android:id="@+id/noBtn"
                 android:layout_weight="1"
-                android:layout_margin="10dp" />
+                android:padding="10dp"
+                android:layout_margin="3dp" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -103,7 +103,8 @@
                 android:textColor="@color/background"
                 android:id="@+id/yesBtn"
                 android:layout_weight="1"
-                android:layout_margin="10dp" />
+                android:padding="10dp"
+                android:layout_margin="3dp" />
 
         </TableRow>
     </TableLayout>
