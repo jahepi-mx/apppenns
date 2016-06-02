@@ -41,6 +41,8 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_track_list);
 
+        application.setIsTracking(true);
+
         Intent intent = getIntent();
         ArrayList<Task> tasks = new ArrayList<Task>();
         parentTask = (Task) intent.getSerializableExtra(CustomApplication.GENERIC_INTENT);

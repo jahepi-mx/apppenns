@@ -238,7 +238,15 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         if (v == backBtn) {
             Intent intent = new Intent(this, TaskListActivity.class);
             if (task != null) {
-                intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
+                if (application.isTracking()) {
+                    Task parent = task.getParentTask();
+                    if (parent != null) {
+                        intent = new Intent(this, TaskTrackListActivity.class);
+                        intent.putExtra(CustomApplication.GENERIC_INTENT, parent);
+                    }
+                } else {
+                    intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
+                }
             }
             startActivity(intent);
             finish();
@@ -267,9 +275,21 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setCheckin(true);
                             task.setSend(false);
                             if (application.saveTask(task)) {
-                                Intent intent = new Intent(TaskViewActivity.this, TaskListActivity.class);
-                                intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
-                                startActivity(intent);
+                                boolean flag = false;
+                                if (application.isTracking()) {
+                                    Task parent = task.getParentTask();
+                                    if (parent != null) {
+                                        Intent intent = new Intent(TaskViewActivity.this, TaskTrackListActivity.class);
+                                        intent.putExtra(CustomApplication.GENERIC_INTENT, parent);
+                                        startActivity(intent);
+                                        flag = true;
+                                    }
+                                }
+                                if (!flag) {
+                                    Intent intent = new Intent(TaskViewActivity.this, TaskListActivity.class);
+                                    intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
+                                    startActivity(intent);
+                                }
                                 finish();
                                 return;
                             }
@@ -315,9 +335,21 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setConclusion(checkOutAlert.getConclusion());
                             task.setEmails(checkOutAlert.getEmails());
                             if (application.saveTask(task)) {
-                                Intent intent = new Intent(TaskViewActivity.this, TaskListActivity.class);
-                                intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
-                                startActivity(intent);
+                                boolean flag = false;
+                                if (application.isTracking()) {
+                                    Task parent = task.getParentTask();
+                                    if (parent != null) {
+                                        Intent intent = new Intent(TaskViewActivity.this, TaskTrackListActivity.class);
+                                        intent.putExtra(CustomApplication.GENERIC_INTENT, parent);
+                                        startActivity(intent);
+                                        flag = true;
+                                    }
+                                }
+                                if (!flag) {
+                                    Intent intent = new Intent(TaskViewActivity.this, TaskListActivity.class);
+                                    intent.putExtra(CustomApplication.GENERIC_INTENT, task.getDate());
+                                    startActivity(intent);
+                                }
                                 finish();
                                 return;
                             }

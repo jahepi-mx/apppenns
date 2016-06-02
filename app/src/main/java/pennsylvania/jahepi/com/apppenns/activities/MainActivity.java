@@ -29,6 +29,8 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        application.setIsTracking(false);
+
         logoutBtn = (Button) findViewById(R.id.logoutBtn);
         smsBtn = (Button) findViewById(R.id.smsBtn);
         activityBtn = (Button) findViewById(R.id.activityBtn);

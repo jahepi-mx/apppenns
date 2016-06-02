@@ -254,9 +254,21 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 task.addAttachments(attachments);
 
                 if (application.saveTask(task)) {
-                    Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
-                    intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
-                    startActivity(intent);
+                    boolean flag = false;
+                    if (application.isTracking()) {
+                        Task parent = task.getParentTask();
+                        if (parent != null) {
+                            Intent intent = new Intent(AddTaskActivity.this, TaskTrackListActivity.class);
+                            intent.putExtra(CustomApplication.GENERIC_INTENT, parent);
+                            startActivity(intent);
+                            flag = true;
+                        }
+                    }
+                    if (!flag) {
+                        Intent intent = new Intent(AddTaskActivity.this, TaskListActivity.class);
+                        intent.putExtra(CustomApplication.GENERIC_INTENT, dateBtn.getText());
+                        startActivity(intent);
+                    }
                     finish();
                 } else {
                     toast(getString(R.string.txt_error_database));

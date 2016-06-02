@@ -47,6 +47,7 @@ public class CustomApplication extends Application {
 
     private boolean logged;
     private boolean syncActive;
+    private boolean isTracking;
     private Gps gps;
     private Dao dao;
     private CalendarBridge calendarBridge;
@@ -148,6 +149,14 @@ public class CustomApplication extends Application {
 
     public boolean isSyncActive() {
         return true;
+    }
+
+    public boolean isTracking() {
+        return isTracking;
+    }
+
+    public void setIsTracking(boolean isTracking) {
+        this.isTracking = isTracking;
     }
 
     public boolean isLogged() {

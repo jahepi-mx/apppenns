@@ -44,6 +44,8 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_list);
 
+        application.setIsTracking(false);
+
         Intent intent = getIntent();
         String date = intent.getStringExtra(CustomApplication.GENERIC_INTENT);
         if (date == null) {
