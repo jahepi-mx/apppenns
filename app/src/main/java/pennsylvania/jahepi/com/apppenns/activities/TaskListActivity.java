@@ -268,7 +268,11 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     @Override
     public void onTrackingTask() {
         Intent intent = new Intent(this, TaskTrackListActivity.class);
-        intent.putExtra(CustomApplication.GENERIC_INTENT, selectedTask);
+        if (selectedTask.getParentTask() != null) {
+            intent.putExtra(CustomApplication.GENERIC_INTENT, selectedTask.getParentTask());
+        } else {
+            intent.putExtra(CustomApplication.GENERIC_INTENT, selectedTask);
+        }
         startActivity(intent);
     }
 

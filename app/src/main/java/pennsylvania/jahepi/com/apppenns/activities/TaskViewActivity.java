@@ -110,6 +110,16 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
 
         if (task != null) {
 
+            if (task.getParentTask() != null) {
+                trackingBtn.setVisibility(View.GONE);
+            } else {
+                if (task.isCheckin() && task.isCheckout() && !task.isCancelled()) {
+                    trackingBtn.setVisibility(View.VISIBLE);
+                } else {
+                    trackingBtn.setVisibility(View.GONE);
+                }
+            }
+
             checkinBtn = (Button) findViewById(R.id.checkinBtn);
             checkoutBtn = (Button) findViewById(R.id.checkoutBtn);
 
