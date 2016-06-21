@@ -659,7 +659,7 @@ public class Dao {
     }
 
     public ArrayList<Client> getClients(int userId, String name) {
-        Cursor cursor = db.getAllOrderBy(Database.CLIENTS_TABLE, String.format("name LIKE '%%%s%%' AND user='%s'", name, userId), "name ASC");
+        Cursor cursor = db.getAllOrderBy(Database.CLIENTS_TABLE, String.format("name LIKE '%%%s%%' AND user='%s' AND active=1", name, userId), "name ASC");
         ArrayList<Client> clients = new ArrayList<Client>();
         if (cursor != null) {
             while (cursor.moveToNext()) {
