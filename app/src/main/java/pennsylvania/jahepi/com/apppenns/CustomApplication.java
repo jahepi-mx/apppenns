@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import pennsylvania.jahepi.com.apppenns.activities.LoginActivity;
+import pennsylvania.jahepi.com.apppenns.activities.MessageListActivity;
 import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Address;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
@@ -33,7 +36,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.Sync;
  */
 public class CustomApplication extends Application {
 
-    public final static double VERSION = 1.5;
+    public final static double VERSION = 1.6;
     public final static String SERVICE_URL = "http://portal.pennsylvania.com.mx/";
     public final static String EXCEPTION_HANDLER_URL = "http://portal.pennsylvania.com.mx/log/exception.php";
     public final static File SDCARD_PATH = Environment.getExternalStorageDirectory();
@@ -272,6 +275,24 @@ public class CustomApplication extends Application {
             if (listener != null) {
                 listener.onNewMessages(messages);
             }
+        }
+        // Notify new messages
+        try {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            Intent intent = new Intent(this, LoginActivity.class);
+            PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+            for (Message message : messages) {
+                android.app.Notification.Builder notification = new android.app.Notification.Builder(this);
+                notification.setContentTitle(String.format(getString(R.string.txt_message_notification), message.getFrom().getName()));
+                notification.setContentText(message.getMessage());
+                notification.setSmallIcon(R.drawable.penns_notification);
+                notification.setAutoCancel(true);
+                notification.setContentIntent(pIntent);
+                notification.setDefaults(android.app.Notification.DEFAULT_SOUND);
+                notificationManager.notify(message.getId(), notification.build());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

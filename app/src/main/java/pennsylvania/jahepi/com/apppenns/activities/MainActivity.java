@@ -41,7 +41,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         view.setText(application.getUser().getName());
 
         viewSms = (TextView) findViewById(R.id.newSmsLabel);
-        viewSms.setText(String.format(getString(R.string.label_new_sms), 0));
+        viewSms.setText(String.format(getString(R.string.txt_new_messages_bar), 0));
 
         logoutBtn.setOnClickListener(this);
         smsBtn.setOnClickListener(this);
@@ -117,7 +117,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         @Override
         protected void onProgressUpdate(Integer... values) {
             try {
-                view.setText(String.format(context.getString(R.string.label_new_sms), values[0]));
+                view.setText(String.format(context.getString(R.string.txt_new_messages_bar), values[0]));
             } catch (Exception exp) {
                 exp.printStackTrace();
             }
