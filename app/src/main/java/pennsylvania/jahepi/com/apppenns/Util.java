@@ -1,7 +1,10 @@
 package pennsylvania.jahepi.com.apppenns;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Environment;
@@ -16,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import pennsylvania.jahepi.com.apppenns.activities.LoginActivity;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 
 /**
@@ -198,5 +202,18 @@ public class Util {
             exp.printStackTrace();
         }
         return minutes;
+    }
+
+    public static void sendNotification(Context context, NotificationManager manager, int id, String title, String message) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), intent, 0);
+        android.app.Notification.Builder notification = new android.app.Notification.Builder(context);
+        notification.setContentTitle(title);
+        notification.setContentText(message);
+        notification.setSmallIcon(R.drawable.penns_notification);
+        notification.setAutoCancel(true);
+        notification.setContentIntent(pIntent);
+        notification.setDefaults(android.app.Notification.DEFAULT_SOUND);
+        manager.notify(id, notification.build());
     }
 }

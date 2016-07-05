@@ -45,6 +45,8 @@
     <string name="txt_version">Versión %1$s</string>
     <string name="txt_new_messages_bar">Mensajes nuevos: %1$s</string>
     <string name="txt_message_notification">Nuevo mensaje de %1$s</string>
+    <string name="txt_activity_notification">Notificacion de %1$s</string>
+    <string name="txt_activity_notification_message">Cliente %1$s (%2$s) %3$s</string>
     <string name="txt_map_me">Mi Posicion</string>
     <string name="txt_map_client">Cliente</string>
     <string name="txt_attachments">Adjuntos:</string>

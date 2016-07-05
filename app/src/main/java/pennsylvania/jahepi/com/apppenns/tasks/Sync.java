@@ -1,5 +1,6 @@
 package pennsylvania.jahepi.com.apppenns.tasks;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -26,9 +27,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
+import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
+import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Notification;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
@@ -244,6 +247,22 @@ public class Sync extends Service {
                         notification.setEventId((int) calendarEventId);
                     }
                     if (application.saveNotification(notification)) {
+                        try {
+                            Task task = application.getTaskByFingerPrint(notification.getFingerprint());
+                            String client = "";
+                            String date = "";
+                            if (task != null) {
+                                Client clientObj = task.getClient();
+                                date = task.getDate();
+                                if (clientObj.getName() != null) {
+                                    client = clientObj.getName();
+                                }
+                            }
+                            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                            Util.sendNotification(this, notificationManager, notification.getId(), String.format(getString(R.string.txt_activity_notification), notification.getFrom().getName()), String.format(getString(R.string.txt_activity_notification_message), client, date, notification.getNotification()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         Log.d(TAG, "getNotifications inserted: " + notification.getNotification());
                     } else {
                         Log.d(TAG, "getNotifications not inserted: " + notification.getNotification());

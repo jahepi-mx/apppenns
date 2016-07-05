@@ -3,6 +3,7 @@ package pennsylvania.jahepi.com.apppenns.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -48,7 +49,7 @@ public class Dao {
     }
 
     public User getUser(String email, String password) {
-        Cursor cursor = db.get(Database.USERS_TABLE, String.format("email='%s' AND password='%s' AND active='1'", email, password));
+        Cursor cursor = db.get(Database.USERS_TABLE, String.format("email=%s AND password=%s AND active='1'", DatabaseUtils.sqlEscapeString(email), DatabaseUtils.sqlEscapeString(password)));
         if (cursor != null) {
             User user = mapUser(cursor);
             cursor.close();
@@ -488,6 +489,19 @@ public class Dao {
 
     public Task getTaskById(Task taskParam) {
         Cursor cursor = db.getTasks(String.format("WHERE tasks.id='%s' AND tasks.user='%s'", taskParam.getId(), taskParam.getUser().getId()), "");
+        if (cursor != null) {
+            Task task = null;
+            if (cursor.moveToNext()) {
+                task = mapTask(cursor);
+            }
+            cursor.close();
+            return task;
+        }
+        return null;
+    }
+
+    public Task getTaskByFingerPrint(String fingerprint) {
+        Cursor cursor = db.getTasks(String.format("WHERE tasks.fingerprint='%s'", fingerprint), "");
         if (cursor != null) {
             Task task = null;
             if (cursor.moveToNext()) {
