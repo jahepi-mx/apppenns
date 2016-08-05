@@ -103,8 +103,12 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
             @Override
             public void onClick(View v) {
                 if (!dateDialog.isAdded()) {
-                    FragmentManager fm = getFragmentManager();
-                    dateDialog.show(fm, TAG);
+                    try {
+                        FragmentManager fm = getFragmentManager();
+                        dateDialog.show(fm, TAG);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -162,8 +166,12 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         selectedTask = (Task) adapter.getItem(position);
         if (!optionsDialog.isAdded()) {
-            FragmentManager fm = getFragmentManager();
-            optionsDialog.show(fm, TAG);
+            try {
+                FragmentManager fm = getFragmentManager();
+                optionsDialog.show(fm, TAG);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }

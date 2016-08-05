@@ -70,6 +70,10 @@ public class AudioRecorder {
                 recording = false;
                 listener.onRecordingError();
                 return false;
+            } catch (Exception e) {
+                recording = false;
+                listener.onRecordingError();
+                return false;
             }
         }
         return true;

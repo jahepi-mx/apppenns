@@ -10,6 +10,7 @@ import android.widget.TextView;
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
+import pennsylvania.jahepi.com.apppenns.tasks.UserSync;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
@@ -20,6 +21,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private EditText userInput, passInput;
     private Button loginBtn;
+    private UserSync userSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         userInput.setText(application.getStoredUserEmail());
 
         loginBtn.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (userSync == null) {
+            userSync = new UserSync(application);
+            userSync.execute();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (userSync != null) {
+            userSync.cancel(true);
+            userSync = null;
+        }
     }
 
     @Override

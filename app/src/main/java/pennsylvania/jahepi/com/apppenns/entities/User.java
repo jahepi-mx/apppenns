@@ -14,7 +14,10 @@ public class User extends Entity {
     private ArrayList<String> groups = new ArrayList<String>();
 
     public String getName() {
-        return name;
+        if (name != null) {
+            return name;
+        }
+        return "";
     }
 
     public void setName(String name) {

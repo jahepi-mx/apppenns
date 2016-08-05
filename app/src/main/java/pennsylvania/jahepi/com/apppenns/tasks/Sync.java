@@ -96,7 +96,7 @@ public class Sync extends Service {
                     syncNewTasks();
                     syncTypes();
                 }
-                syncUsers();
+                //syncUsers();
                 syncFiles();
                 syncNewUbications();
                 active = false;
