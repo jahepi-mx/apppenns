@@ -368,7 +368,8 @@ public class Sync extends Service {
     }
 
     private boolean updateSendMessage(Message message) {
-        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + message.getModifiedDateString();
+        String date = message.getModifiedDateString().replaceAll(" ", "");
+        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + date;
         try {
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
@@ -430,7 +431,8 @@ public class Sync extends Service {
     }
 
     private boolean updateDeliveredMessage(Message message) {
-        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncReadMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + message.getModifiedDateString();
+        String date = message.getModifiedDateString().replaceAll(" ", "");
+        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncReadMessage/" + message.getTo().getId() + "/" + message.getFrom().getId() + "/" + date;
         try {
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
@@ -718,7 +720,8 @@ public class Sync extends Service {
     }
 
     private boolean updateSendTask(Task task) {
-        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncTask/" + task.getUser().getId() + "/" + task.getFingerprint();
+        String fingerprint = task.getFingerprint().replaceAll(" ", "");
+        String url = CustomApplication.SERVICE_URL + "intranet/android/updateSyncTask/" + task.getUser().getId() + "/" + fingerprint;
         try {
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
