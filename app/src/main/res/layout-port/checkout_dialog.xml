@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_container">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/txt_conclusion"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <EditText
+                android:layout_width="0dp"
+                android:id="@+id/taskConclusionEditText"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:background="@drawable/rounded_corner"
+                android:lines="3"
+                android:padding="5dp"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/txt_emails"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <MultiAutoCompleteTextView
+                android:layout_width="0dp"
+                android:id="@+id/emailText"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:background="@drawable/rounded_corner"
+                android:padding="5dp"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:padding="10dp">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_no"
+                android:background="@drawable/custom_button_green"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textColor="@color/background"
+                android:id="@+id/noBtn"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:layout_margin="3dp" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_yes"
+                android:background="@drawable/custom_button_green"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textColor="@color/background"
+                android:id="@+id/yesBtn"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:layout_margin="3dp" />
+
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

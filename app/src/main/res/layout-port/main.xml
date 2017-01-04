@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/welcomeTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Usuario"
+            android:padding="5dp"
+            android:drawablePadding="15dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:drawableLeft="@drawable/home"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            style="@style/CustomLayout">
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newSmsLabel"
+            android:text="@string/txt_new_messages_bar"
+            android:background="#ff000d"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/welcomeTextView">
+        </TextView>
+
+        <Button android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/smsBtn"
+            android:background="@drawable/main_button"
+            android:textSize="22sp"
+            android:text="@string/label_sms"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:drawableRight="@drawable/chat"
+            android:textColor="#fff"
+            android:layout_below="@+id/newSmsLabel"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"></Button>
+
+        <Button android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/activityBtn"
+            android:background="@drawable/main_button"
+            android:textSize="22sp"
+            android:text="@string/btn_activity"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:drawableRight="@drawable/ubication"
+            android:textColor="#fff"
+            android:layout_below="@+id/smsBtn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"></Button>
+
+        <Button android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/calendarBtn"
+            android:background="@drawable/main_button"
+            android:textSize="22sp"
+            android:text="@string/btn_calendar"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:drawableRight="@drawable/calendar"
+            android:textColor="#fff"
+            android:layout_below="@+id/activityBtn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"></Button>
+
+        <Button android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/clientSyncBtn"
+            android:background="@drawable/main_button"
+            android:textSize="22sp"
+            android:text="@string/btn_client_sync"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:drawableRight="@drawable/clients"
+            android:textColor="#fff"
+            android:layout_below="@+id/calendarBtn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"></Button>
+
+        <Button android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/logoutBtn"
+            android:text="@string/label_logout"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:background="@drawable/main_button"
+            android:drawableRight="@drawable/exit"
+            android:textSize="22sp"
+            android:textColor="#fff"
+            android:layout_below="@+id/clientSyncBtn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"></Button>
+
+        <TextView
+            android:layout_below="@+id/logoutBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/pie"
+            android:layout_alignParentRight="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#000" />
+
+    </RelativeLayout>
+</ScrollView>

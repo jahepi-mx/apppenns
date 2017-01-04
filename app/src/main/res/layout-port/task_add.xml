@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_container">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            style="@style/CustomLayout"
+            android:padding="5dp"
+            android:gravity="right">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home"
+                android:id="@+id/homeBtn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/txt_add_task"
+                android:id="@+id/textView"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:layout_weight="3"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_back"
+                android:background="@drawable/custom_button_red"
+                android:shadowRadius="2"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowColor="#000"
+                android:textColor="#fff"
+                android:id="@+id/backBtn"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:id="@+id/statusTextView"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:background="#000"
+                android:padding="5sp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+        </TableRow>
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textColor="#000"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/txt_date"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:id="@+id/taskDateBtn"
+                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button"
+                    android:textColor="#fff"
+                    android:shadowRadius="1"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowColor="#000"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textColor="#000"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/txt_start_time"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:id="@+id/startTimeBtn"
+                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button"
+                    android:textColor="#fff"
+                    android:shadowRadius="1"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowColor="#000"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textColor="#000"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/txt_end_time"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:id="@+id/endTimeBtn"
+                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button"
+                    android:textColor="#fff"
+                    android:shadowRadius="1"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowColor="#000"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <pennsylvania.jahepi.com.apppenns.components.TypeSpinner android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:background="@drawable/custom_button"
+                    android:id="@+id/typeSpinner"></pennsylvania.jahepi.com.apppenns.components.TypeSpinner>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:id="@+id/clientBtn"
+                    android:text="@string/txt_add_client"
+                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button"
+                    android:textColor="#fff"
+                    android:shadowRadius="1"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowColor="#000"
+                    android:drawableLeft="@drawable/clients_small"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:id="@+id/clientAddressTextView"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:textColor="#000"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textStyle="normal" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+                <fragment
+                    android:id="@+id/map"
+                    android:name="pennsylvania.jahepi.com.apppenns.components.GoogleMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_weight="1" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <ListView android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:id="@+id/attachmentsListView"
+                    android:background="@drawable/custom_background"
+                    android:layout_weight="1"></ListView>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:id="@+id/photoBtn"
+                    android:drawableLeft="@drawable/camera"
+                    android:text="@string/btn_photo"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button"
+                    android:textColor="#fff"
+                    android:layout_margin="5dp"
+                    android:shadowRadius="1"
+                    android:layout_weight="3"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowColor="#000"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+                <Button
+                    android:layout_width="0dp"
+                    android:id="@+id/filesBtn"
+                    android:text="@string/btn_attachment"
+                    android:drawableLeft="@drawable/file"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button"
+                    android:textColor="#fff"
+                    android:layout_margin="5dp"
+                    android:shadowRadius="1"
+                    android:layout_weight="3"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowColor="#000"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:padding="10dp">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:hint="@string/txt_description"
+                    android:id="@+id/taskDescEditText"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:background="@drawable/rounded_corner"
+                    android:lines="5"
+                    android:padding="5dp"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:id="@+id/addBtn"
+                    android:layout_weight="1"
+                    android:text="@string/btn_register"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button_green"
+                    android:textColor="@color/background"
+                    android:layout_margin="5dp"
+                    android:shadowRadius="1"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowColor="#000"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+</ScrollView>
