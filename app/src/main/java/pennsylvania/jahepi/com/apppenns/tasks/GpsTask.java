@@ -52,7 +52,13 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
         int res = context.checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION");
         if (res == PackageManager.PERMISSION_GRANTED) {
             locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            boolean networkProviderEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            boolean gpsProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (networkProviderEnabled) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            } else if (gpsProviderEnabled) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            }
             running = true;
             progressDialog.show(manager, TAG);
             progressDialog.hideProgressBar();

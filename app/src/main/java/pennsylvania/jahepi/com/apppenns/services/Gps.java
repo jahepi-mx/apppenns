@@ -26,12 +26,16 @@ public class Gps implements LocationListener {
     private double latitude;
     private double longitude;
     private boolean isEnabled;
+    private boolean networkProviderEnabled;
+    private boolean gpsProviderEnabled;
 
     public Gps(CustomApplication application) {
         this.application = application;
         handler = new Handler();
         locationManager = (LocationManager) this.application.getSystemService(Context.LOCATION_SERVICE);
-        isEnabled  = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        gpsProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        networkProviderEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        isEnabled = gpsProviderEnabled || networkProviderEnabled;
     }
 
     private class GpsThread extends Thread {
@@ -54,7 +58,13 @@ public class Gps implements LocationListener {
     public void start() {
         int res = application.getApplicationContext().checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION");
         if (res == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            gpsProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            networkProviderEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            if (networkProviderEnabled) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            } else if (gpsProviderEnabled) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            }
         }
     }
 

@@ -46,7 +46,7 @@ public class Sync extends Service {
 
     private static final String TAG = "SyncService";
 
-    public static long INTERVAL = 1 * 30 * 1000;
+    public static long INTERVAL = 1 * 60 * 1000;
     private static final int SUCCESS = 1;
 
     private CustomApplication application;
