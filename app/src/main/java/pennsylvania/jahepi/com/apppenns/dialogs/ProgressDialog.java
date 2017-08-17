@@ -3,6 +3,7 @@ package pennsylvania.jahepi.com.apppenns.dialogs;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class ProgressDialog extends DialogFragment {
     public ProgressDialog() {
         super();
         setCancelable(false);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
     }
 
     @Override
@@ -35,7 +37,9 @@ public class ProgressDialog extends DialogFragment {
     }
 
     public void setTitle(String title ) {
-        getDialog().setTitle(title);
+        if (getDialog() != null) {
+            getDialog().setTitle(title);
+        }
     }
 
     public void setStatus(String status) {

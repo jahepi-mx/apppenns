@@ -1,5 +1,6 @@
 package pennsylvania.jahepi.com.apppenns.tasks;
 
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -64,6 +65,7 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
             progressDialog.hideProgressBar();
         } else {
             running = false;
+            this.listener.error("No tiene el pemiso de ubicación habilitado.");
         }
     }
 
@@ -78,8 +80,10 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
     @Override
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
-        progressDialog.setTitle(context.getString(R.string.txt_task_gps_title));
-        progressDialog.setStatus(context.getString(R.string.txt_task_gps_status));
+        if (running) {
+            progressDialog.setTitle(context.getString(R.string.txt_task_gps_title));
+            progressDialog.setStatus(context.getString(R.string.txt_task_gps_status));
+        }
     }
 
     @Override
@@ -88,7 +92,7 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
         if (latitude != 0 && longitude != 0) {
             listener.success(latitude, longitude);
         } else {
-            listener.error();
+            listener.error("No se pudo registrar la actividad, intentelo nuevamente");
         }
         clear();
     }
@@ -150,6 +154,6 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
 
     public static interface GpsTaskListener {
         public void success(double latitude, double longitude);
-        public void error();
+        public void error(String message);
     }
 }

@@ -306,8 +306,8 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                         }
 
                         @Override
-                        public void error() {
-                            toast(getString(R.string.txt_task_gps_error));
+                        public void error(String message) {
+                            toast(message);
                         }
                     });
                     gpsTask.execute();
@@ -366,8 +366,8 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                         }
 
                         @Override
-                        public void error() {
-                            toast(getString(R.string.txt_task_gps_error));
+                        public void error(String message) {
+                            toast(message);
                         }
                     });
                     gpsTask.execute();
