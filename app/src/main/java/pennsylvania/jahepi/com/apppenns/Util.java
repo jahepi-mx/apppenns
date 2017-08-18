@@ -34,8 +34,10 @@ public class Util {
         if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String id = manager.getDeviceId();
-            String filtered = id.substring(0, 5);
-            return filtered;
+            if (id != null) {
+                String filtered = id.substring(0, 5);
+                return filtered;
+            }
         }
         return "";
     }

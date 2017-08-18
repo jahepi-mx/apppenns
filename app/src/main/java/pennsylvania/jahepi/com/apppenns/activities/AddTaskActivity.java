@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import java.io.File;
@@ -67,7 +68,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_add);
-
+        MapsInitializer.initialize(getApplicationContext());
         mapFragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         statusTextView = (TextView) findViewById(R.id.statusTextView);
