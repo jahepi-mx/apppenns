@@ -43,6 +43,9 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         viewSms = (TextView) findViewById(R.id.newSmsLabel);
         viewSms.setText(String.format(getString(R.string.txt_new_messages_bar), 0));
 
+        TextView versionTextView = (TextView) findViewById(R.id.appVersion);
+        versionTextView.setText(String.format(getString(R.string.txt_version_main), CustomApplication.VERSION));
+
         logoutBtn.setOnClickListener(this);
         smsBtn.setOnClickListener(this);
         activityBtn.setOnClickListener(this);

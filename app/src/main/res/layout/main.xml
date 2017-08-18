@@ -27,6 +27,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/appVersion"
+            android:text="version"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:textColor="#73bed1"
+            android:textStyle="normal"
+            style="@style/CustomLayout"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/welcomeTextView">
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/newSmsLabel"
             android:text="@string/txt_new_messages_bar"
             android:background="#ff000d"
@@ -35,7 +49,7 @@
             android:textColor="#fff"
             android:textStyle="bold"
             android:gravity="center_horizontal"
-            android:layout_below="@+id/welcomeTextView">
+            android:layout_below="@+id/appVersion">
         </TextView>
 
         <Button android:layout_height="wrap_content"
