@@ -28,6 +28,7 @@ public class Gps implements LocationListener {
     private boolean isEnabled;
     private boolean networkProviderEnabled;
     private boolean gpsProviderEnabled;
+    private GpsThread thread;
 
     public Gps(CustomApplication application) {
         this.application = application;
@@ -45,11 +46,12 @@ public class Gps implements LocationListener {
                 Thread.sleep(INTERVAL);
             } catch (InterruptedException exception) {
                 exception.printStackTrace();
+                return;
             }
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                   Gps.this.start();
+                    Gps.this.start();
                 }
             });
         }
@@ -58,12 +60,15 @@ public class Gps implements LocationListener {
     public void start() {
         int res = application.getApplicationContext().checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION");
         if (res == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this);
             gpsProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             networkProviderEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             if (networkProviderEnabled) {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
             } else if (gpsProviderEnabled) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            } else {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
             }
         }
     }
@@ -81,12 +86,17 @@ public class Gps implements LocationListener {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         application.onChangeLocation(latitude, longitude);
+
+        /*
         int res = application.getApplicationContext().checkCallingOrSelfPermission("android.permission.ACCESS_FINE_LOCATION");
         if (res == PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(this);
         }
-        GpsThread thread = new GpsThread();
-        thread.start();
+        */
+        if (thread == null || !thread.isAlive()) {
+            thread = new GpsThread();
+            thread.start();
+        }
     }
 
     @Override
@@ -100,11 +110,26 @@ public class Gps implements LocationListener {
 
     @Override
     public void onProviderEnabled(String provider) {
+        try {
+            if (thread != null) {
+                thread.interrupt();
+            }
+        } catch (Exception e) {
+
+        }
         isEnabled = true;
+        start();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
+        try {
+            if (thread != null) {
+                thread.interrupt();
+            }
+        } catch (Exception e) {
+
+        }
         isEnabled = false;
     }
 }
