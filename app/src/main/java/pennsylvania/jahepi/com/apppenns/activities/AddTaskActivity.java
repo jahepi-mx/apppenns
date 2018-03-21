@@ -223,6 +223,11 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                     return;
                 }
 
+                if (description.length() == 0) {
+                    toast(getString(R.string.txt_error_conclusion));
+                    return;
+                }
+
                 if (Util.isGreaterHour(startTimeBtn.getText().toString(), endTimeBtn.getText().toString())) {
                     toast(getString(R.string.txt_error_hour));
                     return;

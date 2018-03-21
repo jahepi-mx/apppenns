@@ -328,6 +328,10 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 toast(getString(R.string.txt_error_gps));
                 return;
             }
+            if (checkOutAlert.getConclusion().length() == 0) {
+                toast(getString(R.string.txt_error_gps));
+                return;
+            }
             if (task.isCheckin() && !task.isCheckout() && !task.isCancelled()) {
                 GpsTask gpsTask = GpsTask.getInstance(getApplicationContext());
                 if (!gpsTask.isRunning()) {
