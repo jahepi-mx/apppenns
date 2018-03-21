@@ -224,7 +224,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 }
 
                 if (description.length() == 0) {
-                    toast(getString(R.string.txt_error_conclusion));
+                    toast(getString(R.string.txt_error_desc_send));
                     return;
                 }
 
