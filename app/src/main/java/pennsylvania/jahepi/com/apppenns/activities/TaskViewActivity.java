@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -50,6 +51,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     private CustomAlertDialog checkInAlert;
     private CheckOutDialog checkOutAlert;
     private Task task;
+    private ListView attachmentList;
     private FileAttachmentAdapter fileAttachmentAdapter;
     private File photoFile;
 
@@ -143,24 +145,38 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                     }
                 }
             });
-
+            attachmentList = (ListView) findViewById(R.id.attachmentsListView);
             fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
             fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {
                 @Override
                 public void onChange(Attachment attachment) {
                     updateTask(task);
+                    int numberOfAttachments = fileAttachmentAdapter.getCount();
+                    ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+                    int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+                    params.height = size;
+                    attachmentList.setLayoutParams(params);
                 }
 
                 @Override
                 public void onRemove(Attachment attachment) {
                     updateTask(task);
+                    int numberOfAttachments = fileAttachmentAdapter.getCount();
+                    ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+                    int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+                    params.height = size;
+                    attachmentList.setLayoutParams(params);
                 }
             });
             Iterator<Attachment> iterator = task.getAttachmentsIterator();
             fileAttachmentAdapter.addAll(task.getAttachments());
-
-            ListView attachmentList = (ListView) findViewById(R.id.attachmentsListView);
             attachmentList.setAdapter(fileAttachmentAdapter);
+
+            int numberOfAttachments = fileAttachmentAdapter.getCount();
+            ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+            int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+            params.height = size;
+            attachmentList.setLayoutParams(params);
 
             TextView dateTextView = (TextView) findViewById(R.id.taskDateValue);
             TextView clientTextView = (TextView) findViewById(R.id.taskClientValue);

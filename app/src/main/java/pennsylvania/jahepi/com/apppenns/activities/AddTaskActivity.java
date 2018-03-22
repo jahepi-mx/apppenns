@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,6 +78,25 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
         attachmentList = (ListView) findViewById(R.id.attachmentsListView);
         attachmentList.setAdapter(fileAttachmentAdapter);
+        fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {
+            @Override
+            public void onChange(Attachment attachment) {
+                int numberOfAttachments = fileAttachmentAdapter.getCount();
+                ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+                int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+                params.height = size;
+                attachmentList.setLayoutParams(params);
+            }
+
+            @Override
+            public void onRemove(Attachment attachment) {
+                int numberOfAttachments = fileAttachmentAdapter.getCount();
+                ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+                int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+                params.height = size;
+                attachmentList.setLayoutParams(params);
+            }
+        });
 
         ArrayList<Type> types = application.getTypes(Type.ACTIVITY_CATEGORY);
         typeSpinner = (TypeSpinner) findViewById(R.id.typeSpinner);
@@ -344,6 +364,11 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             textView.setText(address.getClient().getName() + " " + address.getAddress());
             setMapLocation(address);
         }
+
+        int numberOfAttachments = fileAttachmentAdapter.getCount();
+        ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+        int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+        params.height = size;
     }
 
     private void setMapLocation(Address address) {
