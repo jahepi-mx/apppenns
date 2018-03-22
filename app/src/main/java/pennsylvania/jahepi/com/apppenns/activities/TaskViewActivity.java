@@ -146,7 +146,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 }
             });
             attachmentList = (ListView) findViewById(R.id.attachmentsListView);
-            fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+            fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item, task.isCheckout());
             fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {
                 @Override
                 public void onChange(Attachment attachment) {
@@ -217,7 +217,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             checkInAlert.setMessage(getString(R.string.txt_confirm_checkin));
             checkInAlert.setIcon(R.drawable.ubication_black);
 
-            checkOutAlert = new CheckOutDialog(this, new DialogListener() {
+            checkOutAlert = new CheckOutDialog(this, this, new DialogListener() {
                 @Override
                 public void accept(Object dialog) {
                     checkout();
@@ -242,6 +242,17 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         ArrayList<Attachment> attachments = new ArrayList<Attachment>();
         for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
             attachments.add(fileAttachmentAdapter.getItem(i));
+        }
+        task.addAttachments(attachments);
+        application.saveTask(task);
+    }
+
+    public void updateTaskFromCheckOut() {
+        task.setSend(false);
+        task.setModifiedDate(Util.getDateTime());
+        ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+        for (int i = 0; i < checkOutAlert.fileAttachmentAdapter.getCount(); i++) {
+            attachments.add(checkOutAlert.fileAttachmentAdapter.getItem(i));
         }
         task.addAttachments(attachments);
         application.saveTask(task);
@@ -424,6 +435,22 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 Attachment attachment = Util.buildAttachment(file);
                 if (fileAttachmentAdapter.addAttachment(attachment)) {
                     fileAttachmentAdapter.notifyDataSetChanged();
+                }
+            }
+        } else if (requestCode == CheckOutDialog.REQUEST_IMAGE_CAPTURE_FROM_CHECKOUT && resultCode == RESULT_OK) {
+            if (checkOutAlert.photoFile != null) {
+                Attachment attachment = Util.buildAttachment(checkOutAlert.photoFile);
+                checkOutAlert.photoFile = null;
+                if (checkOutAlert.fileAttachmentAdapter.addAttachment(attachment)) {
+                    checkOutAlert.fileAttachmentAdapter.notifyDataSetChanged();
+                }
+            }
+        } else if (requestCode == CheckOutDialog.REQUEST_CODE_FILE_FROM_CHECKOUT && data != null) {
+            File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
+            if (file != null) {
+                Attachment attachment = Util.buildAttachment(file);
+                if (checkOutAlert.fileAttachmentAdapter.addAttachment(attachment)) {
+                    checkOutAlert.fileAttachmentAdapter.notifyDataSetChanged();
                 }
             }
         }

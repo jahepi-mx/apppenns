@@ -34,7 +34,7 @@ public class MessageViewActivity extends AuthActivity {
 
         if (message != null) {
 
-            fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+            fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item, false);
             fileAttachmentAdapter.setHideDeleteOption(true);
             fileAttachmentAdapter.addAll(message.getAttachments());
 

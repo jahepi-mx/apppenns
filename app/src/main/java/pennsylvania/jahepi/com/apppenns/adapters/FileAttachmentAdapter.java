@@ -35,8 +35,9 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
     private CustomAlertDialog removeDialog;
     private FileAttachmentAdapterListener listener;
     private int selectedPosition;
+    private boolean hideDeleteButton;
 
-    public FileAttachmentAdapter(Context context, int resource) {
+    public FileAttachmentAdapter(Context context, int resource, boolean hideDeleteButton) {
         super(context, resource);
         mResource = resource;
         removeDialog = new CustomAlertDialog(context);
@@ -45,6 +46,7 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
         removeDialog.setTitle(R.string.txt_delete);
         removeDialog.setMessage(R.string.txt_confirm_delete);
         removeDialog.setIcon(R.drawable.file_black);
+        this.hideDeleteButton = hideDeleteButton;
     }
 
     public ArrayList<Attachment> getAttachments() {
@@ -96,6 +98,9 @@ public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements A
             holder.deleteBtn = deleteBtn;
             holder.viewBtn = viewBtn;
             convertView.setTag(holder);
+            if (this.hideDeleteButton) {
+                deleteBtn.setVisibility(View.GONE);
+            }
         }
 
         ViewHolder holder = (ViewHolder) convertView.getTag();

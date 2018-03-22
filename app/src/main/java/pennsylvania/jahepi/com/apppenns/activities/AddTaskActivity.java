@@ -75,7 +75,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
         statusTextView = (TextView) findViewById(R.id.statusTextView);
         descriptionEditText = (EditText) findViewById(R.id.taskDescEditText);
 
-        fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+        fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item, false);
         attachmentList = (ListView) findViewById(R.id.attachmentsListView);
         attachmentList.setAdapter(fileAttachmentAdapter);
         fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {

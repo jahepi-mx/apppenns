@@ -68,7 +68,7 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
         ArrayAdapter<Type> typeAdapter = new ArrayAdapter<Type>(this, R.layout.type_item, types);
         spinner.setAdapter(typeAdapter);
 
-        fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item);
+        fileAttachmentAdapter = new FileAttachmentAdapter(this, R.layout.file_item, false);
 
         options = new ArrayList<ToDialog.Option>();
 

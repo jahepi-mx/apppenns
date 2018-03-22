@@ -78,4 +78,8 @@ public class BaseActivity extends AppCompatActivity {
             exp.printStackTrace();
         }
     }
+
+    public CustomApplication getCustomApplication() {
+        return this.application;
+    }
 }
