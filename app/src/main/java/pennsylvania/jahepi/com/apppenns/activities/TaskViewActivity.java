@@ -244,6 +244,10 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             checkInAlert.show();
         }
         if (v == checkoutBtn) {
+            if (task != null) {
+                checkOutAlert.setConclusion(task.getConclusion());
+                checkOutAlert.setEmails(task.getEmails());
+            }
             checkOutAlert.show();
         }
         if (v == backBtn) {
@@ -372,6 +376,8 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
 
                         @Override
                         public void error(String message) {
+                            task.setConclusion(checkOutAlert.getConclusion());
+                            task.setEmails(checkOutAlert.getEmails());
                             toast(message);
                         }
                     });

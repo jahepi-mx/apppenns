@@ -92,7 +92,7 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
         if (latitude != 0 && longitude != 0) {
             listener.success(latitude, longitude);
         } else {
-            listener.error("No se pudo registrar la actividad, intentelo nuevamente");
+            listener.error("No se pudo registrar la salida, intentelo nuevamente");
         }
         clear();
     }
@@ -137,6 +137,7 @@ public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationList
 
     @Override
     public void onClick(View v) {
+        listener.error("Cancelaste el registro de la salida");
         clear();
     }
 

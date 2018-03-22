@@ -60,6 +60,14 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
         return emailTextiew.getText().toString();
     }
 
+    public void setConclusion(String conclusion) {
+        editText.setText(conclusion);
+    }
+
+    public void setEmails(String emails) {
+        emailTextiew.setText(emails);
+    }
+
     @Override
     public void onClick(View v) {
         dismiss();
