@@ -603,8 +603,17 @@ public class Sync extends Service {
                     if (fileRef.getName().toLowerCase().endsWith("jpg") || fileRef.getName().toLowerCase().endsWith("jpeg")) {
                         String filePath = fileRef.getAbsolutePath();
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        Bitmap bmp = BitmapFactory.decodeFile(filePath);
-                        bmp.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+                        double width = bitmap.getWidth();
+                        double height = bitmap.getHeight();
+                        if (width > 1024) {
+                            double ratio = width / height;
+                            width = 1024;
+                            height = width / ratio;
+                            bitmap = Bitmap.createScaledBitmap(bitmap, (int) width, (int) height, true);
+                        }
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
                         InputStream is = new ByteArrayInputStream(bos.toByteArray());
                         fileData = new InputStreamBody(is, "image/jpeg", file.getName());
                     }
