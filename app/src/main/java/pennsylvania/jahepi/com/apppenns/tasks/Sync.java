@@ -3,18 +3,24 @@ package pennsylvania.jahepi.com.apppenns.tasks;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -591,7 +597,22 @@ public class Sync extends Service {
                 Attachment.File file = iterator.next();
                 MultipartEntity post = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 File fileRef = new File(file.getPathNoName(), file.getName());
-                post.addPart("file", new FileBody(fileRef));
+                ContentBody fileData = new FileBody(fileRef);
+
+                try {
+                    if (fileRef.getName().toLowerCase().endsWith("jpg") || fileRef.getName().toLowerCase().endsWith("jpeg")) {
+                        String filePath = fileRef.getAbsolutePath();
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                        InputStream is = new ByteArrayInputStream(bos.toByteArray());
+                        fileData = new InputStreamBody(is, "image/jpeg", file.getName());
+                    }
+                } catch (Exception e) {
+
+                }
+
+                post.addPart("file", fileData);
 
                 URL urlRef = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
