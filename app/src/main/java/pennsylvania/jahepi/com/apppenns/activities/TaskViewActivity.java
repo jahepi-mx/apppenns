@@ -50,7 +50,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
     private Button checkinBtn, checkoutBtn, backBtn;
     private CustomAlertDialog checkInAlert;
     private CheckOutDialog checkOutAlert;
-    private Task task;
+    public Task task;
     private ListView attachmentList;
     private FileAttachmentAdapter fileAttachmentAdapter;
     private File photoFile;
@@ -150,7 +150,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {
                 @Override
                 public void onChange(Attachment attachment) {
-                    updateTask(task);
+                    updateTask(false);
                     int numberOfAttachments = fileAttachmentAdapter.getCount();
                     ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
                     int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
@@ -160,7 +160,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
 
                 @Override
                 public void onRemove(Attachment attachment) {
-                    updateTask(task);
+                    updateTask(false);
                     int numberOfAttachments = fileAttachmentAdapter.getCount();
                     ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
                     int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
@@ -169,7 +169,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 }
             });
             Iterator<Attachment> iterator = task.getAttachmentsIterator();
-            fileAttachmentAdapter.addAll(task.getAttachments());
+            fileAttachmentAdapter.addAll(task.getAttachmentsFromNonConclusion());
             attachmentList.setAdapter(fileAttachmentAdapter);
 
             int numberOfAttachments = fileAttachmentAdapter.getCount();
@@ -236,26 +236,18 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         backBtn.setOnClickListener(this);
     }
 
-    private void updateTask(Task task) {
+    public void updateTask(boolean fromConclusion) {
         task.setSend(false);
         task.setModifiedDate(Util.getDateTime());
         ArrayList<Attachment> attachments = new ArrayList<Attachment>();
         for (int i = 0; i < fileAttachmentAdapter.getCount(); i++) {
             attachments.add(fileAttachmentAdapter.getItem(i));
         }
-        task.addAttachments(attachments);
-        application.saveTask(task);
-    }
-
-    public void updateTaskFromCheckOut() {
-        task.setSend(false);
-        task.setModifiedDate(Util.getDateTime());
-        ArrayList<Attachment> attachments = new ArrayList<Attachment>();
         for (int i = 0; i < checkOutAlert.fileAttachmentAdapter.getCount(); i++) {
             attachments.add(checkOutAlert.fileAttachmentAdapter.getItem(i));
         }
         task.addAttachments(attachments);
-        application.saveTask(task);
+        application.saveTask(task, fromConclusion);
     }
 
     @Override
@@ -316,7 +308,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setCheckInCoord(coord);
                             task.setCheckin(true);
                             task.setSend(false);
-                            if (application.saveTask(task)) {
+                            if (application.saveTask(task, false)) {
                                 boolean flag = false;
                                 if (application.isTracking()) {
                                     Task parent = task.getParentTask();
@@ -380,7 +372,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setSend(false);
                             task.setConclusion(checkOutAlert.getConclusion());
                             task.setEmails(checkOutAlert.getEmails());
-                            if (application.saveTask(task)) {
+                            if (application.saveTask(task, false)) {
                                 boolean flag = false;
                                 if (application.isTracking()) {
                                     Task parent = task.getParentTask();
@@ -440,6 +432,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         } else if (requestCode == CheckOutDialog.REQUEST_IMAGE_CAPTURE_FROM_CHECKOUT && resultCode == RESULT_OK) {
             if (checkOutAlert.photoFile != null) {
                 Attachment attachment = Util.buildAttachment(checkOutAlert.photoFile);
+                attachment.setFromConclusion(true);
                 checkOutAlert.photoFile = null;
                 if (checkOutAlert.fileAttachmentAdapter.addAttachment(attachment)) {
                     checkOutAlert.fileAttachmentAdapter.notifyDataSetChanged();
@@ -449,6 +442,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             File file = (File) data.getSerializableExtra(Config.KEY_FILE_SELECTED);
             if (file != null) {
                 Attachment attachment = Util.buildAttachment(file);
+                attachment.setFromConclusion(true);
                 if (checkOutAlert.fileAttachmentAdapter.addAttachment(attachment)) {
                     checkOutAlert.fileAttachmentAdapter.notifyDataSetChanged();
                 }

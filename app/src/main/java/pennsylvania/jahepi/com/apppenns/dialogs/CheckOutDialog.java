@@ -60,7 +60,17 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this.parentActivity, R.layout.file_item, false);
         attachmentList = (ListView) view.findViewById(R.id.attachmentsListView);
+        if (parentActivity.task != null) {
+            fileAttachmentAdapter.addAll(parentActivity.task.getAttachmentsFromConclusion());
+        }
         attachmentList.setAdapter(fileAttachmentAdapter);
+
+        int numberOfAttachments = fileAttachmentAdapter.getCount();
+        ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+        int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+        params.height = size;
+        attachmentList.setLayoutParams(params);
+
         fileAttachmentAdapter.setChangeListener(new FileAttachmentAdapter.FileAttachmentAdapterListener() {
             @Override
             public void onChange(Attachment attachment) {
@@ -69,7 +79,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
                 int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
                 params.height = size;
                 attachmentList.setLayoutParams(params);
-                CheckOutDialog.this.parentActivity.updateTaskFromCheckOut();
+                CheckOutDialog.this.parentActivity.updateTask(true);
             }
 
             @Override
@@ -79,7 +89,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
                 int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
                 params.height = size;
                 attachmentList.setLayoutParams(params);
-                CheckOutDialog.this.parentActivity.updateTaskFromCheckOut();
+                CheckOutDialog.this.parentActivity.updateTask(true);
             }
         });
 

@@ -306,6 +306,30 @@ public class Task extends Entity {
         return attachments;
     }
 
+    public ArrayList<Attachment> getAttachmentsFromConclusion() {
+        ArrayList<Attachment> attachments = new ArrayList<>();
+        Iterator<Attachment> iterator = getAttachmentsIterator();
+        while (iterator.hasNext()) {
+            Attachment attachment = iterator.next();
+            if (attachment.isFromConclusion()) {
+                attachments.add(attachment);
+            }
+        }
+        return attachments;
+    }
+
+    public ArrayList<Attachment> getAttachmentsFromNonConclusion() {
+        ArrayList<Attachment> attachments = new ArrayList<>();
+        Iterator<Attachment> iterator = getAttachmentsIterator();
+        while (iterator.hasNext()) {
+            Attachment attachment = iterator.next();
+            if (!attachment.isFromConclusion()) {
+                attachments.add(attachment);
+            }
+        }
+        return attachments;
+    }
+
     public boolean isValid() {
         if (type != null && address != null && address.getClient() != null && user != null) {
             return true;

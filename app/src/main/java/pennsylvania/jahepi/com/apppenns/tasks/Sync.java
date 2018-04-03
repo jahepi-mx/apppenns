@@ -729,7 +729,7 @@ public class Sync extends Service {
                         task.addAttachment(attachment);
                     }
 
-                    if (application.saveTask(task)) {
+                    if (application.saveTask(task, false)) {
                         Log.d(TAG, "getTasks inserted: " + task.getFingerprint());
                     } else {
                         Log.d(TAG, "getTasks not inserted: " + task.getFingerprint());
@@ -814,6 +814,7 @@ public class Sync extends Service {
                     post.addPart("attachment_path[]", new StringBody(attachment.getFile().getPath()));
                     post.addPart("attachment_mime[]", new StringBody(attachment.getFile().getMime()));
                     post.addPart("attachment_date[]", new StringBody(attachment.getFile().getModifiedDateString()));
+                    post.addPart("attachment_from_conclusion[]", new StringBody(attachment.isFromConclusion() ? "1" : "0"));
                 }
 
                 URL urlRef = new URL(url);

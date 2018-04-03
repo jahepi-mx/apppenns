@@ -183,7 +183,7 @@ public class TaskListActivity extends AuthActivity implements DialogListener, Ad
                 selectedTask.setSend(false);
                 selectedTask.setCancelled(true);
                 selectedTask.setModifiedDate(Util.getDateTime());
-                application.saveTask(selectedTask);
+                application.saveTask(selectedTask, false);
                 application.removeEvent(selectedTask.getEventId());
                 selectedTask = null;
                 adapter.notifyDataSetChanged();

@@ -426,6 +426,7 @@ public class Dao {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 Attachment attachment = mapAttachment(cursor);
+                attachment.setFromConclusion(cursor.getInt(8) == 1);
                 attachments.add(attachment);
             }
             cursor.close();
@@ -597,7 +598,7 @@ public class Dao {
         return task;
     }
 
-    public boolean saveTask(Task task) {
+    public boolean saveTask(Task task, boolean fromConclusion) {
         if (task != null) {
             ContentValues values = new ContentValues();
             values.put("user", task.getUser().getId());
@@ -637,16 +638,19 @@ public class Dao {
                 long id = db.insert(Database.TASKS_TABLE, values);
                 task.setId((int) id);
             }
-            db.delete(Database.TASK_ATTACHMENTS_TABLE, String.format("task='%s'", task.getId()));
+            db.delete(Database.TASK_ATTACHMENTS_TABLE, String.format("task='%s' AND from_conclusion='%s'", task.getId(), fromConclusion ? "1" : "0"));
             Iterator<Attachment> iterator = task.getAttachmentsIterator();
             while (iterator.hasNext()) {
                 ContentValues attachmentValues = new ContentValues();
                 Attachment attachment = iterator.next();
-                Attachment.File file = attachment.getFile();
-                saveFile(file);
-                attachmentValues.put("task", task.getId());
-                attachmentValues.put("file", file.getId());
-                db.insert(Database.TASK_ATTACHMENTS_TABLE, attachmentValues);
+                if (attachment.isFromConclusion() == fromConclusion) {
+                    Attachment.File file = attachment.getFile();
+                    saveFile(file);
+                    attachmentValues.put("task", task.getId());
+                    attachmentValues.put("file", file.getId());
+                    attachmentValues.put("from_conclusion", attachment.isFromConclusion() ? 1 : 0);
+                    db.insert(Database.TASK_ATTACHMENTS_TABLE, attachmentValues);
+                }
             }
             return true;
         }

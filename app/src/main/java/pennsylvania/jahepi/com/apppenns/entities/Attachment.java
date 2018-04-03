@@ -9,6 +9,7 @@ public class Attachment implements Serializable {
 
     private int id;
     private File file;
+    private boolean fromConclusion;
 
     public int getId() {
         return id;
@@ -24,6 +25,14 @@ public class Attachment implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public boolean isFromConclusion() {
+        return fromConclusion;
+    }
+
+    public void setFromConclusion(boolean fromConclusion) {
+        this.fromConclusion = fromConclusion;
     }
 
     public static class File extends Entity {

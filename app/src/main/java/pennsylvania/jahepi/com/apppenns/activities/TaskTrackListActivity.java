@@ -173,7 +173,7 @@ public class TaskTrackListActivity extends AuthActivity implements AdapterView.O
                 selectedTask.setSend(false);
                 selectedTask.setCancelled(true);
                 selectedTask.setModifiedDate(Util.getDateTime());
-                application.saveTask(selectedTask);
+                application.saveTask(selectedTask, false);
                 application.removeEvent(selectedTask.getEventId());
                 selectedTask = null;
                 adapter.notifyDataSetChanged();

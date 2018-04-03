@@ -240,8 +240,8 @@ public class CustomApplication extends Application {
         return dao.getTaskByFingerPrint(fingerprint);
     }
 
-    public boolean saveTask(Task task) {
-        return dao.saveTask(task);
+    public boolean saveTask(Task task, boolean fromConclusion) {
+        return dao.saveTask(task, fromConclusion);
     }
 
     public boolean updateTaskAsSend(Task task) {

@@ -279,7 +279,7 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
                 }
                 task.addAttachments(attachments);
 
-                if (application.saveTask(task)) {
+                if (application.saveTask(task, false)) {
                     boolean flag = false;
                     if (application.isTracking()) {
                         Task parent = task.getParentTask();

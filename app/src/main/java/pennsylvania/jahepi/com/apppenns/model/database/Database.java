@@ -25,7 +25,7 @@ public class Database {
     public static final String UBICATIONS_TABLE = "ubications";
     public static final String NOTIFICATIONS_TABLE = "notifications";
 
-    private static final int DB_VERSION = 40;
+    private static final int DB_VERSION = 43;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -103,7 +103,7 @@ public class Database {
 
     public Cursor getTaskAttachments(String where, String orderBy) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String sql = "SELECT task_attachments.id AS attachment_id, files.id AS file_id, files.name, files.mime, files.path, files.date, files.active, files.send " +
+        String sql = "SELECT task_attachments.id AS attachment_id, files.id AS file_id, files.name, files.mime, files.path, files.date, files.active, files.send, task_attachments.from_conclusion " +
                 "FROM task_attachments " +
                 "INNER JOIN files ON files.id = task_attachments.file " +
                 where + " " + orderBy;
@@ -174,7 +174,7 @@ public class Database {
             Log.d(TAG, "Ubications table created!");
             db.execSQL("CREATE TABLE " + ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, message INT, file INT)");
             Log.d(TAG, "Attachments table created!");
-            db.execSQL("CREATE TABLE " + TASK_ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, task INT, file INT)");
+            db.execSQL("CREATE TABLE " + TASK_ATTACHMENTS_TABLE + " (id INTEGER PRIMARY KEY, task INT, file INT, from_conclusion INT)");
             Log.d(TAG, "Task attachments table created!");
             db.execSQL("CREATE TABLE " + FILES_TABLE + " (id INTEGER PRIMARY KEY, path TEXT, name TEXT, mime TEXT, date TEXT, active INT, send INT)");
             Log.d(TAG, "Files table created!");
