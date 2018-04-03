@@ -58,7 +58,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
         emailTextiew.setAdapter(adapter);
         emailTextiew.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
-        fileAttachmentAdapter = new FileAttachmentAdapter(this.parentActivity, R.layout.file_item, false);
+        fileAttachmentAdapter = new FileAttachmentAdapter(this.parentActivity, R.layout.file_item, parentActivity.task.isCheckout());
         attachmentList = (ListView) view.findViewById(R.id.attachmentsListView);
         if (parentActivity.task != null) {
             fileAttachmentAdapter.addAll(parentActivity.task.getAttachmentsFromConclusion());

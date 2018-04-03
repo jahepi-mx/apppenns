@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
@@ -348,6 +349,11 @@ public class AddTaskActivity extends AuthActivity implements DialogListener {
             parentTask = task;
         } else {
             parentTask = task.getParentTask();
+        }
+        Iterator<Attachment> iterator = task.getAttachments().iterator();
+        while (iterator.hasNext()) {
+            Attachment attachment = iterator.next();
+            attachment.setFromConclusion(false);
         }
         fileAttachmentAdapter.addAll(task.getAttachments());
         if (parentTask == null) {
