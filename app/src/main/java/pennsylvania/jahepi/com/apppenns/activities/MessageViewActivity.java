@@ -3,6 +3,7 @@ package pennsylvania.jahepi.com.apppenns.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -40,6 +41,12 @@ public class MessageViewActivity extends AuthActivity {
 
             ListView attachmentList = (ListView) findViewById(R.id.attachmentsListView);
             attachmentList.setAdapter(fileAttachmentAdapter);
+
+            int numberOfAttachments = fileAttachmentAdapter.getCount();
+            ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+            int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+            params.height = size;
+            attachmentList.setLayoutParams(params);
 
             TextView date = (TextView) findViewById(R.id.messageDateValue);
             TextView from = (TextView) findViewById(R.id.messageFromValue);
