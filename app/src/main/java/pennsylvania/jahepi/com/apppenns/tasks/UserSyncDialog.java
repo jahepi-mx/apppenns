@@ -1,8 +1,11 @@
 package pennsylvania.jahepi.com.apppenns.tasks;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,38 +17,84 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
+import pennsylvania.jahepi.com.apppenns.R;
+import pennsylvania.jahepi.com.apppenns.dialogs.ProgressDialog;
 import pennsylvania.jahepi.com.apppenns.entities.TaskActivity;
-import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
- * Created by javier.hernandez on 05/08/2016.
+ * Created by jahepi on 09/03/16.
  */
-public class UserSync extends AsyncTask<Void, Void, Void> {
+public class UserSyncDialog extends AsyncTask<Void, UserSyncDialog.DownloadInfo, Boolean> implements View.OnClickListener {
 
-    private static final String TAG = "UserSync";
+    private static final String TAG = "UserSyncDialog";
+    private static UserSyncDialog self;
 
+    private ProgressDialog dialog;
     private Context context;
+    private DownloadInfo downloadInfo;
+    private FragmentManager manager;
 
-    public UserSync(Context context) {
+    private UserSyncDialog(Context context) {
+        dialog = new ProgressDialog();
+        dialog.setListener(this);
         this.context = context;
+        downloadInfo = new DownloadInfo();
+    }
+
+    public static UserSyncDialog getInstance(Context context) {
+        if (self != null && !self.isCancelled() && (self.getStatus() == Status.RUNNING || self.getStatus() == Status.PENDING)) {
+            return self;
+        } else {
+           self = new UserSyncDialog(context);
+        }
+        return self;
+    }
+
+    public void setManager(FragmentManager manager) {
+        this.manager = manager;
+    }
+
+    public boolean isRunning() {
+        return self.getStatus() == Status.RUNNING && !isCancelled();
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-        while (!isCancelled()) {
-            try {
-                Thread.sleep(30000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            syncTaskActivities();
-            getUsers();
-        }
-        return null;
+    protected void onPreExecute() {
+        dialog.show(manager, TAG);
     }
 
-    private void syncTaskActivities() {
+    @Override
+    protected void onProgressUpdate(DownloadInfo... values) {
+        try {
+            DownloadInfo info = values[0];
+            dialog.setStatus(info.name);
+            dialog.setTitle(String.format(context.getString(R.string.txt_sync_status), info.percentage + "%"));
+            dialog.setProgress(info.percentage);
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean success) {
+        if (!success) {
+            Toast.makeText(context, context.getString(R.string.txt_error_user_sync), Toast.LENGTH_LONG).show();
+        }
+        cancel(true);
+        if (dialog.isResumed()) {
+            dialog.dismiss();
+        }
+        context = null;
+        manager = null;
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... params) {
+        return syncUserData();
+    }
+
+    private Boolean syncUserData() {
 
         try {
             CustomApplication application = (CustomApplication) context;
@@ -74,7 +123,6 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
                 taskActivity.setUserType(json.getInt("userType"));
                 taskActivity.setModifiedDate(json.getString("date"));
                 taskActivity.setActive(json.getInt("active") != 0);
-
                 if (application.saveTaskActivity(taskActivity)) {
                     Log.d(TAG, "syncTaskActivities inserted: " + taskActivity.getName());
                 } else {
@@ -85,9 +133,7 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    private void getUsers() {
         try {
             CustomApplication application = (CustomApplication) context;
             String url = CustomApplication.SERVICE_URL + "intranet/android/getUsers";
@@ -108,7 +154,7 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
             JSONObject jObject = new JSONObject(jsonStr.toString());
             JSONArray users = jObject.getJSONArray("users");
 
-            for (int i = 0; i < users.length(); i++) {
+            for (int i = 0; i < users.length() && !isCancelled(); i++) {
                 JSONObject json = users.getJSONObject(i);
                 User user = new User();
                 user.setId(json.getInt("id"));
@@ -120,7 +166,7 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
                 String groups = json.getString("group");
                 if (groups != null) {
                     String[] groupsArray = groups.split(",");
-                    for (int u = 0; u < groupsArray.length; u++) {
+                    for (int u = 0; u < groupsArray.length && !isCancelled(); u++) {
                         String groupName = groupsArray[u];
                         if (!groupName.equals("")) {
                             user.addGroup(groupName);
@@ -133,13 +179,31 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
 
                 if (application.saveUser(user)) {
                     Log.d(TAG, "syncUsers inserted: " + user.getName());
-                } else {
-                    Log.d(TAG, "syncUsers not inserted: " + user.getName());
                 }
+
+                float percentage = (float) i / (float) users.length() * 100;
+                downloadInfo.percentage = (int) percentage;
+                downloadInfo.name = user.getName();
+                publishProgress(downloadInfo);
             }
 
         } catch (Exception exp) {
             exp.printStackTrace();
+            return false;
         }
+        return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        cancel(true);
+        dialog.dismiss();
+        context = null;
+        manager = null;
+    }
+
+    public static class DownloadInfo {
+        int percentage;
+        String name;
     }
 }

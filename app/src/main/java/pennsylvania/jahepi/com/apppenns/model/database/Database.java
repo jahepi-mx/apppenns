@@ -24,8 +24,10 @@ public class Database {
     public static final String FILES_TABLE = "files";
     public static final String UBICATIONS_TABLE = "ubications";
     public static final String NOTIFICATIONS_TABLE = "notifications";
+    public static final String PRODUCTS_TABLE = "products";
+    public static final String ACTIVITIES_TABLE = "activities";
 
-    private static final int DB_VERSION = 43;
+    private static final int DB_VERSION = 44;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -158,11 +160,11 @@ public class Database {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT, group_name TEXT)");
+            db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT, group_name TEXT, user_type INT)");
             Log.d(TAG, "Users table created!");
             db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, type INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
-            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT, cancelled INT, type INT, start_time TEXT, end_time TEXT, event_id INT, emails TEXT, parent_task INT, fingerprint TEXT, status TEXT)");
+            db.execSQL("CREATE TABLE " + TASKS_TABLE + " (id INTEGER PRIMARY KEY, user INT, address TEXT, description TEXT, date TEXT, in_lat REAL, in_lon REAL, out_lat REAL, out_lon REAL, send INT, register_date TEXT, check_in INT, check_out INT, checkin_date TEXT, checkout_date TEXT, conclusion TEXT, cancelled INT, type INT, start_time TEXT, end_time TEXT, event_id INT, emails TEXT, parent_task INT, fingerprint TEXT, status TEXT, conclusion_competence TEXT, products TEXT, activities TEXT)");
             Log.d(TAG, "Tasks table created!");
             db.execSQL("CREATE TABLE " + CLIENTS_TABLE + " (id INT, user INT, name TEXT, kepler TEXT, date TEXT, active INT, UNIQUE (id, user))");
             Log.d(TAG, "Clients table created!");
@@ -181,6 +183,10 @@ public class Database {
             db.execSQL("CREATE TABLE " + NOTIFICATIONS_TABLE + " (id INT PRIMARY KEY, from_user INT, to_user INT, notification TEXT, event_date TEXT, minutes INT, event_id INT, fingerprint TEXT, date TEXT, active INT)");
             Log.d(TAG, "Notifications table created!");
             db.execSQL("CREATE INDEX fingerprint_index ON " + TASKS_TABLE + " (fingerprint)");
+            db.execSQL("CREATE TABLE " + PRODUCTS_TABLE + " (id TEXT, user INT, name TEXT, date TEXT, UNIQUE (id, user))");
+            Log.d(TAG, "Products table created!");
+            db.execSQL("CREATE TABLE " + ACTIVITIES_TABLE + " (id INTEGER PRIMARY KEY, user_type INT, name TEXT, date TEXT, active INT)");
+            Log.d(TAG, "ACTIVITIES table created!");
         }
 
         @Override
@@ -207,6 +213,10 @@ public class Database {
             Log.d(TAG, "Files table removed!");
             db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATIONS_TABLE);
             Log.d(TAG, "Notifications table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + PRODUCTS_TABLE);
+            Log.d(TAG, "Products table removed!");
+            db.execSQL("DROP TABLE IF EXISTS " + ACTIVITIES_TABLE);
+            Log.d(TAG, "Activities table removed!");
             onCreate(db);
         }
     }

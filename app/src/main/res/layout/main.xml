@@ -118,6 +118,38 @@
 
         <Button android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:id="@+id/productSyncBtn"
+            android:background="@drawable/main_button"
+            android:textSize="22sp"
+            android:text="@string/btn_product_sync"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:drawableRight="@drawable/clients"
+            android:textColor="#fff"
+            android:layout_below="@+id/clientSyncBtn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"></Button>
+
+        <Button android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/userSyncBtn"
+            android:background="@drawable/main_button"
+            android:textSize="22sp"
+            android:text="@string/btn_user_sync"
+            android:shadowRadius="1"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowColor="#000"
+            android:drawableRight="@drawable/clients"
+            android:textColor="#fff"
+            android:layout_below="@+id/productSyncBtn"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"></Button>
+
+        <Button android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:id="@+id/logoutBtn"
             android:text="@string/label_logout"
             android:shadowRadius="1"
@@ -128,7 +160,7 @@
             android:drawableRight="@drawable/exit"
             android:textSize="22sp"
             android:textColor="#fff"
-            android:layout_below="@+id/clientSyncBtn"
+            android:layout_below="@+id/userSyncBtn"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"></Button>
 

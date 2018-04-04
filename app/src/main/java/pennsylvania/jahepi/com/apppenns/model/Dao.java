@@ -16,7 +16,9 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Coord;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Notification;
+import pennsylvania.jahepi.com.apppenns.entities.Product;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
+import pennsylvania.jahepi.com.apppenns.entities.TaskActivity;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.Ubication;
 import pennsylvania.jahepi.com.apppenns.entities.User;
@@ -76,6 +78,7 @@ public class Dao {
         user.setName(cursor.getString(3));
         user.setModifiedDate(cursor.getString(4));
         user.setActive(cursor.getInt(5) != 0);
+        user.setType(cursor.getInt(7));
         String groups = cursor.getString(6);
         if (groups != null) {
             String[] groupsArray = groups.split(",");
@@ -94,6 +97,7 @@ public class Dao {
             values.put("email", user.getEmail());
             values.put("password", user.getPassword());
             values.put("name", user.getName());
+            values.put("user_type", user.getType());
             values.put("group_name", TextUtils.join(",", user.getGroups()));
             values.put("active", user.isActive() ? 1 : 0);
             values.put("date", user.getModifiedDateString());
@@ -214,6 +218,118 @@ public class Dao {
             return true;
         }
         return false;
+    }
+
+    public TaskActivity getTaskActivity(int taskActivityId) {
+        Cursor cursor = db.get(Database.ACTIVITIES_TABLE, String.format("id='%s'", taskActivityId));
+        if (cursor != null) {
+            TaskActivity activity = mapTaskActivity(cursor);
+            cursor.close();
+            return activity;
+        }
+        return null;
+    }
+
+    public ArrayList<TaskActivity> getTaskActivities(int userType) {
+        ArrayList<TaskActivity> taskActivities = new ArrayList<TaskActivity>();
+        Cursor cursor = db.getAllOrderBy(Database.ACTIVITIES_TABLE, String.format("active='1' AND user_type='%s'", userType), "name ASC");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                TaskActivity activity = mapTaskActivity(cursor);
+                taskActivities.add(activity);
+            }
+            cursor.close();
+        }
+        return taskActivities;
+    }
+
+    private TaskActivity mapTaskActivity(Cursor cursor) {
+        TaskActivity taskActivity = new TaskActivity();
+        taskActivity.setId(cursor.getInt(0));
+        taskActivity.setUserType(cursor.getInt(1));
+        taskActivity.setName(cursor.getString(2));
+        taskActivity.setModifiedDate(cursor.getString(3));
+        taskActivity.setActive(cursor.getInt(4) != 0);
+        return taskActivity;
+    }
+
+    public boolean saveTaskActivity(TaskActivity taskActivity) {
+        if (taskActivity != null) {
+            ContentValues values = new ContentValues();
+            values.put("name", taskActivity.getName());
+            values.put("user_type", taskActivity.getUserType());
+            values.put("active", taskActivity.isActive() ? 1 : 0);
+            values.put("date", taskActivity.getModifiedDateString());
+
+            TaskActivity taskActivityDB = getTaskActivity(taskActivity.getId());
+            if (taskActivityDB != null) {
+                if (taskActivityDB.isGreaterDate(taskActivity)) {
+                    db.update(Database.ACTIVITIES_TABLE, values, String.format("id='%s'", taskActivity.getId()));
+                }
+            } else {
+                values.put("id", taskActivity.getId());
+                db.insert(Database.ACTIVITIES_TABLE, values);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public Product getProduct(int userId, String productId) {
+        Cursor cursor = db.get(Database.PRODUCTS_TABLE, String.format("id='%s' AND user='%s'", productId, userId));
+        if (cursor != null) {
+            Product product = mapProduct(cursor);
+            cursor.close();
+            return product;
+        }
+        return null;
+    }
+
+    public ArrayList<Product> getProducts(int userId) {
+        ArrayList<Product> products = new ArrayList<Product>();
+        Cursor cursor = db.getAllOrderBy(Database.PRODUCTS_TABLE, String.format("user='%s'", userId), "name ASC");
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Product product = mapProduct(cursor);
+                products.add(product);
+            }
+            cursor.close();
+        }
+        return products;
+    }
+
+    private Product mapProduct(Cursor cursor) {
+        Product product = new Product();
+        product.setId(cursor.getString(0));
+        product.setUser(getUser(cursor.getInt(1)));
+        product.setName(cursor.getString(2));
+        product.setModifiedDate(cursor.getString(3));
+        return product;
+    }
+
+    public boolean saveProduct(Product product) {
+        if (product != null) {
+            ContentValues values = new ContentValues();
+            values.put("name", product.getName());
+            values.put("user", product.getUser().getId());
+            values.put("date", product.getModifiedDateString());
+
+            Product productDB = getProduct(product.getUser().getId(), product.getId());
+            if (productDB != null) {
+                if (productDB.isGreaterDate(product)) {
+                    db.update(Database.PRODUCTS_TABLE, values, String.format("id='%s' AND user='%s'", product.getId(), product.getUser().getId()));
+                }
+            } else {
+                values.put("id", product.getId());
+                db.insert(Database.PRODUCTS_TABLE, values);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteProducts(int userId) {
+        return db.delete(Database.PRODUCTS_TABLE, String.format("user='%s'", userId)) != Database.ERROR;
     }
 
     public Attachment.File getFile(int fileId) {

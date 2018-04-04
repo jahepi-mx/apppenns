@@ -21,7 +21,9 @@ import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 import pennsylvania.jahepi.com.apppenns.entities.Client;
 import pennsylvania.jahepi.com.apppenns.entities.Message;
 import pennsylvania.jahepi.com.apppenns.entities.Notification;
+import pennsylvania.jahepi.com.apppenns.entities.Product;
 import pennsylvania.jahepi.com.apppenns.entities.Task;
+import pennsylvania.jahepi.com.apppenns.entities.TaskActivity;
 import pennsylvania.jahepi.com.apppenns.entities.Type;
 import pennsylvania.jahepi.com.apppenns.entities.Ubication;
 import pennsylvania.jahepi.com.apppenns.entities.User;
@@ -358,6 +360,18 @@ public class CustomApplication extends Application {
 
     public boolean updateMessageField(Message message, String field, String value) {
         return dao.updateMessageField(message, field, value);
+    }
+
+    public boolean saveProduct(Product product) {
+        return dao.saveProduct(product);
+    }
+
+    public boolean deleteProducts(int userId) {
+        return dao.deleteProducts(userId);
+    }
+
+    public boolean saveTaskActivity(TaskActivity taskActivity) {
+        return dao.saveTaskActivity(taskActivity);
     }
 
     public boolean saveClient(Client client) {

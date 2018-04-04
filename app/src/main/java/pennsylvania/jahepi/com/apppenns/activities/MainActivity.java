@@ -12,6 +12,8 @@ import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.components.CalendarBridge;
 import pennsylvania.jahepi.com.apppenns.tasks.ClientSync;
+import pennsylvania.jahepi.com.apppenns.tasks.ProductSync;
+import pennsylvania.jahepi.com.apppenns.tasks.UserSyncDialog;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
@@ -22,7 +24,7 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
 
     private TextView viewSms;
     private MessageNotifier messageNotifier;
-    private Button logoutBtn, smsBtn, activityBtn, clientSyncBtn, calendarBtn;
+    private Button logoutBtn, smsBtn, activityBtn, clientSyncBtn, calendarBtn, userDataSyncBtn, productSyncBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         activityBtn = (Button) findViewById(R.id.activityBtn);
         clientSyncBtn = (Button) findViewById(R.id.clientSyncBtn);
         calendarBtn = (Button) findViewById(R.id.calendarBtn);
+        userDataSyncBtn = (Button) findViewById(R.id.userSyncBtn);
+        productSyncBtn = (Button) findViewById(R.id.productSyncBtn);
 
         TextView view = (TextView) findViewById(R.id.welcomeTextView);
         view.setText(application.getUser().getName());
@@ -51,6 +55,8 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
         activityBtn.setOnClickListener(this);
         clientSyncBtn.setOnClickListener(this);
         calendarBtn.setOnClickListener(this);
+        productSyncBtn.setOnClickListener(this);
+        userDataSyncBtn.setOnClickListener(this);
     }
 
     @Override
@@ -73,6 +79,20 @@ public class MainActivity extends AuthActivity implements View.OnClickListener {
             if (!clientSync.isRunning()) {
                 clientSync.setManager(getFragmentManager());
                 clientSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+        if (v == userDataSyncBtn) {
+            UserSyncDialog userSyncDialog = UserSyncDialog.getInstance(getApplicationContext());
+            if (!userSyncDialog.isRunning()) {
+                userSyncDialog.setManager(getFragmentManager());
+                userSyncDialog.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+        if (v == productSyncBtn) {
+            ProductSync productSync = ProductSync.getInstance(getApplicationContext());
+            if (!productSync.isRunning()) {
+                productSync.setManager(getFragmentManager());
+                productSync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
         if (v == calendarBtn) {

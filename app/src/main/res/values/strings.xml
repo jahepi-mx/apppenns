@@ -27,6 +27,8 @@
     <string name="txt_error_desc_send">La descripción es obligatoria</string>
     <string name="txt_error_hour">Verifique que la hora inicial sea menor a la final</string>
     <string name="txt_error_client_sync">Error de conexión a la base de datos de clientes.</string>
+    <string name="txt_error_product_sync">Error de conexión a la base de datos de productos.</string>
+    <string name="txt_error_user_sync">Error de conexión a la base de datos de usuarios.</string>
     <string name="txt_error_gps">Habilite el GPS para realizar la acción</string>
     <string name="txt_error_conclusion">La conclusión es un campo obligatorio</string>
     <string name="txt_error_task">No hay una actividad definida.</string>
@@ -107,6 +109,8 @@
     <string name="btn_activity">Actividades</string>
     <string name="btn_calendar">Calendario</string>
     <string name="btn_client_sync">Actualiza Clientes</string>
+    <string name="btn_user_sync">Actualiza Datos Sesión</string>
+    <string name="btn_product_sync">Actualiza Productos</string>
     <string name="btn_add">Agregar</string>
     <string name="btn_register">Registrar</string>
     <string name="btn_new">Nuevo</string>
