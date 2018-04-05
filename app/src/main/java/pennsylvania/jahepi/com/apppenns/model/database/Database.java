@@ -27,7 +27,7 @@ public class Database {
     public static final String PRODUCTS_TABLE = "products";
     public static final String ACTIVITIES_TABLE = "activities";
 
-    private static final int DB_VERSION = 44;
+    private static final int DB_VERSION = 45;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -86,7 +86,7 @@ public class Database {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "SELECT tasks.id AS task_id, tasks.user, tasks.address AS address_id, tasks.description, tasks.date AS task_date, tasks.in_lat, tasks.in_lon, tasks.out_lat, tasks.out_lon, tasks.send, tasks.register_date, tasks.check_in, tasks.check_out, tasks.checkin_date, tasks.checkout_date, tasks.conclusion, " +
             "addresses.client AS client_id, addresses.address, addresses.latitude, addresses.longitude, addresses.date AS address_date, addresses.active AS address_active, " +
-            "clients.name, clients.kepler, clients.date AS client_date, clients.active AS client_active, tasks.cancelled, types.id AS type_id, types.name AS type_name, types.date AS type_date, types.active AS type_active, tasks.start_time, tasks.end_time, tasks.event_id, tasks.emails, tasks.parent_task, tasks.fingerprint, tasks.status " +
+            "clients.name, clients.kepler, clients.date AS client_date, clients.active AS client_active, tasks.cancelled, types.id AS type_id, types.name AS type_name, types.date AS type_date, types.active AS type_active, tasks.start_time, tasks.end_time, tasks.event_id, tasks.emails, tasks.parent_task, tasks.fingerprint, tasks.status, tasks.activities, tasks.conclusion_competence, tasks.products " +
             "FROM tasks INNER JOIN addresses ON tasks.address = addresses.id " +
             "INNER JOIN clients ON clients.id = addresses.client " +
             "INNER JOIN types ON tasks.type = types.id " +

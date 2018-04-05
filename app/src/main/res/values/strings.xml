@@ -16,6 +16,7 @@
     <string name="label_password">Contraseña</string>
     <string name="label_logout">Salir</string>
     <string name="label_sms">Mensajes</string>
+    <string name="label_activity">Actividades</string>
     <string name="label_client">Cliente/Sucursal</string>
     <string name="label_task">Actividades</string>
     <string name="label_new_sms">%1$s</string>

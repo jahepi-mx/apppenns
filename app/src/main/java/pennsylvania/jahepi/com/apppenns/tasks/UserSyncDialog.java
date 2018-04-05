@@ -178,6 +178,11 @@ public class UserSyncDialog extends AsyncTask<Void, UserSyncDialog.DownloadInfo,
                 user.setActive(json.getInt("active") != 0);
 
                 if (application.saveUser(user)) {
+                    User loggedUser = application.getUser();
+                    if (loggedUser != null && loggedUser.equals(user)) {
+                        loggedUser.setType(user.getType());
+                        loggedUser.setGroups(user.getGroups());
+                    }
                     Log.d(TAG, "syncUsers inserted: " + user.getName());
                 }
 

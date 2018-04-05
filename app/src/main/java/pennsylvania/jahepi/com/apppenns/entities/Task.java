@@ -41,14 +41,38 @@ public class Task extends Entity {
     private boolean updateAllState;
     private String status;
     private boolean hasChildren;
+    private ArrayList<TaskActivity> taskActivities;
 
     public Task() {
         checkInCoord = new Coord();
         checkOutCoord = new Coord();
         attachments = new ArrayList<Attachment>();
         notifications = new ArrayList<Notification>();
+        taskActivities = new ArrayList<TaskActivity>();
         updateAllState = true;
         status = STATUS_NONE;
+    }
+
+    public void setTaskActivities(ArrayList<TaskActivity> taskActivities) {
+        this.taskActivities = taskActivities;
+    }
+
+    public ArrayList<TaskActivity> getTaskActivities() {
+        return taskActivities;
+    }
+
+    public String getTaskActivitiesText() {
+        String txt = "";
+        int a = 0;
+        Iterator<TaskActivity> iterator = taskActivities.iterator();
+        while (iterator.hasNext()) {
+            if (++a == taskActivities.size()) {
+                txt += iterator.next().getId();
+            } else {
+                txt += iterator.next().getId() + ",";
+            }
+        }
+        return txt;
     }
 
     public void setCheckOutLatitude(double latitude) {

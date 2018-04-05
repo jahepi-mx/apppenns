@@ -5,21 +5,29 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import pennsylvania.jahepi.com.apppenns.CustomApplication;
 import pennsylvania.jahepi.com.apppenns.R;
@@ -28,6 +36,7 @@ import pennsylvania.jahepi.com.apppenns.activities.TaskViewActivity;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
+import pennsylvania.jahepi.com.apppenns.entities.TaskActivity;
 
 /**
  * Created by javier.hernandez on 08/03/2016.
@@ -46,6 +55,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
     public FileAttachmentAdapter fileAttachmentAdapter;
     public File photoFile;
     private TaskViewActivity parentActivity;
+    private HashMap<Integer, CheckBox> checkboxesHashMap = new HashMap<>();
 
     public CheckOutDialog(Context context, TaskViewActivity parentActivity, DialogListener listener) {
         super(context);
@@ -57,6 +67,8 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
         emailTextiew = (MultiAutoCompleteTextView) view.findViewById(R.id.emailText);
         emailTextiew.setAdapter(adapter);
         emailTextiew.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+
+        this.buildActivitiesCheckboxes(view);
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this.parentActivity, R.layout.file_item, parentActivity.task.isCheckout());
         attachmentList = (ListView) view.findViewById(R.id.attachmentsListView);
@@ -128,6 +140,50 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
         yesBtn.setOnClickListener(this);
     }
 
+    private void buildActivitiesCheckboxes(View view) {
+
+        CustomApplication app = parentActivity.getCustomApplication();
+        ArrayList<TaskActivity> taskActivities = app.getTaskActivities();
+
+        TableLayout tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        TableRow row = new TableRow(view.getContext());
+        TableLayout.LayoutParams rowParams = new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        int margin = (int) (10f * dm.density);
+        rowParams.setMargins(margin, margin, margin, margin);
+        row.setLayoutParams(rowParams);
+        tableLayout.addView(row, 6);
+
+        if (taskActivities.size() > 0) {
+            TextView textView = new TextView(view.getContext());
+            textView.setText(R.string.label_activity);
+            textView.setTypeface(Typeface.DEFAULT_BOLD);
+            textView.setTextSize(6 * dm.density);
+            row.addView(textView);
+        }
+
+        row = new TableRow(view.getContext());
+        row.setLayoutParams(rowParams);
+
+        if (taskActivities.size() > 0) {
+            LinearLayout linearLayout = new LinearLayout(view.getContext());
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            row.addView(linearLayout);
+
+            Iterator<TaskActivity> iterator = taskActivities.iterator();
+            while (iterator.hasNext()) {
+                TaskActivity taskActivity = iterator.next();
+                CheckBox checkBox = new CheckBox(view.getContext());
+                checkBox.setText(taskActivity.getName());
+                checkBox.setId(taskActivity.getId());
+                linearLayout.addView(checkBox);
+                checkboxesHashMap.put(taskActivity.getId(), checkBox);
+            }
+        }
+        tableLayout.addView(row, 7);
+    }
+
     public String getConclusion() {
         return editText.getText().toString();
     }
@@ -136,12 +192,36 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
         return emailTextiew.getText().toString();
     }
 
+    public ArrayList<TaskActivity> getTaskActivities() {
+        ArrayList<TaskActivity> taskActivities = new ArrayList<>();
+        for (CheckBox cb : checkboxesHashMap.values()) {
+            if (cb.isChecked()) {
+                TaskActivity taskActivity = new TaskActivity();
+                taskActivity.setName(cb.getText().toString());
+                taskActivity.setId(cb.getId());
+                taskActivities.add(taskActivity);
+            }
+        }
+        return taskActivities;
+    }
+
     public void setConclusion(String conclusion) {
         editText.setText(conclusion);
     }
 
     public void setEmails(String emails) {
         emailTextiew.setText(emails);
+    }
+
+    public void setTaskActivities(ArrayList<TaskActivity> taskActivities) {
+        Iterator<TaskActivity> iterator = taskActivities.iterator();
+        while (iterator.hasNext()) {
+            TaskActivity taskActivity = iterator.next();
+            if (checkboxesHashMap.containsKey(taskActivity.getId())) {
+                CheckBox cb = checkboxesHashMap.get(taskActivity.getId());
+                cb.setChecked(true);
+            }
+        }
     }
 
     @Override

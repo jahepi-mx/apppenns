@@ -370,6 +370,10 @@ public class CustomApplication extends Application {
         return dao.deleteProducts(userId);
     }
 
+    public ArrayList<TaskActivity> getTaskActivities() {
+        return dao.getTaskActivities(getUser().getType());
+    }
+
     public boolean saveTaskActivity(TaskActivity taskActivity) {
         return dao.saveTaskActivity(taskActivity);
     }

@@ -697,6 +697,19 @@ public class Dao {
         task.setFingerprint(cursor.getString(36));
         task.setStatus(cursor.getString(37));
 
+        String taskActivitiesText = cursor.getString(38);
+        if (taskActivitiesText != null) {
+            ArrayList<TaskActivity> taskActivities = new ArrayList<>();
+            String[] ids = taskActivitiesText.split(",");
+            for (String id : ids) {
+                TaskActivity taskActivity = getTaskActivity(Integer.valueOf(id));
+                if (taskActivity != null) {
+                    taskActivities.add(taskActivity);
+                }
+            }
+            task.setTaskActivities(taskActivities);
+        }
+
         Task parentTask = new Task();
         parentTask.setId(cursor.getInt(35));
         parentTask.setUser(task.getUser());
@@ -739,6 +752,7 @@ public class Dao {
                 values.put("checkin_date", task.getCheckInDate());
                 values.put("checkout_date", task.getCheckOutDate());
                 values.put("conclusion", task.getConclusion());
+                values.put("activities", task.getTaskActivitiesText());
                 values.put("cancelled", task.isCancelled() ? 1 : 0);
                 values.put("emails", task.getEmails());
                 values.put("parent_task", task.getParentTaskId());

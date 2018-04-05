@@ -266,6 +266,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             if (task != null) {
                 checkOutAlert.setConclusion(task.getConclusion());
                 checkOutAlert.setEmails(task.getEmails());
+                checkOutAlert.setTaskActivities(task.getTaskActivities());
             }
             checkOutAlert.show();
         }
@@ -372,6 +373,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setSend(false);
                             task.setConclusion(checkOutAlert.getConclusion());
                             task.setEmails(checkOutAlert.getEmails());
+                            task.setTaskActivities(checkOutAlert.getTaskActivities());
                             if (application.saveTask(task, false)) {
                                 boolean flag = false;
                                 if (application.isTracking()) {
@@ -397,6 +399,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                         public void error(String message) {
                             task.setConclusion(checkOutAlert.getConclusion());
                             task.setEmails(checkOutAlert.getEmails());
+                            task.setTaskActivities(checkOutAlert.getTaskActivities());
                             toast(message);
                         }
                     });

@@ -65,6 +65,10 @@ public class User extends Entity {
         this.type = type;
     }
 
+    public void setGroups(ArrayList<String> groups) {
+        this.groups = groups;
+    }
+
     @Override
     public boolean equals(Object o) {
         User user = (User) o;
