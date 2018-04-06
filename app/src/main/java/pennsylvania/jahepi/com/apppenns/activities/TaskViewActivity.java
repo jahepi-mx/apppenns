@@ -267,6 +267,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                 checkOutAlert.setConclusion(task.getConclusion());
                 checkOutAlert.setEmails(task.getEmails());
                 checkOutAlert.setTaskActivities(task.getTaskActivities());
+                checkOutAlert.setTaskProducts(task.getTaskProducts());
             }
             checkOutAlert.show();
         }
@@ -374,6 +375,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setConclusion(checkOutAlert.getConclusion());
                             task.setEmails(checkOutAlert.getEmails());
                             task.setTaskActivities(checkOutAlert.getTaskActivities());
+                            task.setTaskProducts(checkOutAlert.getTaskProducts());
                             if (application.saveTask(task, false)) {
                                 boolean flag = false;
                                 if (application.isTracking()) {
@@ -400,6 +402,7 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setConclusion(checkOutAlert.getConclusion());
                             task.setEmails(checkOutAlert.getEmails());
                             task.setTaskActivities(checkOutAlert.getTaskActivities());
+                            task.setTaskProducts(checkOutAlert.getTaskProducts());
                             toast(message);
                         }
                     });

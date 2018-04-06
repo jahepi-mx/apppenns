@@ -1,9 +1,7 @@
 package pennsylvania.jahepi.com.apppenns.dialogs;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -46,7 +44,7 @@ import pennsylvania.jahepi.com.apppenns.entities.TaskActivity;
 /**
  * Created by javier.hernandez on 08/03/2016.
  */
-public class CheckOutDialog extends AlertDialog implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class CheckOutDialog extends AlertDialog implements View.OnClickListener, AdapterView.OnItemClickListener, ProductItem.ProductItemListener {
 
     public final static int REQUEST_CODE_FILE_FROM_CHECKOUT = 8;
     public final static int REQUEST_IMAGE_CAPTURE_FROM_CHECKOUT = 16;
@@ -64,17 +62,20 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
     private AutoCompleteTextView productTextView;
     private ProductAdapter productAdapter;
     private LinearLayout productLinearLayout;
+    private ArrayList<Product> taskProducts;
+    private View view;
 
     public CheckOutDialog(Context context, TaskViewActivity parentActivity, DialogListener listener) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = (View) inflater.inflate(R.layout.checkout_dialog, null);
+        view = (View) inflater.inflate(R.layout.checkout_dialog, null);
         this.parentActivity = parentActivity;
         editText = (EditText) view.findViewById(R.id.taskConclusionEditText);
         adapter = new AutoCompleteEmailAdapter(context, R.layout.generic_item);
         emailTextiew = (MultiAutoCompleteTextView) view.findViewById(R.id.emailText);
         emailTextiew.setAdapter(adapter);
         emailTextiew.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        taskProducts = new ArrayList<>();
 
         this.buildActivitiesCheckboxes(view);
         this.buildProductSearch(view);
@@ -188,8 +189,13 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         Product product = productAdapter.getItem(position);
         productTextView.setText("");
 
-        ProductItem productItem = new ProductItem(view.getContext(), product);
+        ProductItem productItem = new ProductItem(view.getContext(), product, this);
         productLinearLayout.addView(productItem);
+        taskProducts.add(product);
+    }
+
+    public void onDelete(Product product) {
+        taskProducts.remove(product);
     }
 
     private void buildActivitiesCheckboxes(View view) {
@@ -244,6 +250,10 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         return emailTextiew.getText().toString();
     }
 
+    public ArrayList<Product> getTaskProducts() {
+        return taskProducts;
+    }
+
     public ArrayList<TaskActivity> getTaskActivities() {
         ArrayList<TaskActivity> taskActivities = new ArrayList<>();
         for (CheckBox cb : checkboxesHashMap.values()) {
@@ -272,6 +282,18 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
             if (checkboxesHashMap.containsKey(taskActivity.getId())) {
                 CheckBox cb = checkboxesHashMap.get(taskActivity.getId());
                 cb.setChecked(true);
+            }
+        }
+    }
+
+    public void setTaskProducts(ArrayList<Product> products) {
+        CustomApplication app = parentActivity.getCustomApplication();
+        boolean hasProducts = app.getProductsTotal() > 0;
+        if (hasProducts) {
+            for (Product product : products) {
+                ProductItem productItem = new ProductItem(view.getContext(), product, this);
+                productLinearLayout.addView(productItem);
+                taskProducts.add(product);
             }
         }
     }

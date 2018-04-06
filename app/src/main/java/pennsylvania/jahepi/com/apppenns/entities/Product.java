@@ -40,4 +40,8 @@ public class Product extends Entity {
     public String toString() {
         return id;
     }
+
+    public boolean equals(Product product) {
+        return id == product.id && user.getId() == product.getUser().getId();
+    }
 }

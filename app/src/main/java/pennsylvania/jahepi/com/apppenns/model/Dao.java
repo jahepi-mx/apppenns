@@ -726,12 +726,29 @@ public class Dao {
             ArrayList<TaskActivity> taskActivities = new ArrayList<>();
             String[] ids = taskActivitiesText.split(",");
             for (String id : ids) {
-                TaskActivity taskActivity = getTaskActivity(Integer.valueOf(id));
-                if (taskActivity != null) {
-                    taskActivities.add(taskActivity);
+                if (!id.trim().equals("")) {
+                    TaskActivity taskActivity = getTaskActivity(Integer.valueOf(id));
+                    if (taskActivity != null) {
+                        taskActivities.add(taskActivity);
+                    }
                 }
             }
             task.setTaskActivities(taskActivities);
+        }
+
+        String taskProductsText = cursor.getString(40);
+        if (taskProductsText != null) {
+            ArrayList<Product> taskProducts = new ArrayList<>();
+            String[] ids = taskProductsText.split(",");
+            for (String id : ids) {
+                if (!id.trim().equals("")) {
+                    Product product = getProduct(task.getUser().getId(), id);
+                    if (product != null) {
+                        taskProducts.add(product);
+                    }
+                }
+            }
+            task.setTaskProducts(taskProducts);
         }
 
         Task parentTask = new Task();
@@ -777,6 +794,7 @@ public class Dao {
                 values.put("checkout_date", task.getCheckOutDate());
                 values.put("conclusion", task.getConclusion());
                 values.put("activities", task.getTaskActivitiesText());
+                values.put("products", task.getTaskProductsText());
                 values.put("cancelled", task.isCancelled() ? 1 : 0);
                 values.put("emails", task.getEmails());
                 values.put("parent_task", task.getParentTaskId());

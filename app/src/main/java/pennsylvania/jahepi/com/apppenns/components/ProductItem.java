@@ -22,8 +22,9 @@ public class ProductItem extends LinearLayout implements View.OnClickListener {
     private Product product;
     private TextView nameTextView;
     private Button deleteBtn;
+    private ProductItemListener listener;
 
-    public ProductItem(Context context, Product product) {
+    public ProductItem(Context context, Product product, ProductItemListener listener) {
         super(context);
 
         TableLayout tableLayout = new TableLayout(getContext());
@@ -51,11 +52,18 @@ public class ProductItem extends LinearLayout implements View.OnClickListener {
         row.addView(deleteBtn);
 
         addView(tableLayout);
+
+        this.listener = listener;
     }
 
     @Override
     public void onClick(View v) {
         LinearLayout linearLayout = (LinearLayout) v.getParent().getParent().getParent().getParent();
+        listener.onDelete(product);
         linearLayout.removeView(this);
+    }
+
+    public interface ProductItemListener {
+        void onDelete(Product product);
     }
 }
