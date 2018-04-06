@@ -298,6 +298,19 @@ public class Dao {
         return products;
     }
 
+    public ArrayList<Product> getProducts(int userId, String name) {
+        Cursor cursor = db.getAllOrderBy(Database.PRODUCTS_TABLE, String.format("(name LIKE '%%%s%%' OR id LIKE '%%%s%%') AND user='%s'", name, name, userId), "name ASC");
+        ArrayList<Product> products = new ArrayList<Product>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Product product = mapProduct(cursor);
+                products.add(product);
+            }
+            cursor.close();
+        }
+        return products;
+    }
+
     private Product mapProduct(Cursor cursor) {
         Product product = new Product();
         product.setId(cursor.getString(0));
@@ -527,6 +540,17 @@ public class Dao {
 
     public int getNoReadMessagesTotal(int userId) {
         Cursor cursor = db.getNoReadMessagesTotal(userId);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int n = cursor.getInt(0);
+            cursor.close();
+            return n;
+        }
+        return 0;
+    }
+
+    public int getProductsTotal(int userId) {
+        Cursor cursor = db.getProductsTotal(userId);
         if (cursor != null) {
             cursor.moveToFirst();
             int n = cursor.getInt(0);

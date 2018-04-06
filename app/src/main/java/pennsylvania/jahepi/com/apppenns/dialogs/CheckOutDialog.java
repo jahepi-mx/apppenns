@@ -12,7 +12,9 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -34,14 +36,17 @@ import pennsylvania.jahepi.com.apppenns.R;
 import pennsylvania.jahepi.com.apppenns.Util;
 import pennsylvania.jahepi.com.apppenns.activities.TaskViewActivity;
 import pennsylvania.jahepi.com.apppenns.adapters.FileAttachmentAdapter;
+import pennsylvania.jahepi.com.apppenns.adapters.ProductAdapter;
+import pennsylvania.jahepi.com.apppenns.components.ProductItem;
 import pennsylvania.jahepi.com.apppenns.components.filechooser.activities.FileChooserActivity;
 import pennsylvania.jahepi.com.apppenns.entities.Attachment;
+import pennsylvania.jahepi.com.apppenns.entities.Product;
 import pennsylvania.jahepi.com.apppenns.entities.TaskActivity;
 
 /**
  * Created by javier.hernandez on 08/03/2016.
  */
-public class CheckOutDialog extends AlertDialog implements View.OnClickListener {
+public class CheckOutDialog extends AlertDialog implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     public final static int REQUEST_CODE_FILE_FROM_CHECKOUT = 8;
     public final static int REQUEST_IMAGE_CAPTURE_FROM_CHECKOUT = 16;
@@ -56,6 +61,9 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
     public File photoFile;
     private TaskViewActivity parentActivity;
     private HashMap<Integer, CheckBox> checkboxesHashMap = new HashMap<>();
+    private AutoCompleteTextView productTextView;
+    private ProductAdapter productAdapter;
+    private LinearLayout productLinearLayout;
 
     public CheckOutDialog(Context context, TaskViewActivity parentActivity, DialogListener listener) {
         super(context);
@@ -69,6 +77,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
         emailTextiew.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         this.buildActivitiesCheckboxes(view);
+        this.buildProductSearch(view);
 
         fileAttachmentAdapter = new FileAttachmentAdapter(this.parentActivity, R.layout.file_item, parentActivity.task.isCheckout());
         attachmentList = (ListView) view.findViewById(R.id.attachmentsListView);
@@ -138,6 +147,49 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener 
 
         noBtn.setOnClickListener(this);
         yesBtn.setOnClickListener(this);
+    }
+
+    private void buildProductSearch(View view) {
+        CustomApplication app = parentActivity.getCustomApplication();
+        boolean hasProducts = app.getProductsTotal() > 0;
+
+        TableLayout tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        TableRow row = new TableRow(view.getContext());
+        TableLayout.LayoutParams rowParams = new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        int margin = (int) (10f * dm.density);
+        rowParams.setMargins(margin, margin, margin, margin);
+        row.setLayoutParams(rowParams);
+        tableLayout.addView(row, 8);
+
+        if (hasProducts) {
+            productLinearLayout = new LinearLayout(view.getContext());
+            productLinearLayout.setOrientation(LinearLayout.VERTICAL);
+            row.addView(productLinearLayout);
+
+            TextView textView = new TextView(view.getContext());
+            textView.setText(R.string.label_products);
+            textView.setTypeface(Typeface.DEFAULT_BOLD);
+            textView.setTextSize(6 * dm.density);
+            productLinearLayout.addView(textView);
+
+            productTextView = new AutoCompleteTextView(view.getContext());
+            productLinearLayout.addView(productTextView);
+
+            productAdapter = new ProductAdapter(app, R.layout.generic_item);
+            productTextView.setAdapter(productAdapter);
+            productTextView.setOnItemClickListener(this);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Product product = productAdapter.getItem(position);
+        productTextView.setText("");
+
+        ProductItem productItem = new ProductItem(view.getContext(), product);
+        productLinearLayout.addView(productItem);
     }
 
     private void buildActivitiesCheckboxes(View view) {

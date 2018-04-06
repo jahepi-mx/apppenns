@@ -42,6 +42,7 @@ public class Task extends Entity {
     private String status;
     private boolean hasChildren;
     private ArrayList<TaskActivity> taskActivities;
+    private ArrayList<Product> taskProducts;
 
     public Task() {
         checkInCoord = new Coord();
@@ -49,6 +50,7 @@ public class Task extends Entity {
         attachments = new ArrayList<Attachment>();
         notifications = new ArrayList<Notification>();
         taskActivities = new ArrayList<TaskActivity>();
+        taskProducts = new ArrayList<Product>();
         updateAllState = true;
         status = STATUS_NONE;
     }
@@ -59,6 +61,28 @@ public class Task extends Entity {
 
     public ArrayList<TaskActivity> getTaskActivities() {
         return taskActivities;
+    }
+
+    public ArrayList<Product> getTaskProducts() {
+        return taskProducts;
+    }
+
+    public void setTaskProducts(ArrayList<Product> taskProducts) {
+        this.taskProducts = taskProducts;
+    }
+
+    public String getTaskProductsText() {
+        String txt = "";
+        int a = 0;
+        Iterator<Product> iterator = taskProducts.iterator();
+        while (iterator.hasNext()) {
+            if (++a == taskProducts.size()) {
+                txt += iterator.next().getId();
+            } else {
+                txt += iterator.next().getId() + ",";
+            }
+        }
+        return txt;
     }
 
     public String getTaskActivitiesText() {

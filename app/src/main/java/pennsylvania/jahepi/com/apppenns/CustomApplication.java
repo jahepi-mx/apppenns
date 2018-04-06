@@ -198,6 +198,13 @@ public class CustomApplication extends Application {
         return 0;
     }
 
+    public int getProductsTotal() {
+        if (getUser() != null) {
+            return dao.getProductsTotal(getUser().getId());
+        }
+        return 0;
+    }
+
     public User getUser(int userId) {
         return dao.getUser(userId);
     }
@@ -360,6 +367,10 @@ public class CustomApplication extends Application {
 
     public boolean updateMessageField(Message message, String field, String value) {
         return dao.updateMessageField(message, field, value);
+    }
+
+    public ArrayList<Product> getProducts(String name) {
+        return dao.getProducts(getUser().getId(), name);
     }
 
     public boolean saveProduct(Product product) {

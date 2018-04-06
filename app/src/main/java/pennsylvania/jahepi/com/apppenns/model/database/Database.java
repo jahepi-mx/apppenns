@@ -72,6 +72,11 @@ public class Database {
         }
     }
 
+    public Cursor getProductsTotal(int userId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        return db.rawQuery("SELECT COUNT(*) AS total FROM " + PRODUCTS_TABLE + " WHERE user='" + userId + "'", null);
+    }
+
     public Cursor getNoReadMessagesTotal(int userId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         return db.rawQuery("SELECT COUNT(*) AS total FROM " + MESSAGES_TABLE + " WHERE (from_user='" + userId + "' OR to_user='" + userId + "') AND read='0'", null);
