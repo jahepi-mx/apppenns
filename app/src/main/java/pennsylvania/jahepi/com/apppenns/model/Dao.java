@@ -742,7 +742,9 @@ public class Dao {
             String[] ids = taskProductsText.split(",");
             for (String id : ids) {
                 if (!id.trim().equals("")) {
-                    Product product = getProduct(task.getUser().getId(), id);
+                    String parts[] = id.split("@");
+                    Product product = getProduct(task.getUser().getId(), parts[0]);
+                    product.setQuantity(Integer.valueOf(parts[1]));
                     if (product != null) {
                         taskProducts.add(product);
                     }

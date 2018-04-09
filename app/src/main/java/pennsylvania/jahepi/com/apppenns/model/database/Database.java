@@ -27,7 +27,7 @@ public class Database {
     public static final String PRODUCTS_TABLE = "products";
     public static final String ACTIVITIES_TABLE = "activities";
 
-    private static final int DB_VERSION = 45;
+    private static final int DB_VERSION = 46;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;

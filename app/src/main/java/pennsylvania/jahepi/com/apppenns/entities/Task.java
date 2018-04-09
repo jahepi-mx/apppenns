@@ -76,10 +76,11 @@ public class Task extends Entity {
         int a = 0;
         Iterator<Product> iterator = taskProducts.iterator();
         while (iterator.hasNext()) {
+            Product product = iterator.next();
             if (++a == taskProducts.size()) {
-                txt += iterator.next().getId();
+                txt += product.getId() + "@" + product.getQuantity();
             } else {
-                txt += iterator.next().getId() + ",";
+                txt += product.getId() + "@" + product.getQuantity() + ",";
             }
         }
         return txt;

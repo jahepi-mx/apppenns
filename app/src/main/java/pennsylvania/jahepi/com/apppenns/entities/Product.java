@@ -7,6 +7,7 @@ public class Product extends Entity {
 
     private String id;
     private String name;
+    private int quantity;
     private User user;
 
     public Product() {
@@ -39,6 +40,14 @@ public class Product extends Entity {
 
     public String toString() {
         return id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public boolean equals(Product product) {
