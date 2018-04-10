@@ -735,7 +735,7 @@ public class Dao {
             }
             task.setTaskActivities(taskActivities);
         }
-
+        task.setCompetenceComments(cursor.getString(39));
         String taskProductsText = cursor.getString(40);
         if (taskProductsText != null) {
             ArrayList<Product> taskProducts = new ArrayList<>();
@@ -752,6 +752,7 @@ public class Dao {
             }
             task.setTaskProducts(taskProducts);
         }
+        task.setGeneralComments(cursor.getString(41));
 
         Task parentTask = new Task();
         parentTask.setId(cursor.getInt(35));
@@ -795,6 +796,8 @@ public class Dao {
                 values.put("checkin_date", task.getCheckInDate());
                 values.put("checkout_date", task.getCheckOutDate());
                 values.put("conclusion", task.getConclusion());
+                values.put("competence_comment", task.getCompetenceComments());
+                values.put("general_comment", task.getGeneralComments());
                 values.put("activities", task.getTaskActivitiesText());
                 values.put("products", task.getTaskProductsText());
                 values.put("cancelled", task.isCancelled() ? 1 : 0);

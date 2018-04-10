@@ -13,6 +13,7 @@
     <string name="txt_audio_error">Error al generar el audio</string>
     <string name="txt_session_error">Se ha perdido la sesion!, reingrese usuario y contraseña.</string>
     <string name="label_email">Email</string>
+    <string name="label_quantity">Cantidad</string>
     <string name="label_password">Contraseña</string>
     <string name="label_logout">Salir</string>
     <string name="label_sms">Mensajes</string>
@@ -83,6 +84,8 @@
     <string name="txt_task_gps_status">Por favor espere mientras se procesa la informacion ...</string>
     <string name="txt_error_attachment">El archivo no debe ser mayor a 5MB</string>
     <string name="txt_conclusion">Conclusión (Obligatorio):</string>
+    <string name="txt_general_comment">Comentarios Generales:</string>
+    <string name="txt_competence_comment">Comentarios Competencia:</string>
     <string name="txt_to_users">Destinatarios</string>
     <string name="txt_users">Usuarios</string>
     <string name="txt_confirm">Confirmación</string>

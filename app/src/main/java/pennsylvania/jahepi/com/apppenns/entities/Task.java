@@ -27,6 +27,8 @@ public class Task extends Entity {
     private boolean send;
     private String date;
     private String conclusion;
+    private String generalComments;
+    private String competenceComments;
     private float distance;
     private Type type;
     private String startTime;
@@ -209,6 +211,28 @@ public class Task extends Entity {
 
     public void setConclusion(String conclusion) {
         this.conclusion = conclusion;
+    }
+
+    public String getCompetenceComments() {
+        if (competenceComments == null) {
+            return "";
+        }
+        return competenceComments;
+    }
+
+    public void setCompetenceComments(String competenceComments) {
+        this.competenceComments = competenceComments;
+    }
+
+    public String getGeneralComments() {
+        if (generalComments == null) {
+            return "";
+        }
+        return generalComments;
+    }
+
+    public void setGeneralComments(String generalComments) {
+        this.generalComments = generalComments;
     }
 
     public String getCheckInDate() {

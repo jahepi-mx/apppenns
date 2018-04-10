@@ -49,7 +49,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
     public final static int REQUEST_CODE_FILE_FROM_CHECKOUT = 8;
     public final static int REQUEST_IMAGE_CAPTURE_FROM_CHECKOUT = 16;
 
-    private EditText editText;
+    private EditText editText, generalCommentEditText, competenceCommentEditText;
     private MultiAutoCompleteTextView emailTextiew;
     private DialogListener listener;
     private AutoCompleteEmailAdapter adapter;
@@ -61,7 +61,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
     private HashMap<Integer, CheckBox> checkboxesHashMap = new HashMap<>();
     private AutoCompleteTextView productTextView;
     private ProductAdapter productAdapter;
-    private LinearLayout productLinearLayout;
+    private LinearLayout productSearchLinearLayout, productsLinearLayout;
     private ArrayList<Product> taskProducts;
     private View view;
 
@@ -71,6 +71,8 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         view = (View) inflater.inflate(R.layout.checkout_dialog, null);
         this.parentActivity = parentActivity;
         editText = (EditText) view.findViewById(R.id.taskConclusionEditText);
+        generalCommentEditText = (EditText) view.findViewById(R.id.taskGeneralCommentEditText);
+        competenceCommentEditText = (EditText) view.findViewById(R.id.taskCompetenceCommentEditText);
         adapter = new AutoCompleteEmailAdapter(context, R.layout.generic_item);
         emailTextiew = (MultiAutoCompleteTextView) view.findViewById(R.id.emailText);
         emailTextiew.setAdapter(adapter);
@@ -155,33 +157,44 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         boolean hasProducts = app.getProductsTotal() > 0;
 
         TableLayout tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
-        TableRow row = new TableRow(view.getContext());
-        TableLayout.LayoutParams rowParams = new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         int margin = (int) (10f * dm.density);
-        rowParams.setMargins(margin, margin, margin, margin);
-        row.setLayoutParams(rowParams);
-        tableLayout.addView(row, 8);
-
+        int level = 8;
         if (hasProducts) {
-            productLinearLayout = new LinearLayout(view.getContext());
-            productLinearLayout.setOrientation(LinearLayout.VERTICAL);
-            row.addView(productLinearLayout);
+
+            TableRow row = new TableRow(view.getContext());
+            TableLayout.LayoutParams rowParams = new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+            rowParams.setMargins(margin, margin, margin, margin);
+            row.setLayoutParams(rowParams);
+            tableLayout.addView(row, level++);
+
+            productSearchLinearLayout = new LinearLayout(view.getContext());
+            productSearchLinearLayout.setOrientation(LinearLayout.VERTICAL);
+            row.addView(productSearchLinearLayout);
 
             TextView textView = new TextView(view.getContext());
             textView.setText(R.string.label_products);
             textView.setTypeface(Typeface.DEFAULT_BOLD);
             textView.setTextSize(6 * dm.density);
-            productLinearLayout.addView(textView);
+            productSearchLinearLayout.addView(textView);
 
             productTextView = new AutoCompleteTextView(view.getContext());
-            productLinearLayout.addView(productTextView);
+            productSearchLinearLayout.addView(productTextView);
 
             productAdapter = new ProductAdapter(app, R.layout.generic_item);
             productTextView.setAdapter(productAdapter);
             productTextView.setOnItemClickListener(this);
         }
+
+        TableRow row = new TableRow(view.getContext());
+        TableLayout.LayoutParams rowParams = new TableLayout.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        rowParams.setMargins(margin, margin, margin, margin);
+        row.setLayoutParams(rowParams);
+        tableLayout.addView(row, level);
+
+        productsLinearLayout = new LinearLayout(view.getContext());
+        productsLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        row.addView(productsLinearLayout);
     }
 
     @Override
@@ -190,7 +203,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         productTextView.setText("");
 
         ProductItem productItem = new ProductItem(view.getContext(), product, this);
-        productLinearLayout.addView(productItem);
+        productsLinearLayout.addView(productItem);
         taskProducts.add(product);
     }
 
@@ -246,12 +259,20 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         return editText.getText().toString();
     }
 
+    public String getGeneralComment() {
+        return generalCommentEditText.getText().toString();
+    }
+
+    public String getCompetenceComment() {
+        return competenceCommentEditText.getText().toString();
+    }
+
     public String getEmails() {
         return emailTextiew.getText().toString();
     }
 
     public ArrayList<Product> getTaskProducts() {
-        return taskProducts;
+        return (ArrayList<Product>) taskProducts.clone();
     }
 
     public ArrayList<TaskActivity> getTaskActivities() {
@@ -287,12 +308,14 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
     }
 
     public void setTaskProducts(ArrayList<Product> products) {
+        taskProducts.clear();
+        productsLinearLayout.removeAllViews();
         CustomApplication app = parentActivity.getCustomApplication();
         boolean hasProducts = app.getProductsTotal() > 0;
         if (hasProducts) {
             for (Product product : products) {
                 ProductItem productItem = new ProductItem(view.getContext(), product, this);
-                productLinearLayout.addView(productItem);
+                productsLinearLayout.addView(productItem);
                 taskProducts.add(product);
             }
         }
