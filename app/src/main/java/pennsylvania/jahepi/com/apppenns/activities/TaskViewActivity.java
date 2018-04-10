@@ -265,6 +265,8 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         if (v == checkoutBtn) {
             if (task != null) {
                 checkOutAlert.setConclusion(task.getConclusion());
+                checkOutAlert.setGeneralComment(task.getGeneralComments());
+                checkOutAlert.setCompetenceComment(task.getCompetenceComments());
                 checkOutAlert.setEmails(task.getEmails());
                 checkOutAlert.setTaskActivities(task.getTaskActivities());
                 checkOutAlert.setTaskProducts(task.getTaskProducts());

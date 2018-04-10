@@ -292,6 +292,14 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         editText.setText(conclusion);
     }
 
+    public void setGeneralComment(String comment) {
+        generalCommentEditText.setText(comment);
+    }
+
+    public void setCompetenceComment(String comment) {
+        competenceCommentEditText.setText(comment);
+    }
+
     public void setEmails(String emails) {
         emailTextiew.setText(emails);
     }
