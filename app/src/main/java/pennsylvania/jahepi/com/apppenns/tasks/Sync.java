@@ -794,6 +794,10 @@ public class Sync extends Service {
                 post.addPart("checkin_date", new StringBody(task.getCheckInDate()));
                 post.addPart("checkout_date", new StringBody(task.getCheckOutDate()));
                 post.addPart("conclusion", new StringBody(URLEncoder.encode(task.getConclusion(), "UTF-8")));
+                post.addPart("general_comment", new StringBody(URLEncoder.encode(task.getGeneralComments(), "UTF-8")));
+                post.addPart("competence_comment", new StringBody(URLEncoder.encode(task.getCompetenceComments(), "UTF-8")));
+                post.addPart("activities", new StringBody(URLEncoder.encode(task.getTaskActivitiesText(), "UTF-8")));
+                post.addPart("products", new StringBody(URLEncoder.encode(task.getTaskProductsText(), "UTF-8")));
                 post.addPart("emails", new StringBody(task.getEmails()));
                 post.addPart("fingerprint", new StringBody(task.getFingerprint()));
                 post.addPart("cancelled", new StringBody(task.isCancelled() ? "1" : "0"));
