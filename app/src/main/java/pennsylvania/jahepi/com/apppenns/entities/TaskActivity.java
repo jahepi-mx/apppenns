@@ -7,7 +7,7 @@ public class TaskActivity extends Entity {
 
     private int id;
     private String name;
-    private int userType;
+    private User user;
 
     public int getId() {
         return id;
@@ -25,11 +25,11 @@ public class TaskActivity extends Entity {
         this.name = name;
     }
 
-    public int getUserType() {
-        return userType;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserType(int userType) {
-        this.userType = userType;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

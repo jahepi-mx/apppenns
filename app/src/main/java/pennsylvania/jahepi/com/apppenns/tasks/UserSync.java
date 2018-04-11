@@ -49,7 +49,7 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
 
         try {
             CustomApplication application = (CustomApplication) context;
-            String url = CustomApplication.SERVICE_URL + "intranet/android/getTaskActivities";
+            String url = CustomApplication.SERVICE_URL + "intranet/android/getTaskActivities/" + application.getUser().getId();
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
             connection.setDoInput(true);
@@ -65,13 +65,13 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
 
             JSONObject jObject = new JSONObject(jsonStr.toString());
             JSONArray activities = jObject.getJSONArray("taskActivities");
-
+            application.deleteActivities();
             for (int i = 0; i < activities.length(); i++) {
                 JSONObject json = activities.getJSONObject(i);
                 TaskActivity taskActivity = new TaskActivity();
                 taskActivity.setId(json.getInt("id"));
                 taskActivity.setName(json.getString("name"));
-                taskActivity.setUserType(json.getInt("userType"));
+                taskActivity.setUser(application.getUser());
                 taskActivity.setModifiedDate(json.getString("date"));
                 taskActivity.setActive(json.getInt("active") != 0);
 
@@ -115,7 +115,6 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
                 user.setEmail(json.getString("email"));
                 user.setPassword(json.getString("password"));
                 user.setName(json.getString("username"));
-                user.setType(json.getInt("type"));
 
                 String groups = json.getString("group");
                 if (groups != null) {

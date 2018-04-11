@@ -98,7 +98,7 @@ public class UserSyncDialog extends AsyncTask<Void, UserSyncDialog.DownloadInfo,
 
         try {
             CustomApplication application = (CustomApplication) context;
-            String url = CustomApplication.SERVICE_URL + "intranet/android/getTaskActivities";
+            String url = CustomApplication.SERVICE_URL + "intranet/android/getTaskActivities/" + application.getUser().getId();
             URL urlRef = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) urlRef.openConnection();
             connection.setDoInput(true);
@@ -115,12 +115,13 @@ public class UserSyncDialog extends AsyncTask<Void, UserSyncDialog.DownloadInfo,
             JSONObject jObject = new JSONObject(jsonStr.toString());
             JSONArray activities = jObject.getJSONArray("taskActivities");
 
+            application.deleteActivities();
             for (int i = 0; i < activities.length(); i++) {
                 JSONObject json = activities.getJSONObject(i);
                 TaskActivity taskActivity = new TaskActivity();
                 taskActivity.setId(json.getInt("id"));
                 taskActivity.setName(json.getString("name"));
-                taskActivity.setUserType(json.getInt("userType"));
+                taskActivity.setUser(application.getUser());
                 taskActivity.setModifiedDate(json.getString("date"));
                 taskActivity.setActive(json.getInt("active") != 0);
                 if (application.saveTaskActivity(taskActivity)) {
@@ -161,7 +162,6 @@ public class UserSyncDialog extends AsyncTask<Void, UserSyncDialog.DownloadInfo,
                 user.setEmail(json.getString("email"));
                 user.setPassword(json.getString("password"));
                 user.setName(json.getString("username"));
-                user.setType(json.getInt("type"));
 
                 String groups = json.getString("group");
                 if (groups != null) {
@@ -180,7 +180,6 @@ public class UserSyncDialog extends AsyncTask<Void, UserSyncDialog.DownloadInfo,
                 if (application.saveUser(user)) {
                     User loggedUser = application.getUser();
                     if (loggedUser != null && loggedUser.equals(user)) {
-                        loggedUser.setType(user.getType());
                         loggedUser.setGroups(user.getGroups());
                     }
                     Log.d(TAG, "syncUsers inserted: " + user.getName());

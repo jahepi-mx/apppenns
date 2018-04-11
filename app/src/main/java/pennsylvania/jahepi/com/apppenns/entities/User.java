@@ -11,7 +11,6 @@ public class User extends Entity {
     private String name;
     private String email;
     private String password;
-    private int type;
     private ArrayList<String> groups = new ArrayList<String>();
 
     public String getName() {
@@ -55,14 +54,6 @@ public class User extends Entity {
 
     public void addGroup(String group) {
         this.groups.add(group);
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public void setGroups(ArrayList<String> groups) {

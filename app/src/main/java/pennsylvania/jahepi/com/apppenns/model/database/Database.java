@@ -27,7 +27,7 @@ public class Database {
     public static final String PRODUCTS_TABLE = "products";
     public static final String ACTIVITIES_TABLE = "activities";
 
-    private static final int DB_VERSION = 47;
+    private static final int DB_VERSION = 48;
     private static final String TAG = "DBHelper";
     private static final String DB_NAME = "pennsylvania.db";
     public static final int ERROR = -1;
@@ -165,7 +165,7 @@ public class Database {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT, group_name TEXT, user_type INT)");
+            db.execSQL("CREATE TABLE " + USERS_TABLE + " (id INT PRIMARY KEY, email TEXT, password TEXT, name TEXT, date TEXT, active INT, group_name TEXT)");
             Log.d(TAG, "Users table created!");
             db.execSQL("CREATE TABLE " + MESSAGES_TABLE + " (id INTEGER PRIMARY KEY, from_user INT, to_user INT, message TEXT, date TEXT, delivered INT, read INT, send INT, read_sync INT, type INT, UNIQUE (to_user, from_user, date))");
             Log.d(TAG, "Messages table created!");
@@ -190,8 +190,8 @@ public class Database {
             db.execSQL("CREATE INDEX fingerprint_index ON " + TASKS_TABLE + " (fingerprint)");
             db.execSQL("CREATE TABLE " + PRODUCTS_TABLE + " (id TEXT, user INT, name TEXT, date TEXT, UNIQUE (id, user))");
             Log.d(TAG, "Products table created!");
-            db.execSQL("CREATE TABLE " + ACTIVITIES_TABLE + " (id INTEGER PRIMARY KEY, user_type INT, name TEXT, date TEXT, active INT)");
-            Log.d(TAG, "ACTIVITIES table created!");
+            db.execSQL("CREATE TABLE " + ACTIVITIES_TABLE + " (id INT, user INT, name TEXT, date TEXT, active INT, UNIQUE (id, user))");
+            Log.d(TAG, "Activities table created!");
         }
 
         @Override

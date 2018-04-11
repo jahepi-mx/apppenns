@@ -78,7 +78,6 @@ public class Dao {
         user.setName(cursor.getString(3));
         user.setModifiedDate(cursor.getString(4));
         user.setActive(cursor.getInt(5) != 0);
-        user.setType(cursor.getInt(7));
         String groups = cursor.getString(6);
         if (groups != null) {
             String[] groupsArray = groups.split(",");
@@ -97,7 +96,6 @@ public class Dao {
             values.put("email", user.getEmail());
             values.put("password", user.getPassword());
             values.put("name", user.getName());
-            values.put("user_type", user.getType());
             values.put("group_name", TextUtils.join(",", user.getGroups()));
             values.put("active", user.isActive() ? 1 : 0);
             values.put("date", user.getModifiedDateString());
@@ -220,8 +218,8 @@ public class Dao {
         return false;
     }
 
-    public TaskActivity getTaskActivity(int taskActivityId) {
-        Cursor cursor = db.get(Database.ACTIVITIES_TABLE, String.format("id='%s'", taskActivityId));
+    public TaskActivity getTaskActivity(int taskActivityId, int userId) {
+        Cursor cursor = db.get(Database.ACTIVITIES_TABLE, String.format("id='%s' AND user='%s'", taskActivityId, userId));
         if (cursor != null) {
             TaskActivity activity = mapTaskActivity(cursor);
             cursor.close();
@@ -230,9 +228,9 @@ public class Dao {
         return null;
     }
 
-    public ArrayList<TaskActivity> getTaskActivities(int userType) {
+    public ArrayList<TaskActivity> getTaskActivities(int userId) {
         ArrayList<TaskActivity> taskActivities = new ArrayList<TaskActivity>();
-        Cursor cursor = db.getAllOrderBy(Database.ACTIVITIES_TABLE, String.format("active='1' AND user_type='%s'", userType), "name ASC");
+        Cursor cursor = db.getAllOrderBy(Database.ACTIVITIES_TABLE, String.format("active='1' AND user='%s'", userId), "name ASC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 TaskActivity activity = mapTaskActivity(cursor);
@@ -246,7 +244,7 @@ public class Dao {
     private TaskActivity mapTaskActivity(Cursor cursor) {
         TaskActivity taskActivity = new TaskActivity();
         taskActivity.setId(cursor.getInt(0));
-        taskActivity.setUserType(cursor.getInt(1));
+        taskActivity.setUser(getUser(cursor.getInt(1)));
         taskActivity.setName(cursor.getString(2));
         taskActivity.setModifiedDate(cursor.getString(3));
         taskActivity.setActive(cursor.getInt(4) != 0);
@@ -257,14 +255,14 @@ public class Dao {
         if (taskActivity != null) {
             ContentValues values = new ContentValues();
             values.put("name", taskActivity.getName());
-            values.put("user_type", taskActivity.getUserType());
+            values.put("user", taskActivity.getUser().getId());
             values.put("active", taskActivity.isActive() ? 1 : 0);
             values.put("date", taskActivity.getModifiedDateString());
 
-            TaskActivity taskActivityDB = getTaskActivity(taskActivity.getId());
+            TaskActivity taskActivityDB = getTaskActivity(taskActivity.getId(), taskActivity.getUser().getId());
             if (taskActivityDB != null) {
                 if (taskActivityDB.isGreaterDate(taskActivity)) {
-                    db.update(Database.ACTIVITIES_TABLE, values, String.format("id='%s'", taskActivity.getId()));
+                    db.update(Database.ACTIVITIES_TABLE, values, String.format("id='%s' AND user='%s'", taskActivity.getId(), taskActivity.getUser().getId()));
                 }
             } else {
                 values.put("id", taskActivity.getId());
@@ -273,6 +271,10 @@ public class Dao {
             return true;
         }
         return false;
+    }
+
+    public boolean deleteActivities(int userId) {
+        return db.delete(Database.ACTIVITIES_TABLE, String.format("user='%s'", userId)) != Database.ERROR;
     }
 
     public Product getProduct(int userId, String productId) {
@@ -727,7 +729,7 @@ public class Dao {
             String[] ids = taskActivitiesText.split(",");
             for (String id : ids) {
                 if (!id.trim().equals("")) {
-                    TaskActivity taskActivity = getTaskActivity(Integer.valueOf(id));
+                    TaskActivity taskActivity = getTaskActivity(Integer.valueOf(id), task.getUser().getId());
                     if (taskActivity != null) {
                         taskActivities.add(taskActivity);
                     }
