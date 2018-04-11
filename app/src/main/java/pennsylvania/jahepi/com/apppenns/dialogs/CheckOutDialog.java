@@ -199,6 +199,9 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (parentActivity.task != null && (parentActivity.task.isCheckout() || parentActivity.task.isCancelled())) {
+            return;
+        }
         Product product = productAdapter.getItem(position);
         productTextView.setText("");
 
@@ -207,8 +210,12 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         taskProducts.add(product);
     }
 
-    public void onDelete(Product product) {
-        taskProducts.remove(product);
+    public void onDelete(ProductItem productItem) {
+        if (parentActivity.task != null && (parentActivity.task.isCheckout() || parentActivity.task.isCancelled())) {
+            return;
+        }
+        taskProducts.remove(productItem.getProduct());
+        productItem.removeFromView();
     }
 
     private void buildActivitiesCheckboxes(View view) {
@@ -248,6 +255,9 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
                 CheckBox checkBox = new CheckBox(view.getContext());
                 checkBox.setText(taskActivity.getName());
                 checkBox.setId(taskActivity.getId());
+                if (parentActivity.task != null && (parentActivity.task.isCheckout() || parentActivity.task.isCancelled())) {
+                    checkBox.setEnabled(false);
+                }
                 linearLayout.addView(checkBox);
                 checkboxesHashMap.put(taskActivity.getId(), checkBox);
             }
