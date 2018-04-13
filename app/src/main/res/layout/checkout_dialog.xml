@@ -55,39 +55,6 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/txt_general_comment"
-                    android:textStyle="bold" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp">
-
-                <EditText
-                    android:layout_width="0dp"
-                    android:id="@+id/taskGeneralCommentEditText"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:background="@drawable/rounded_corner"
-                    android:lines="3"
-                    android:padding="5dp"/>
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/txt_competence_comment"
                     android:textStyle="bold" />
 

@@ -39,7 +39,7 @@ public class Dao {
 
     public ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<User>();
-        Cursor cursor = db.getAllOrderBy(Database.USERS_TABLE, "active='1'", "group_name, name ASC");
+        Cursor cursor = db.getAllOrderBy(Database.USERS_TABLE, "active='1'", "name ASC");
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 User user = mapUser(cursor);
@@ -754,7 +754,6 @@ public class Dao {
             }
             task.setTaskProducts(taskProducts);
         }
-        task.setGeneralComments(cursor.getString(41));
 
         Task parentTask = new Task();
         parentTask.setId(cursor.getInt(35));
@@ -799,7 +798,6 @@ public class Dao {
                 values.put("checkout_date", task.getCheckOutDate());
                 values.put("conclusion", task.getConclusion());
                 values.put("competence_comment", task.getCompetenceComments());
-                values.put("general_comment", task.getGeneralComments());
                 values.put("activities", task.getTaskActivitiesText());
                 values.put("products", task.getTaskProductsText());
                 values.put("cancelled", task.isCancelled() ? 1 : 0);

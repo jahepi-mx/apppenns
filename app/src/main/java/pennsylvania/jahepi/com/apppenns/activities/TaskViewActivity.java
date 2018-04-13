@@ -265,7 +265,6 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         if (v == checkoutBtn) {
             if (task != null) {
                 checkOutAlert.setConclusion(task.getConclusion());
-                checkOutAlert.setGeneralComment(task.getGeneralComments());
                 checkOutAlert.setCompetenceComment(task.getCompetenceComments());
                 checkOutAlert.setEmails(task.getEmails());
                 checkOutAlert.setTaskActivities(task.getTaskActivities());
@@ -353,7 +352,6 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
         if (task != null) {
             if (!application.isGpsEnabled()) {
                 task.setConclusion(checkOutAlert.getConclusion());
-                task.setGeneralComments(checkOutAlert.getGeneralComment());
                 task.setCompetenceComments(checkOutAlert.getCompetenceComment());
                 task.setEmails(checkOutAlert.getEmails());
                 task.setTaskActivities(checkOutAlert.getTaskActivities());
@@ -363,7 +361,6 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
             }
             if (checkOutAlert.getConclusion().length() == 0) {
                 task.setConclusion(checkOutAlert.getConclusion());
-                task.setGeneralComments(checkOutAlert.getGeneralComment());
                 task.setCompetenceComments(checkOutAlert.getCompetenceComment());
                 task.setEmails(checkOutAlert.getEmails());
                 task.setTaskActivities(checkOutAlert.getTaskActivities());
@@ -387,7 +384,6 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                             task.setCheckout(true);
                             task.setSend(false);
                             task.setConclusion(checkOutAlert.getConclusion());
-                            task.setGeneralComments(checkOutAlert.getGeneralComment());
                             task.setCompetenceComments(checkOutAlert.getCompetenceComment());
                             task.setEmails(checkOutAlert.getEmails());
                             task.setTaskActivities(checkOutAlert.getTaskActivities());
@@ -416,7 +412,6 @@ public class TaskViewActivity extends AuthActivity implements View.OnClickListen
                         @Override
                         public void error(String message) {
                             task.setConclusion(checkOutAlert.getConclusion());
-                            task.setGeneralComments(checkOutAlert.getGeneralComment());
                             task.setCompetenceComments(checkOutAlert.getCompetenceComment());
                             task.setEmails(checkOutAlert.getEmails());
                             task.setTaskActivities(checkOutAlert.getTaskActivities());

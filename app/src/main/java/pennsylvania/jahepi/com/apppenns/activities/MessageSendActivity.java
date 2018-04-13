@@ -105,9 +105,14 @@ public class MessageSendActivity extends AuthActivity implements DialogListener,
                     @Override
                     public void run() {
                         audioBtn.setText(R.string.btn_audio);
-                        audioBtn.setBackgroundResource(R.drawable.custom_button_green);
+                        audioBtn.setBackgroundResource(R.drawable.custom_button);
                         fileAttachmentAdapter.add(Util.buildAttachment(audio));
                         fileAttachmentAdapter.notifyDataSetChanged();
+                        int numberOfAttachments = fileAttachmentAdapter.getCount();
+                        ViewGroup.LayoutParams params = attachmentList.getLayoutParams();
+                        int size = numberOfAttachments == 0 ? 160 : numberOfAttachments * 160;
+                        params.height = size;
+                        attachmentList.setLayoutParams(params);
                     }
                 });
             }

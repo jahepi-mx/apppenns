@@ -49,7 +49,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
     public final static int REQUEST_CODE_FILE_FROM_CHECKOUT = 8;
     public final static int REQUEST_IMAGE_CAPTURE_FROM_CHECKOUT = 16;
 
-    private EditText editText, generalCommentEditText, competenceCommentEditText;
+    private EditText editText, competenceCommentEditText;
     private MultiAutoCompleteTextView emailTextiew;
     private DialogListener listener;
     private AutoCompleteEmailAdapter adapter;
@@ -71,7 +71,6 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         view = (View) inflater.inflate(R.layout.checkout_dialog, null);
         this.parentActivity = parentActivity;
         editText = (EditText) view.findViewById(R.id.taskConclusionEditText);
-        generalCommentEditText = (EditText) view.findViewById(R.id.taskGeneralCommentEditText);
         competenceCommentEditText = (EditText) view.findViewById(R.id.taskCompetenceCommentEditText);
         adapter = new AutoCompleteEmailAdapter(context, R.layout.generic_item);
         emailTextiew = (MultiAutoCompleteTextView) view.findViewById(R.id.emailText);
@@ -206,7 +205,7 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         productTextView.setText("");
 
         ProductItem productItem = new ProductItem(view.getContext(), product, this);
-        productsLinearLayout.addView(productItem);
+        productsLinearLayout.addView(productItem, 0);
         taskProducts.add(product);
     }
 
@@ -269,10 +268,6 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
         return editText.getText().toString();
     }
 
-    public String getGeneralComment() {
-        return generalCommentEditText.getText().toString();
-    }
-
     public String getCompetenceComment() {
         return competenceCommentEditText.getText().toString();
     }
@@ -300,10 +295,6 @@ public class CheckOutDialog extends AlertDialog implements View.OnClickListener,
 
     public void setConclusion(String conclusion) {
         editText.setText(conclusion);
-    }
-
-    public void setGeneralComment(String comment) {
-        generalCommentEditText.setText(comment);
     }
 
     public void setCompetenceComment(String comment) {
