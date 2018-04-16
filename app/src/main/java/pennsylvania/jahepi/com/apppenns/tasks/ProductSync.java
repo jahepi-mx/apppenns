@@ -111,11 +111,9 @@ public class ProductSync extends AsyncTask<Void, ProductSync.DownloadInfo, Boole
                 jsonStr = jsonStr.append(line);
             }
 
+            application.deleteProducts();
             JSONObject jObject = new JSONObject(jsonStr.toString());
             JSONArray products = jObject.getJSONArray("products");
-
-
-            application.deleteProducts();
 
             for (int i = 0; i < products.length() && !isCancelled(); i++) {
 

@@ -63,9 +63,10 @@ public class UserSync extends AsyncTask<Void, Void, Void> {
                 jsonStr = jsonStr.append(line);
             }
 
+            application.deleteActivities();
             JSONObject jObject = new JSONObject(jsonStr.toString());
             JSONArray activities = jObject.getJSONArray("taskActivities");
-            application.deleteActivities();
+
             for (int i = 0; i < activities.length(); i++) {
                 JSONObject json = activities.getJSONObject(i);
                 TaskActivity taskActivity = new TaskActivity();
