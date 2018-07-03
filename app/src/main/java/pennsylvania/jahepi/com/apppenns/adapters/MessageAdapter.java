@@ -22,6 +22,7 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
  * Created by javier.hernandez on 26/02/2016.
+ * Class adapter for messages.
  */
 public class MessageAdapter extends ArrayAdapter<Entity> {
 

@@ -19,6 +19,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 
 /**
  * Created by jahepi on 22/03/16.
+ * Asynchronous task for downloading attachments from tasks
  */
 public class AttachmentTask extends AsyncTask<Void, AttachmentTask.DownloadInfo, Void> {
 

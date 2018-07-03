@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.entities;
 
 /**
  * Created by javier.hernandez on 09/03/2016.
+ * Entity class for a client address
  */
 public class Address extends Entity {
 

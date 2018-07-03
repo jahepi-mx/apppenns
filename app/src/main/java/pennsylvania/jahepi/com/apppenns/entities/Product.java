@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.entities;
 
 /**
  * Created by javier.hernandez on 04/04/2018.
+ * Entity class for a product
  */
 public class Product extends Entity {
 

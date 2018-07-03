@@ -18,6 +18,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
  * Created by jahepi on 05/03/16.
+ * Class adapter for tasks.
  */
 public class TaskAdapter extends ArrayAdapter<Entity> {
 

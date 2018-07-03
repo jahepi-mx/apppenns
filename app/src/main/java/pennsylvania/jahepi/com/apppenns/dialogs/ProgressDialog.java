@@ -15,6 +15,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 
 /**
  * Created by jahepi on 22/03/16.
+ * Progress dialog component.
  */
 public class ProgressDialog extends DialogFragment {
 

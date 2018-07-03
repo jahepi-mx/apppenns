@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Entity class for a message
  */
 public class Message extends Entity {
 

@@ -15,6 +15,7 @@ import pennsylvania.jahepi.com.apppenns.Util;
 
 /**
  * Created by jahepi on 05/03/16.
+ * Date dialog component
  */
 public class DateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 

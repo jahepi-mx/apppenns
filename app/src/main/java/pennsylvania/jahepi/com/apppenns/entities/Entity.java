@@ -6,6 +6,7 @@ import java.util.Date;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Base entity class that must be inherited from all entitiy class objects
  */
 public class Entity implements Serializable {
 

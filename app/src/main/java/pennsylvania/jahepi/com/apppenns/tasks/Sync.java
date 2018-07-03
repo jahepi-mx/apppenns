@@ -47,6 +47,7 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Main service for updating data from server every certain amount of time.
  */
 public class Sync extends Service {
 

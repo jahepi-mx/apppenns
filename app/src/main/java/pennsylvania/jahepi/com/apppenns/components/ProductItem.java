@@ -14,6 +14,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Product;
 
 /**
  * Created by javier.hernandez on 06/04/2018.
+ * Product item component for storing the products for each task.
  */
 public class ProductItem extends LinearLayout implements View.OnClickListener, TextWatcher {
 

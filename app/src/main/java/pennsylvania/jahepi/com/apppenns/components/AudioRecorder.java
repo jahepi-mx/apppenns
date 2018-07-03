@@ -10,6 +10,7 @@ import java.util.Date;
 
 /**
  * Created by javier.hernandez on 11/04/2016.
+ * Component class for recording audio.
  */
 public class AudioRecorder {
 

@@ -12,6 +12,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Address;
 
 /**
  * Created by javier.hernandez on 09/03/2016.
+ * Class adapter for addresses
  */
 public class AddressAdapter extends ArrayAdapter<Address> {
 

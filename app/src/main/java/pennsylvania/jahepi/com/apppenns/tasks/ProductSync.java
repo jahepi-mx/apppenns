@@ -23,6 +23,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Product;
 
 /**
  * Created by jahepi on 09/03/16.
+ * Asynchronous task for downloading products
  */
 public class ProductSync extends AsyncTask<Void, ProductSync.DownloadInfo, Boolean> implements View.OnClickListener {
 

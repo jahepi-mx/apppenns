@@ -43,6 +43,7 @@ import pennsylvania.jahepi.com.apppenns.entities.TaskActivity;
 
 /**
  * Created by javier.hernandez on 08/03/2016.
+ * Checkout dialog component
  */
 public class CheckOutDialog extends AlertDialog implements View.OnClickListener, AdapterView.OnItemClickListener, ProductItem.ProductItemListener {
 

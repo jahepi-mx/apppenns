@@ -24,6 +24,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Attachment;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Static class with some helper methods.
  */
 public class Util {
 

@@ -10,6 +10,7 @@ import android.util.Log;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Database class (SQL-Lite)
  */
 public class Database {
 

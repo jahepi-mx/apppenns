@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.entities;
 
 /**
  * Created by jahepi on 20/04/16.
+ * Entity class for a notification
  */
 public class Notification extends Entity {
 

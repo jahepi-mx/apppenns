@@ -7,6 +7,7 @@ import pennsylvania.jahepi.com.apppenns.Util;
 
 /**
  * Created by javier.hernandez on 04/03/2016.
+ * Entity class for a task
  */
 public class Task extends Entity {
 

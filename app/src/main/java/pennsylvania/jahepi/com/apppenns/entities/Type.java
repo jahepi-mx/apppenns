@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.entities;
 
 /**
  * Created by jahepi on 12/03/16.
+ * Entity class for a type
  */
 public class Type extends Entity {
 

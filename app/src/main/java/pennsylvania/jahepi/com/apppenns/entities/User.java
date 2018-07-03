@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Entity class for a user
  */
 public class User extends Entity {
 

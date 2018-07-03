@@ -24,6 +24,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.AttachmentTask;
 
 /**
  * Created by jahepi on 20/03/16.
+ * Class adapter for attachments
  */
 public class FileAttachmentAdapter extends ArrayAdapter<Attachment> implements AttachmentTask.AttachmentTaskListener, DialogInterface.OnClickListener {
 

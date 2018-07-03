@@ -26,6 +26,8 @@ import pennsylvania.jahepi.com.apppenns.model.database.Database;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * The Data Access Object class (DAO) is responsible of mapping all tha Database data to entity objects.
+ * It also saves, updates and deletes all the entity object state to the Database.
  */
 public class Dao {
 

@@ -8,6 +8,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Type;
 
 /**
  * Created by javier.hernandez on 30/03/2016.
+ * Type Spinner component
  */
 public class TypeSpinner extends Spinner {
 

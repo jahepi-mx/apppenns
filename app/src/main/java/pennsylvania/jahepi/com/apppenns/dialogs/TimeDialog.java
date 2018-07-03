@@ -14,6 +14,7 @@ import java.util.Date;
 
 /**
  * Created by jahepi on 12/03/16.
+ * Time dialog component.
  */
 public class TimeDialog extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 

@@ -2,6 +2,7 @@ package pennsylvania.jahepi.com.apppenns.entities;
 
 /**
  * Created by javier.hernandez on 12/04/2016.
+ * Entity class for an ubication
  */
 public class Ubication extends Entity {
 

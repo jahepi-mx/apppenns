@@ -16,6 +16,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
 
 /**
  * Created by javier.hernandez on 09/03/2016.
+ * Class adapter for clients
  */
 public class ClientAdapter extends ArrayAdapter<Client> {
 

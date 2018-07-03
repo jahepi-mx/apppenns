@@ -24,6 +24,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
 
 /**
  * Created by jahepi on 09/03/16.
+ * Asynchronous task for updating the clients from the server
  */
 public class ClientSync extends AsyncTask<Void, ClientSync.DownloadInfo, Boolean> implements View.OnClickListener {
 

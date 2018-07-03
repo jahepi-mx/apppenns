@@ -17,6 +17,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Product;
 
 /**
  * Created by javier.hernandez on 09/03/2016.
+ * Class adapter for products.
  */
 public class ProductAdapter extends ArrayAdapter<Product> {
 

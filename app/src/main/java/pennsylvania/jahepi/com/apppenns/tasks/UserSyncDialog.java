@@ -24,6 +24,7 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
  * Created by jahepi on 09/03/16.
+ * Dialog with an Asynchronous task for updating user data from server
  */
 public class UserSyncDialog extends AsyncTask<Void, UserSyncDialog.DownloadInfo, Boolean> implements View.OnClickListener {
 

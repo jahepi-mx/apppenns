@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by javier.hernandez on 04/03/2016.
+ * Entity class for a coordinate
  */
 public class Coord implements Serializable {
 

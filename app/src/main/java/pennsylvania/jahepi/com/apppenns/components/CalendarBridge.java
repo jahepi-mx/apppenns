@@ -15,6 +15,7 @@ import java.util.Calendar;
 
 /**
  * Created by javier.hernandez on 15/03/2016.
+ * Calendar component class
  */
 public class CalendarBridge {
 

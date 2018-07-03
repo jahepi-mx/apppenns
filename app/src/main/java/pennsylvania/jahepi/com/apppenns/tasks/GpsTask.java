@@ -16,6 +16,7 @@ import pennsylvania.jahepi.com.apppenns.dialogs.ProgressDialog;
 
 /**
  * Created by jahepi on 04/04/16.
+ * Asynchronous task to get the device location when you check-in or check-out from an activity task
  */
 public class GpsTask extends AsyncTask<Void, Void, Void> implements LocationListener, View.OnClickListener {
 

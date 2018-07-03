@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 /**
  * Created by javier.hernandez on 09/03/2016.
+ * Entity class for a client
  */
 public class Client extends Entity {
 

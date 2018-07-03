@@ -13,6 +13,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 
 /**
  * Created by javier.hernandez on 01/06/2016.
+ * Task Option dialog for tracking and canceling tasks.
  */
 public class TaskOptionsDialog extends DialogFragment {
 

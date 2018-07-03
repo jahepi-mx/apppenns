@@ -33,6 +33,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.Sync;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Mediator class, communicates the main services objects with the activity classes
  */
 public class CustomApplication extends Application {
 

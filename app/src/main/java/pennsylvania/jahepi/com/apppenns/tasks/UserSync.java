@@ -20,6 +20,7 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
  * Created by javier.hernandez on 05/08/2016.
+ * Asynchronous task for updating user data from server
  */
 public class UserSync extends AsyncTask<Void, Void, Void> {
 

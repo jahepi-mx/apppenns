@@ -12,6 +12,7 @@ import pennsylvania.jahepi.com.apppenns.CustomApplication;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Gps class service, it gets the current device location every certain amount time.
  */
 public class Gps implements LocationListener {
 

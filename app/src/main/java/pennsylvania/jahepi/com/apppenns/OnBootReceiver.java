@@ -8,6 +8,7 @@ import pennsylvania.jahepi.com.apppenns.activities.LoginActivity;
 
 /**
  * Created by javier.hernandez on 18/04/2016.
+ * Class that executes the Login Activity when the device boots up
  */
 public class OnBootReceiver extends BroadcastReceiver {
 

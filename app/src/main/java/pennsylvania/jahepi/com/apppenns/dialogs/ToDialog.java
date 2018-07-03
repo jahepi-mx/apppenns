@@ -24,6 +24,7 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
  * Created by javier.hernandez on 29/02/2016.
+ * To Dialog component for the messaging module.
  */
 public class ToDialog extends DialogFragment implements View.OnClickListener {
 

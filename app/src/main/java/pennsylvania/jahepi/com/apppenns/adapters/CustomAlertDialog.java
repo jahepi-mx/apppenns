@@ -8,6 +8,7 @@ import android.os.Build;
 
 /**
  * Created by javier.hernandez on 01/04/2016.
+ * Custom alert dialog component.
  */
 public class CustomAlertDialog extends AlertDialog.Builder implements DialogInterface.OnDismissListener {
 
