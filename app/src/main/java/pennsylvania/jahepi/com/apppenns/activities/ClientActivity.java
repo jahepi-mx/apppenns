@@ -20,6 +20,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Client;
 
 /**
  * Created by javier.hernandez on 09/03/2016.
+ * Class Activity to select the client from the task.
  */
 public class ClientActivity extends AuthActivity implements AdapterView.OnItemClickListener {
 

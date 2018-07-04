@@ -18,6 +18,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Base class that must be inherited from all activity classes.
  */
 public class BaseActivity extends AppCompatActivity {
 

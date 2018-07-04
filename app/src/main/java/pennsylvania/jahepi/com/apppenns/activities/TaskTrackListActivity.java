@@ -23,6 +23,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
  * Created by javier.hernandez on 01/06/2016.
+ * Class activity to view the list of tracking tasks of the logged user.
  */
 public class TaskTrackListActivity extends AuthActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener, DialogInterface.OnClickListener, TaskOptionsDialog.TaskOptionDialogListener {
 

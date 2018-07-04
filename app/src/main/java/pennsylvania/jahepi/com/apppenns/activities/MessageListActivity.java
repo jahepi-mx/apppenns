@@ -25,6 +25,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Task;
 
 /**
  * Created by javier.hernandez on 26/02/2016.
+ * Class activity to display all the messages associated with the logged user.
  */
 public class MessageListActivity extends AuthActivity implements DialogListener, AdapterView.OnItemLongClickListener, CustomApplication.ApplicationNotifierListener {
 

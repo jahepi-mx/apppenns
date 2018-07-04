@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by jahepi on 23/03/16.
- * DTO (Data Transfer Object) for application attachments
+ * Entity class for attachments
  */
 public class Attachment implements Serializable {
 

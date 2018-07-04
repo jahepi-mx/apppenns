@@ -17,6 +17,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.UserSyncDialog;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Class activity with the main menu options of the applicaction.
  */
 public class MainActivity extends AuthActivity implements View.OnClickListener {
 

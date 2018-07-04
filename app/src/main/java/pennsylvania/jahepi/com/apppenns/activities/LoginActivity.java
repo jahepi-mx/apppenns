@@ -14,6 +14,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.UserSync;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Class activity to log in the user.
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 

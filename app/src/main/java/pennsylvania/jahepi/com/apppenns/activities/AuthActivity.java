@@ -8,6 +8,7 @@ import pennsylvania.jahepi.com.apppenns.R;
 
 /**
  * Created by javier.hernandez on 24/02/2016.
+ * Base authentication class which must be inherited from all classes that need session user data.
  */
 public class AuthActivity extends BaseActivity {
 

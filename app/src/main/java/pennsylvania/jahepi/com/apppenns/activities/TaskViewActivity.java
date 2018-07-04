@@ -37,6 +37,7 @@ import pennsylvania.jahepi.com.apppenns.tasks.GpsTask;
 
 /**
  * Created by jahepi on 06/03/16.
+ * Class activity to view the details of a task.
  */
 public class TaskViewActivity extends AuthActivity implements View.OnClickListener, DialogInterface.OnClickListener {
 

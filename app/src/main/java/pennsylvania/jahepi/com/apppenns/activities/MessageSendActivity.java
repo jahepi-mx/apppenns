@@ -33,6 +33,7 @@ import pennsylvania.jahepi.com.apppenns.entities.User;
 
 /**
  * Created by javier.hernandez on 29/02/2016.
+ * Class activity to send messages.
  */
 public class MessageSendActivity extends AuthActivity implements DialogListener, View.OnClickListener {
 

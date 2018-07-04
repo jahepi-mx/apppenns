@@ -19,6 +19,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Message;
 
 /**
  * Created by javier.hernandez on 29/02/2016.
+ * Class activity to view the details of a message.
  */
 public class MessageViewActivity extends AuthActivity {
 

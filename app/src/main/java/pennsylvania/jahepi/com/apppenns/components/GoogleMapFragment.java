@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by javier.hernandez on 04/04/2016.
+ * Google Map Fragment adapter class
  */
 public class GoogleMapFragment extends SupportMapFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 

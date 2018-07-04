@@ -40,6 +40,7 @@ import pennsylvania.jahepi.com.apppenns.entities.Type;
 
 /**
  * Created by javier.hernandez on 04/03/2016.
+ * Activity class that adds tasks to the logged user.
  */
 public class AddTaskActivity extends AuthActivity implements DialogListener {
 
